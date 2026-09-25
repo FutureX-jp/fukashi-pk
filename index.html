@@ -565,7 +565,7 @@ function tipTick(now){
   tipG.lineCap='round'; tipG.lineJoin='round'; tipG.strokeStyle='rgba(216,255,60,.9)'; tipG.lineWidth=6; tipG.beginPath();
   const n=Math.floor(Math.min(1,u)*60); for(let i=0;i<=n;i++){ const [x,y]=f(i/60); tipG.lineTo(x*W,y*H); } tipG.stroke();
   const [hx,hy]=f(Math.min(1,u)); tipG.fillStyle='#fff'; tipG.beginPath(); tipG.arc(hx*W,hy*H,9,0,7); tipG.fill();
-  if(tipKind==='drop'&&u<0.45){ tipG.strokeStyle='rgba(255,255,255,.8)'; tipG.lineWidth=3; tipG.beginPath(); tipG.arc(hx*W,hy*H,12+(u/0.45)*14,0,7); tipG.stroke(); }
+  if((tipKind==='drop'&&u<0.45)||(tipKind==='rocket'&&u<0.7)){ tipG.strokeStyle='rgba(255,255,255,.8)'; tipG.lineWidth=3; tipG.beginPath(); tipG.arc(hx*W,hy*H,12+(u/0.45)*14,0,7); tipG.stroke(); }
 }
 
 // 一人称のグローブ（カメラの子）
@@ -682,6 +682,8 @@ function updCharge(dt){ const K=kicker.sp, t=S.chargeT, u=Math.min(1,t/S.chargeD
   const jit=0.015+u*0.05; kicker.squash.position.x=(Math.random()-.5)*jit; kicker.squash.position.z=(Math.random()-.5)*jit;       // 小刻みに震える
   if(R.chargeStyle==='windmill'){ K.legR.a=t*18; K.legR.v=0; K.legR.t=K.legR.a; K.armLz.t=K.armRz.t=1.7; K.legL.t=-0.15; K.lean.t=0.2; }   // 蹴り脚をぐるぐる回す
   else if(R.chargeStyle==='propeller'){ K.armL.a=t*24; K.armL.v=0; K.armL.t=K.armL.a; K.armR.a=-t*24; K.armR.v=0; K.armR.t=K.armR.a; K.legR.t=1.9; K.lean.t=0.3; }   // 腕がプロペラ
+  else if(R.chargeStyle==='spin'){ kicker.root.rotation.y=R.baseRot+t*t*14; K.armLz.t=K.armRz.t=1.6; K.legL.t=0; K.legR.t=-0.4; K.lean.t=0; }   // コマみたいに回る
+  else if(R.chargeStyle==='hop'){ kicker.root.position.y=Math.abs(Math.sin(t*11))*0.32; K.legL.t=K.legR.t=-0.5*Math.abs(Math.sin(t*11)); K.armL.t=Math.sin(t*11)*1.2; K.armR.t=-Math.sin(t*11)*1.2; K.armLz.t=K.armRz.t=0.8; }   // その場でピョンピョン
   else { K.sy.t=0.8; kicker.root.position.y=-(1-K.sy.a)*0.95; K.lean.t=0.85; K.armL.t=K.armR.t=1.9; K.legR.t=2.4; K.armLz.t=K.armRz.t=0.5; K.head.t=-0.5; }   // しゃがんで力む
   S.auraT+=dt; if(S.auraT>0.05){ S.auraT=0; inward(new THREE.Vector3(kp.x,1.0,kp.z),12+(u*34|0)); }
   S.ringT+=dt; if(S.ringT>0.22){ S.ringT=0; ring(new THREE.Vector3(kp.x,0.03,kp.z),0xd8ff3c,2+u*3,0.35); }
@@ -773,11 +775,7 @@ function tryShot(){
   for(const q of pts) minY=Math.max(minY,q.y-a.y);                                                              // 一度どれだけ下げたか
   const still=(()=>{ for(const q of pts){ if(Math.hypot(q.x-a.x,q.y-a.y)>16) return (q.t-a.t)/1000; } return 0; })();
   let trick=null;
-  if(Math.abs(turn)>8.2) trick='cartwheel';
-  else if(Math.abs(turn)>4.0) trick='flip';
-  else if(rev>=2) trick='tornado';
-  else if(minY>H*0.045) trick='bicycle';
-  else if(still>0.3) trick='drop';
+  trick=trickOf(pts,turn,rev,minY,still,H);
   { const sh={tx,ty,curve,speed,vs}; if(ultraArmed){ sh.ultra=true; sh.tx=THREE.MathUtils.clamp(tx,-HALF+0.45,HALF-0.45); sh.ty=THREE.MathUtils.clamp(ty,0.3,GOAL_H-0.35); sh.speed=Math.max(speed,24); ultraArmed=false; M.ultraUsed=true; if(window.tixMode&&tixMode()) GACHA_.useTix('ultra'); PG.add('ultraUsed'); flash('#ffd23f',0.7,400); } beginRun(sh,trick,len/H); }
 }
 const aimMark=(()=>{ const g=new THREE.Group(), m=new THREE.MeshBasicMaterial({color:0xd8ff3c,transparent:true,opacity:.9,depthTest:false,side:THREE.DoubleSide});
@@ -786,7 +784,7 @@ const aimMark=(()=>{ const g=new THREE.Group(), m=new THREE.MeshBasicMaterial({c
 function updAimMark(t){ const on=!!(S.shot&&S.shotMine&&!S.resolved&&['run','charge','flight'].includes(S.phase)); aimMark.visible=on; if(!on) return;
   aimMark.position.set(S.shot.tx,S.shot.ty,0.05); const k=1.4*(1+Math.sin(t*9)*0.12); aimMark.scale.set(k,k,k); aimMark.rotation.z=t*1.5; }
 function beginRun(shot,trick,lenH){ S.shotMine=humanKicks(); R.ultra=!!shot.ultra; if(R.ultra){ trick=trick||pick(Object.keys(TRICKS)); if(!shot.name) shot.name='絶対・'+genName(true); } if(trick&&humanKicks()) learnTrick(trick);
-  if(trick&&!shot.name) shot.name=genName(true); if(!shot.cs) shot.cs=pick(['windmill','crouch','propeller']); shot.lenH=lenH;
+  if(trick&&!shot.name) shot.name=genName(true); if(!shot.cs) shot.cs=pick(['windmill','crouch','propeller','spin','hop']); shot.lenH=lenH;
   S.shot=shot; R.tier=tierOf(shot.vs); R.trick=trick; R.trickName=shot.name||null; hideTurn(); recStart(); RP.start(); S.kt=0;
   S.runDur=THREE.MathUtils.clamp(0.95-lenH*0.5,0.5,0.95); S.charged=false; S.chargeAt=R.trick?0.62:0.86; S.chargeDur=0.95+0.25*R.tier; R.chargeStyle=shot.cs;
   S.runT=0; if(R.tier===0)S.runDur+=0.35; if(R.trick)S.runDur+=0.6; S.phase='run';
@@ -1043,7 +1041,7 @@ function resolve(r){
   else { S.streak=0; if(r==='save'){tone(140,0.25,'sine',.5); crowd(0.9,.18);} }
   const txt={goal:[(!isKeeperSide()&&window.GOALTXT&&GOALTXT())||'GOAL!!', postHit?'ポストに当てて入った':(Math.abs(pos.x)>2.6&&pos.y>1.6?'上隅を撃ち抜いた':'')],save:['SAVE!','キーパーに止められた'],post:['POST!','枠に嫌われた'],miss:['MISS',pos.y>GOAL_H?'バーの上':'枠の外']}[r];
   if(r==='save'&&R.face) txt[1]='顔面ブロック'; if(r==='save'&&R.gkSp) txt[1]=R.god?'神セーブ発動':'必殺セーブ（'+GKSP[R.gkSp]+'）'; if(ok&&R.gkSp) txt[1]='必殺技を打ち破った';
-  if(R.kick==='land'){ R.cheer=ok; } else if(R.kick!=='recoil'){ R.kick= ok?(Math.random()<0.5?'dance':'jumpfall'):'slump'; R.kickT=0; }
+  if(R.kick==='land'){ R.cheer=ok; } else if(R.kick!=='recoil'){ R.kick= ok?pick(GOAL_R):pick(MISS_R); R.kickT=0; }
   trailOn=ok||trailOn; R.gk= ok?'sad':(r==='save'&&R.face?'face':'celebrate'); R.gkT=0;
   if(isKeeperSide()){ txt[0]={goal:'GOAL…',save:'SAVE!!',post:'POST!',miss:'MISS'}[r]; if(r==='save')txt[1]=R.god?'神セーブ発動':R.face?'顔面ブロック':'ナイスセーブ'; }   // 守る番は立場が逆
   { const gkTurn=isKeeperSide(); const v=(gkTurn?{goal:['lose'],save:['save1','save2'],post:['post'],miss:['miss']}:{goal:['goal1','goal2'],save:['save1'],post:['post'],miss:['miss']})[r]; vplay(v[0],{cut:false}); if(v[1]) vplay(v[1],{cut:false}); }
@@ -1058,7 +1056,7 @@ function animate(dt,now){
   const K=kicker.sp, P=keeper.sp;
   kicker.legs[1].scale.y+=(1-kicker.legs[1].scale.y)*Math.min(1,dt*6);
   if(S.phase==='aim'||S.phase==='cpuwait'||S.phase==='oppwait'||S.phase==='menu'){                                   // 待機：ゆらゆら
-    kicker.root.position.copy(KICK_FROM); K.lean.t=0.05+Math.sin(now*3)*0.05; K.armL.t=K.armR.t=0; K.armLz.t=K.armRz.t=0.25+Math.sin(now*4)*0.06; K.legL.t=K.legR.t=0; K.head.t=Math.sin(now*2)*0.1; K.leanZ.t=0;
+    kicker.root.position.copy(KICK_FROM); K.lean.t=0.05+Math.sin(now*3)*0.05; K.armL.t=K.armR.t=0; K.armLz.t=K.armRz.t=0.25+Math.sin(now*4)*0.06; K.legL.t=K.legR.t=0; K.head.t=Math.sin(now*2)*0.1; K.leanZ.t=0; idle2(now,K);
   } else if(S.phase==='run'){
     const k=Math.min(1,S.runT/S.runDur), tier=R.tier; let e;
     if(tier===0){ const stop=k>0.6&&k<0.86; e=k<0.6?k/0.6*0.8:(stop?0.8:0.8+(k-0.86)/0.14*0.2); kicker.mouth.visible=stop; K.headZ.t=stop?0.4:0; }   // トコトコ→「えっ？」
@@ -1071,6 +1069,7 @@ function animate(dt,now){
     kicker.root.position.y=Math.abs(Math.sin(k*Math.PI*freq))*0.05*(tier+1);
     if(tier===3&&k>0.7&&k<0.95) kicker.root.rotation.y=R.baseRot+(k-0.7)/0.25*Math.PI*2;   // 勢い余って1回転
     else if(!(R.trick&&k>0.62)) kicker.root.rotation.y=R.baseRot;
+    if(R.runStyle&&R.runStyle!=='n'&&k<0.75&&!(tier===0&&k>0.6)) runStyle(R.runStyle,k,K);
     if(k>0.9) K.legR.t=1.0;                                                                 // 振りかぶり
     if(R.trick){ const kr=Math.min(1,k/0.62); kicker.root.position.lerpVectors(KICK_FROM,KICK_TO,kr*kr*(3-2*kr));
       if(k>0.62){ const u=(k-0.62)/0.38, P2=Math.PI*2; kicker.root.position.copy(KICK_TO);
@@ -1078,6 +1077,7 @@ function animate(dt,now){
         else if(R.trick==='tornado'){ kicker.root.position.y=Math.sin(u*Math.PI)*0.9; kicker.root.rotation.y=R.baseRot+u*P2*3; K.legR.t=-1.5; K.legL.t=0.3; K.armLz.t=K.armRz.t=1.6; K.leanZ.t=0.5; }
         else if(R.trick==='bicycle'){ kicker.root.position.y=Math.sin(u*Math.PI)*1.35; kicker.squash.rotation.x=-u*Math.PI*1.15; K.legL.t=-2.6*u; K.legR.t=-2.2*u+Math.sin(u*30)*0.6; K.armL.t=Math.sin(u*25)*1.5; K.armR.t=-Math.sin(u*25)*1.5; K.armLz.t=K.armRz.t=1.4; }
         else if(R.trick==='cartwheel'){ kicker.root.position.x=KICK_TO.x-Math.sign(S.shot.curve||1)*(1-u)*0.9; kicker.root.position.y=Math.abs(Math.sin(u*Math.PI))*0.35; kicker.squash.rotation.z=u*P2*Math.sign(S.shot.curve||1); K.armLz.t=K.armRz.t=2.9; K.legL.t=0.9; K.legR.t=-0.9; }
+        else if(TRICKS2[R.trick]) TRICKS2[R.trick].run(u,K,P2);
         else if(R.trick==='drop'){ kicker.root.position.y=Math.sin(u*Math.PI)*0.75+0.2*u; kicker.squash.rotation.x=-1.35*Math.min(1,u*1.8); K.legL.t=K.legR.t=-1.5; K.armLz.t=K.armRz.t=2.6; kicker.mouth.visible=true; }
       } }
   }
@@ -1085,16 +1085,18 @@ function animate(dt,now){
     if(R.kick==='land'){ const y=Math.max(0,R.y0-0.5*G*t*t); kicker.root.position.y=y; const down=y<=0;
       if(down&&!R.landed){ R.landed=true; jolt(kicker,'sy',-5); jolt(kicker,'sx',3); tone(120,0.12,'sine',.3); }
       const tr=R.trick, m=Math.min(1,t*4);
-      if(tr==='flip'){ kicker.squash.rotation.x=0; K.legL.t=K.legR.t=0.3; K.lean.t=down?0.7:0.2; if(down&&t<0.9)kicker.root.position.z=KICK_TO.z-Math.min(0.6,(t-0.2)*1.5); }       // 着地でつんのめる
+      if(TRICKS2[tr]) TRICKS2[tr].land(t,dt,K,down,m);
+      else if(tr==='flip'){ kicker.squash.rotation.x=0; K.legL.t=K.legR.t=0.3; K.lean.t=down?0.7:0.2; if(down&&t<0.9)kicker.root.position.z=KICK_TO.z-Math.min(0.6,(t-0.2)*1.5); }       // 着地でつんのめる
       else if(tr==='tornado'){ kicker.root.rotation.y+=dt*Math.max(0,10-t*12); kicker.squash.rotation.z=Math.sin(t*9)*0.25*Math.min(1,t*2); K.headZ.t=Math.sin(t*11)*0.5; kicker.mouth.visible=true; }  // 目が回ってフラフラ
       else if(tr==='cartwheel'){ kicker.squash.rotation.z=0; K.armLz.t=K.armRz.t=2.9; }      // 着地でポーズ
       else { kicker.squash.rotation.x=R.rx0+(-1.5-R.rx0)*m; kicker.root.position.y=Math.max(-0.82,y-0.82*m); K.legL.t=K.legR.t=-1.3; }          // オーバーヘッド・ドロップは背中から落ちる
-      if(R.cheer===true&&t>0.5){ if(tr==='bicycle'||tr==='drop'){ K.legL.t=-1.3+Math.sin(t*16)*0.8; K.legR.t=-1.3-Math.sin(t*16)*0.8; K.armLz.t=K.armRz.t=2.8; } else { K.armLz.t=K.armRz.t=2.8; K.armL.t=Math.sin(t*14); K.leanZ.t=Math.sin(t*9)*0.4; kicker.root.rotation.y+=dt*3; } kicker.mouth.visible=true; }
+      if(R.cheer===true&&t>0.5){ if(tr==='bicycle'||tr==='drop'||(TRICKS2[tr]&&TRICKS2[tr].lying)){ K.legL.t=-1.3+Math.sin(t*16)*0.8; K.legR.t=-1.3-Math.sin(t*16)*0.8; K.armLz.t=K.armRz.t=2.8; } else { K.armLz.t=K.armRz.t=2.8; K.armL.t=Math.sin(t*14); K.leanZ.t=Math.sin(t*9)*0.4; kicker.root.rotation.y+=dt*3; } kicker.mouth.visible=true; }
       if(R.cheer===false&&t>0.5){ K.legL.t=-0.4+Math.sin(t*27)*0.35; K.legR.t=-0.4-Math.sin(t*22)*0.35; K.armLz.t=K.armRz.t=0.2; K.head.t=0.4; }
     }
     if(R.kick==='follow'){ K.legR.t=-1.7; K.armL.t=0.9; K.armR.t=-0.7; K.lean.t=-0.1; kicker.root.position.y=R.jump?Math.max(0,3*t-4.9*t*t):0; }
     else if(R.kick==='recoil'){ const k=Math.min(1,t/0.45); kicker.root.position.z=R.rz+k*0.7; kicker.root.position.x=KICK_TO.x-k*1.3; kicker.root.position.y=Math.max(0,Math.sin(k*Math.PI)*0.55); kicker.squash.rotation.x=-1.3*k; kicker.root.position.y-=0.55*k; K.legL.t=K.legR.t=-1.3; K.armL.t=K.armR.t=-2.4; kicker.mouth.visible=true;
       if(t>0.45&&t<0.5) jolt(kicker,'sy',-4); if(t>0.6){ K.legL.t=-1.3+Math.sin(t*25)*0.3; K.legR.t=-1.3-Math.sin(t*21)*0.3; } }
+    else if(KICK2[R.kick]) KICK2[R.kick](t,dt,K);
     else if(R.kick==='dance'){ K.armLz.t=K.armRz.t=2.5; K.armL.t=Math.sin(t*14)*1.3; K.armR.t=-Math.sin(t*14)*1.3; K.leanZ.t=Math.sin(t*10)*0.5; K.legL.t=Math.max(0,Math.sin(t*10))*0.9; K.legR.t=Math.max(0,-Math.sin(t*10))*0.9; kicker.root.rotation.y+=dt*4; kicker.root.position.y=Math.abs(Math.sin(t*10))*0.14; kicker.mouth.visible=true; K.head.t=Math.sin(t*20)*0.3; }
     else if(R.kick==='jumpfall'){ kicker.root.position.y=Math.max(0,4.2*t-4.9*t*t); K.armLz.t=K.armRz.t=2.9; K.legL.t=0.8; K.legR.t=-0.8; if(t>0.86){ kicker.squash.rotation.z=Math.min(1.5,(t-0.86)*7); kicker.root.position.y-=0.8*Math.min(1,(t-0.86)*7); kicker.mouth.visible=true; if(t<0.9) jolt(kicker,'sy',-3);} }   // 着地失敗
     else if(R.kick==='slump'){ const k=Math.min(1,t/0.5); kicker.squash.rotation.x=1.45*k*k; kicker.root.position.y=-0.8*k*k; K.armL.t=-2.7; K.armLz.t=K.armRz.t=0.35; K.head.t=0.3; if(t>0.6){ K.legL.t=-0.2+Math.sin(t*28)*0.35; K.legR.t=-0.2-Math.sin(t*23)*0.35; } }   // 崩れ落ちて足ピクピク
@@ -1154,8 +1156,8 @@ const NET2={room:null,ready:false,code:null,role:null,go:null,opp:null,oppGoneAt
       if(h){ this.opp=h.peer; this.go=h.presence.pk.go; this.send({go:this.go}); startOnline('B'); } } },
   tick(){ if(!this.room||!this.opp) return;
     const o=this.room.peers().find(p=>p.peer===this.opp), pk=o&&o.presence&&o.presence.pk;
-    if(!o||!pk||pk.go!==this.go){ if(!this.oppGoneAt) this.oppGoneAt=performance.now(); else if(performance.now()-this.oppGoneAt>4000&&S.phase!=='end'){ this.oppGoneAt=0; oppLeft(); } return; }
-    this.oppGoneAt=0; const n=M.turn, sn=this.seen, ph=S.phase;
+    if(!o||!pk||pk.go!==this.go){ if(!this.oppGoneAt) this.oppGoneAt=performance.now(); else { const gone=performance.now()-this.oppGoneAt; if(gone>1500&&S.phase!=='end'&&typeof netWait==='function') netWait(gone); if(gone>(typeof NET_GRACE!=='undefined'?NET_GRACE:4000)&&S.phase!=='end'){ this.oppGoneAt=0; if(typeof netWait==='function') netWait(null); oppLeft(); } } return; }
+    if(this.oppGoneAt&&typeof netWait==='function') netWait(null); this.oppGoneAt=0; const n=M.turn, sn=this.seen, ph=S.phase;
     if(pk.me&&!sn.me){ sn.me=1; try{ onOppProfile(pk.me); }catch(e){} }
     if(pk.stamp&&pk.stamp.k!==sn.stamp){ sn.stamp=pk.stamp.k; megaStamp(pk.stamp.i,true); }
     if(pk.shot&&pk.shot.n===n&&sn.shot!==n&&ph==='oppwait'){ sn.shot=n; const sh={...pk.shot}; const tr=sh.trick||null; delete sh.n; delete sh.trick; beginRun(sh,tr,sh.lenH||0.45); }
@@ -1166,14 +1168,14 @@ const NET2={room:null,ready:false,code:null,role:null,go:null,opp:null,oppGoneAt
 };
 // claude.ai の外（普通のブラウザ）では PeerJS でスマホ同士を直接つなぐ。room と同じ presence/peers の形に揃えて上の処理を共用する
 const PR={peer:null,conn:null,opp:null,mine:null,timer:0,
-  wire(c){ this.conn=c; c.on('data',d=>{ try{ this.opp=typeof d==='string'?JSON.parse(d):d; }catch(e){ console.error('peer data '+e.name); } });
+  wire(c){ this.conn=c; this.rx=Date.now(); c.on('data',d=>{ try{ this.rx=Date.now(); this.opp=typeof d==='string'?JSON.parse(d):d; }catch(e){ console.error('peer data '+e.name); } });
     c.on('open',()=>this.flush()); c.on('close',()=>{ if(this.conn===c){ this.conn=null; this.opp=null; } }); c.on('error',e=>console.error('conn '+(e&&e.type))); },
   flush(){ if(this.conn&&this.conn.open&&this.mine) this.conn.send(JSON.stringify(this.mine)); },
   start(id,onReady,onErr){ this.stop(); const q=new URLSearchParams(location.search).get('peerhost'), o=q?{host:q.split(':')[0],port:+q.split(':')[1]||9000,path:'/',secure:false}:undefined;   // テスト用に自前サーバーへ向ける口
     try{ this.peer=id?new Peer(id,o):new Peer(o); }catch(e){ onErr('init'); return; }
-    this.peer.on('open',()=>onReady()); this.peer.on('error',e=>onErr(e&&e.type)); this.peer.on('connection',c=>{ if(this.conn&&this.conn.open){ c.close(); return; } this.wire(c); });
+    this.peer.on('open',()=>onReady()); this.peer.on('error',e=>{ if(M.mode==='online'&&S.phase!=='end'){ console.error('peer '+(e&&e.type)); return; } onErr(e&&e.type); }); this.peer.on('disconnected',()=>{ try{ if(!this.peer.destroyed) this.peer.reconnect(); }catch(e){} }); this.peer.on('connection',c=>{ if(this.conn&&this.conn.open&&Date.now()-(this.rx||0)<3000){ c.close(); return; } if(this.conn&&this.conn!==c){ const old=this.conn; this.conn=null; try{ old.close(); }catch(e){} } this.wire(c); });
     this.timer=setInterval(()=>this.flush(),1000); },
-  stop(){ clearInterval(this.timer); try{ this.conn&&this.conn.close(); this.peer&&this.peer.destroy(); }catch(e){} this.peer=this.conn=this.opp=null; },
+  stop(){ this.target=null; clearInterval(this.timer); try{ this.conn&&this.conn.close(); this.peer&&this.peer.destroy(); }catch(e){} this.peer=this.conn=this.opp=null; },
   presence(patch){ if(patch.pk===null){ this.mine=null; } else { this.mine=patch.pk; this.flush(); } return Promise.resolve(); },
   peers(){ return this.conn&&this.conn.open&&this.opp?[{peer:'opp',sameTab:false,presence:{pk:this.opp}}]:[]; } };
 (async()=>{ try{ NET2.room=window.claude&&claude.use?await claude.use('room'):null; }catch(e){ NET2.room=null; console.error('room '+(e&&e.name)); }
@@ -1196,10 +1198,10 @@ document.getElementById('lbJoin').addEventListener('click',()=>{ if(!NET2.room){
   NET2.leave(); NET2.code=c; NET2.role='guest'; lbBig.hidden=true; lbMsg.textContent=c+' の部屋を探してる…';
   const go=()=>{ NET2.lobby=true; NET2.send({code:c,role:'guest'}); lbMsg.textContent=c+' の部屋を探してる…（相手が「部屋を作る」を押してるか確認）'; };
   if(!NET2.p2p){ go(); return; }
-  PR.start(null,()=>{ try{ PR.wire(PR.peer.connect('fukashipk-'+c,{reliable:true})); go(); }catch(e){ lbMsg.textContent='つなげなかった（'+e.name+'）'; } },
+  PR.start(null,()=>{ try{ PR.target='fukashipk-'+c; PR.wire(PR.peer.connect(PR.target,{reliable:true})); go(); }catch(e){ lbMsg.textContent='つなげなかった（'+e.name+'）'; } },
     t=>{ lbMsg.textContent=t==='peer-unavailable'?c+' の部屋が見つからない。番号を確かめて、相手が「部屋を作る」を押してるか見てね':'つなげなかった（'+t+'）'; }); });
 function startOnline(me){ PG.add('online'); NET2.lobby=false; NET2.seen={}; NET2.oppMe=null; try{ NET2.send({me:myProfile()}); }catch(e){} lobbyEl.hidden=true; M.me=me; startMode('online'); }
-function oppLeft(){ showTurn('相手が抜けた','通信が切れたか、相手が閉じた',true); say('相手が抜けました'); setTimeout(()=>{ if(M.mode==='online'&&S.phase!=='end') finish(true); },1800); }
+function oppLeft(){ if(typeof netWait==='function') netWait(null); showTurn('相手が抜けた','通信が切れたか、相手が閉じた',true); say('相手が抜けました'); setTimeout(()=>{ if(M.mode==='online'&&S.phase!=='end') finish(true); },1800); }
 
 // ===== リプレイ（別アングル）：蹴った瞬間からの全員の姿勢を毎フレーム記録し、結果のあとに別カメラ・スローで再生する =====
 // 再生中も録画は続く＝共有する動画には「本番の視点」＋「リプレイの別アングル」が両方入る
@@ -1291,7 +1293,7 @@ if(!recSupported()) clipBtn.remove();
 const fpsEl=document.getElementById('fps'); let fpsN=0, fpsT0=performance.now(), lowCnt=0, quality=2;
 function fpsTick(now){ fpsN++; const el=now-fpsT0; if(el<2000) return; const f=fpsN*1000/el; fpsN=0; fpsT0=now;
   fpsEl.textContent=`${f.toFixed(0)} fps`+(quality<2?` ・画質${quality===1?'中':'低'}`:'');
-  if(S.phase==='menu'||document.hidden) return;
+  if(document.hidden) return; if(S.phase==='menu'&&f>=50) return;
   if(f<50){ hiCnt=0; if(++lowCnt>=2&&quality>0){ quality--; lowCnt=0; if(upgraded) qLock=true; applyQuality(); } } else { lowCnt=0; if(f>=58&&quality<2&&!qLock&&++hiCnt>=3){ quality++; hiCnt=0; upgraded=true; applyQuality(); } } }
 let hiCnt=0, qLock=false, upgraded=false;
 function applyQuality(){ if(quality===2){ renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; sun.shadow.mapSize.set(1024,1024); if(sun.shadow.map){ sun.shadow.map.dispose(); sun.shadow.map=null; } scene.traverse(o=>{ if(o.material) o.material.needsUpdate=true; }); }
@@ -2668,6 +2670,135 @@ new MutationObserver(()=>{ const end=document.getElementById('end'); if(end.hidd
 }).observe(document.getElementById('end'),{attributes:true,attributeFilter:['hidden']});
 // 共有文に人数（100人から）
 { const _t=shareText; shareText=function(res){ const s=_t(res); return PLY.n>=100?s+`\n🔥 いま${PLY.n.toLocaleString()}人がフカシ中!! あなたも＋1人しない？`:s; }; }
+
+// ===== 通信対戦を切れにくくする（主「2人でやってたら接続が不安定」2026-09-25）=====
+// ①相手が見えなくなっても4秒で終わりにしない → 20秒まで待つ（上に「つなぎ直してる」を出す）
+// ②切れたら自動でつなぎ直す（入った側が部屋に入り直す／案内サーバーから外れたら戻る）
+// ③画面に戻ってきた時にすぐ自分の状態を送り直す（iPhoneは裏に回ると通信が止まる）
+const NET_GRACE=20000;
+const nwEl=document.createElement('div'); nwEl.id='netwait'; nwEl.hidden=true; document.body.appendChild(nwEl);
+{ const st=document.createElement('style'); st.textContent=`#netwait{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 96px);transform:translateX(-50%);z-index:9;font:800 13px/1.4 var(--ui);color:#111;background:#ffc83d;border:2px solid #111;border-radius:12px;padding:8px 12px;box-shadow:0 4px 0 #111;white-space:nowrap;text-align:center}
+#netwait small{display:block;font-weight:500;font-size:11px}`; document.head.appendChild(st); }
+NET2.leftAt=0;
+function netWait(ms){ if(ms==null||NET2.leftAt||S.phase==='end'){ nwEl.hidden=true; return; } const left=Math.max(0,Math.ceil((NET_GRACE-ms)/1000)); nwEl.hidden=false; nwEl.innerHTML=`📶 相手の電波が弱いみたい…つなぎ直してる<small>あと${left}秒待つ（相手がアプリを切り替えてないか確認してね）</small>`; }
+PR.target=null; PR.retryT=0;
+PR.retry=function(){ if(!this.peer||!this.target||M.mode!=='online'||(this.conn&&this.conn.open)) return; try{ if(this.peer.disconnected) this.peer.reconnect(); this.wire(this.peer.connect(this.target,{reliable:true})); }catch(e){ console.error('retry '+e.name); } };
+setInterval(()=>{ if(NET2.p2p&&M.mode==='online'&&S.phase!=='end'&&PR.peer){ if(PR.peer.disconnected&&!PR.peer.destroyed){ try{ PR.peer.reconnect(); }catch(e){} } if(!(PR.conn&&PR.conn.open)) PR.retry(); } },2500);
+document.addEventListener('visibilitychange',()=>{ if(document.hidden||!NET2.p2p) return; PR.flush(); if(M.mode==='online'&&!(PR.conn&&PR.conn.open)) PR.retry(); });
+{ const _ol=oppLeft; oppLeft=function(){ NET2.leftAt=Date.now(); return _ol(); }; const _so=startOnline; startOnline=function(me){ NET2.leftAt=0; return _so(me); }; }
+if(/dbg/.test(location.search)){ window.__NET2=NET2; window.__PR=PR; }
+
+// ===== 動作を軽くする（主「ちょっと動作が重いかも」2026-09-25）=====
+// 重さの正体はJSではなく描画（画面の細かさ×影）。①スマホは最初から「中」で始める ②前回ちょうど良かった画質を覚えて次から最初からそれで始める（重い時間を毎回4秒以上がまんしなくていい）
+// ③メニュー画面でも重ければ下げる
+{ let saved=null; try{ saved=localStorage.getItem('pk_q'); }catch(e){}
+  const mobile=matchMedia('(pointer:coarse)').matches;
+  const want=saved!=null?Math.max(0,Math.min(2,+saved)):(mobile?1:2);
+  if(want!==quality){ quality=want; applyQuality(); } }
+{ const _a=applyQuality; applyQuality=function(){ _a(); try{ localStorage.setItem('pk_q',String(quality)); }catch(e){} }; }
+
+// ===== キッカーのモーションを増やす（主「キッカーのモーション増やして」2026-09-25）=====
+// ①技 5→10：バク宙（逆回りの輪）／ムーンサルト（逆回りの輪2回）／スコーピオン（N字）／分身キック（横に払ってから上）／ロケットキック（1秒ためてから上）
+// ②助走のクセ5種（スキップ・ムーンウォーク・カニ歩き・ジグザグ・ロボット）③ため2種（コマ回転・ピョンピョン）
+// ④ゴール後3種（膝スライディング・飛行機・筋肉ポーズ）／外した後2種（地団駄・頭を抱える）⑤待ち時間のクセ4種
+// 助走のクセとためはシュートの中身（shot.rs / shot.cs）に入れて送るので、通信対戦の相手の画面でも同じ動きになる
+Object.assign(TRICKS,{backflip:'バク宙キック',moonsault:'ムーンサルトキック',scorpion:'スコーピオンキック',ninja:'分身キック',rocket:'ロケットキック'});
+Object.assign(TIPS,{backflip:'輪を逆回りに1回描いてから上へ',moonsault:'逆回りの輪を2回描いてから上へ',scorpion:'上→下→上とN字に描く',ninja:'横にスッと払ってから上へ',rocket:'押したまま1秒ためてから上へ'});
+Object.assign(TIP_PATH,{
+  backflip:u=>u<0.6?[0.5-0.2*Math.sin(u/0.6*6.283),0.72+0.2*Math.cos(u/0.6*6.283)]:[0.5,0.92-(u-0.6)/0.4*0.85],
+  moonsault:u=>u<0.7?[0.5-0.2*Math.sin(u/0.35*6.283),0.72+0.2*Math.cos(u/0.35*6.283)]:[0.5,0.92-(u-0.7)/0.3*0.85],
+  scorpion:u=>u<0.3?[0.35+u/0.3*0.1,0.92-u/0.3*0.4]:u<0.55?[0.45+(u-0.3)/0.25*0.1,0.52+(u-0.3)/0.25*0.3]:[0.55+(u-0.55)/0.45*0.1,0.82-(u-0.55)/0.45*0.74],
+  ninja:u=>u<0.4?[0.15+u/0.4*0.6,0.92]:[0.75,0.92-(u-0.4)/0.6*0.85],
+  rocket:u=>u<0.7?[0.5,0.92]:[0.5,0.92-(u-0.7)/0.3*0.85] });
+const ss=(a,b,x)=>{ const t=Math.min(1,Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); };
+// 描いた形 → 技（tryShot から呼ぶ）。今までの5つの見分け方はそのまま、逆回り・N字・横払い・長ためを足す
+function trickOf(pts,turn,rev,minY,still,H){ const a=pts[0], W=innerWidth;
+  let vrev=0, vdir=0, vacc=0; for(let i=1;i<pts.length;i++){ const my=pts[i].y-pts[i-1].y, sg=Math.sign(my); if(!sg) continue;   // 縦の折り返し（上→下→上）
+    if(sg===vdir) vacc+=Math.abs(my); else { if(vdir&&vacc>H*0.03) vrev++; vdir=sg; vacc=Math.abs(my); } }
+  let side=0; for(const q of pts){ if(a.y-q.y>H*0.05) break; side=Math.max(side,Math.abs(q.x-a.x)); }                              // 上に行く前に横へどれだけ払ったか
+  const up1=pts.findIndex(q=>a.y-q.y>H*0.03);
+  if(Math.abs(turn)>8.2) return turn<0?'cartwheel':'moonsault';
+  if(Math.abs(turn)>4.0) return turn<0?'flip':'backflip';
+  if(rev>=2) return 'tornado';
+  if(vrev>=2&&up1>=0&&minY<H*0.03) return 'scorpion';
+  if(minY>H*0.045) return 'bicycle';
+  if(side>W*0.2) return 'ninja';
+  if(still>1.0) return 'rocket';
+  if(still>0.3) return 'drop';
+  return null; }
+const TRICKS2={
+  backflip:{ run(u,K,P2){ const r=kicker.root; r.position.y=Math.sin(u*Math.PI)*1.3; kicker.squash.rotation.x=-u*P2; K.legL.t=K.legR.t=u<0.8?-1.7:0; if(u>0.8) K.legR.t=-2.2; K.armLz.t=K.armRz.t=2.4; K.lean.t=-0.2; },
+    land(t,dt,K,down){ kicker.squash.rotation.x=0; K.legL.t=K.legR.t=0.2; K.lean.t=down?-0.5:-0.1; K.armL.t=Math.sin(t*20)*1.4; K.armR.t=-Math.sin(t*20)*1.4; K.armLz.t=K.armRz.t=1.4;   // 後ろによろける
+      if(down&&t<0.9) kicker.root.position.z=KICK_TO.z+Math.min(0.55,(t-0.2)*1.3); } },
+  moonsault:{ run(u,K,P2){ const r=kicker.root; r.position.y=Math.sin(u*Math.PI)*1.7; kicker.squash.rotation.x=-u*P2; r.rotation.y=R.baseRot+u*P2; K.armLz.t=K.armRz.t=u<0.8?1.6:2.6; K.legL.t=u<0.8?-0.3:0.2; K.legR.t=u<0.8?-0.3:-2.2; },
+    land(t,dt,K,down){ kicker.squash.rotation.x=0; kicker.root.rotation.y=R.baseRot; K.armLz.t=K.armRz.t=2.9; K.legL.t=K.legR.t=0; K.lean.t=-0.25; K.head.t=-0.3; if(down) kicker.mouth.visible=true; } },   // 体操選手の決めポーズ
+  scorpion:{ lying:true, run(u,K){ const r=kicker.root; r.position.z=KICK_TO.z+(1-ss(0,0.6,u))*0.7; r.position.y=Math.sin(u*Math.PI)*0.7; kicker.squash.rotation.x=1.45*ss(0,0.5,u);   // 前に飛び込んで
+      K.armL.t=K.armR.t=-1.6; K.armLz.t=K.armRz.t=0.5; K.legL.t=2.2*ss(0.2,0.7,u); K.legR.t=2.8*ss(0.2,0.8,u)+(u>0.8?Math.sin((u-0.8)*25)*0.6:0); K.head.t=-0.6; },                      // かかとが頭の上を越える
+    land(t,dt,K,down,m){ kicker.squash.rotation.x=1.45; kicker.root.position.y=Math.max(-0.82,kicker.root.position.y-0.82*m); K.legL.t=K.legR.t=1.4; K.armL.t=K.armR.t=-2.6; if(down&&t<0.4) kicker.root.position.z=KICK_TO.z-(t*1.2); } },   // 腹から着地してスーッと滑る
+  ninja:{ run(u,K){ const r=kicker.root, w=Math.sin(u*Math.PI*7)*(1-ss(0.6,0.85,u)); r.position.x=KICK_TO.x+w*0.8; r.position.y=Math.abs(Math.sin(u*Math.PI*7))*0.2;   // 左右に高速ステップ
+      K.lean.t=0.75; K.armL.t=K.armR.t=2.0; K.armLz.t=K.armRz.t=0.3; K.legL.t=w*0.9; K.legR.t=-w*0.9;
+      if(u>0.8){ const v=(u-0.8)/0.2; r.position.y=Math.sin(v*Math.PI)*0.6; r.rotation.y=R.baseRot+v*Math.PI*2; K.legR.t=-2.0; K.lean.t=0.1; }
+      if(!R.nj&&u>0.05){ R.nj=1; } if(R.nj===1&&u>0.35){ R.nj=2; burst({at:r.position.clone().setY(0.6),n:26,colors:['#ffffff','#d9e2ea','#b8c4cf'],speed:1.6,up:0.8,grav:0,life:0.5,size:0.12}); tone(520,0.12,'triangle',.12,260); } },   // ドロン
+    land(t,dt,K){ kicker.root.rotation.y=R.baseRot; K.armR.t=-2.7; K.armL.t=0.2; K.armLz.t=0.3; K.armRz.t=0.5; K.legL.t=-0.5; K.legR.t=0.5; K.lean.t=0.2; K.headZ.t=0.3; } },   // 忍者の印
+  rocket:{ run(u,K){ const r=kicker.root, v=ss(0.25,1,u);
+      if(u<0.25){ const c=u/0.25; r.position.y=-0.25*Math.sin(c*Math.PI/2); K.lean.t=0.6; K.armL.t=K.armR.t=1.5; K.legL.t=K.legR.t=0.6; }                    // しゃがんで力をためて
+      else { r.position.y=Math.sin(v*Math.PI)*2.8; r.rotation.y=R.baseRot+v*Math.PI*4; K.armLz.t=K.armRz.t=3.0; K.armL.t=K.armR.t=0; K.lean.t=0; K.legL.t=K.legR.t=u>0.85?0:0.1; if(u>0.85) K.legR.t=-2.0; }   // 真上に発射
+      if(!R.rk&&u>0.25){ R.rk=1; burst({at:r.position.clone().setY(0.1),n:60,colors:['#ffffff','#ffd23f','#ff8a00','#9aa4ad'],speed:2.8,up:1.2,grav:2,life:0.9,size:0.14}); tone(70,0.6,'sawtooth',.18,900); } },
+    land(t,dt,K,down){ kicker.root.rotation.y=R.baseRot; K.legL.t=-1.4; K.legR.t=1.2; K.lean.t=0.65; K.armR.t=0.7; K.armL.t=-0.4; K.armLz.t=0.4; K.armRz.t=0.9;          // ヒーロー着地
+      if(down&&!R.rkL){ R.rkL=1; S.shake=Math.max(S.shake||0,0.35); burst({at:kicker.root.position.clone().setY(0.05),n:50,colors:['#6b8f55','#3e6b3a','#c9d6b8'],speed:3,up:1.6,grav:9.8,life:0.8,size:0.07}); } } } };
+// 助走のクセ（6割くらいは普通に走る）
+function runStyle(rs,k,K){ const r=kicker.root, fade=1-ss(0.55,0.75,k), f=Math.sin(k*Math.PI*6);
+  if(rs==='skip'){ r.position.y+=Math.abs(f)*0.22*fade; K.legL.t=-1.1*Math.max(0,f)*fade; K.legR.t=-1.1*Math.max(0,-f)*fade; K.armLz.t=K.armRz.t=1.1+Math.abs(f)*0.8; kicker.mouth.visible=fade>0.5; }
+  else if(rs==='moon'){ r.rotation.y=R.baseRot+Math.PI*fade; K.lean.t=-0.15*fade; K.legL.t=f*0.35; K.legR.t=-f*0.35; K.head.t=Math.sin(k*40)*0.2*fade; K.armL.t=K.armR.t=0; }        // 後ろ向きでスーッ
+  else if(rs==='crab'){ r.rotation.y=R.baseRot+Math.PI/2*fade; K.armLz.t=K.armRz.t=2.0*fade+0.3; K.armL.t=K.armR.t=(-1.0+Math.sin(k*50)*0.5)*fade; K.leanZ.t=f*0.25*fade; K.lean.t=0.3*fade; }   // カニ歩き（ハサミをチョキチョキ）
+  else if(rs==='zigzag'){ r.position.x+=Math.sin(k*Math.PI*4)*0.55*fade; K.leanZ.t=Math.cos(k*Math.PI*4)*0.5*fade; }
+  else if(rs==='robot'){ const q=Math.sign(f); K.legL.t=q*0.5*fade; K.legR.t=-q*0.5*fade; K.armL.t=q>0?-1.57*fade:0; K.armR.t=q<0?-1.57*fade:0; K.armLz.t=K.armRz.t=0.1; K.lean.t=0; r.position.y=0; K.head.t=q*0.15*fade; } }   // カクカク
+// ゴール後・外した後の新しいリアクション
+const KICK2={
+  slide(t,dt,K){ const r=kicker.root; r.position.z=KICK_TO.z-2.3*(1-Math.exp(-t*2.6)); r.position.y=-0.38*Math.min(1,t*5); K.lean.t=-0.45; K.legL.t=K.legR.t=1.3; K.armLz.t=K.armRz.t=2.6; K.head.t=-0.4; kicker.mouth.visible=true;
+    if(t<0.9&&Math.random()<dt*25) burst({at:new THREE.Vector3(r.position.x,0.05,r.position.z+0.3),n:4,colors:['#6b8f55','#3e6b3a','#c9d6b8'],speed:1.2,up:1,grav:9.8,life:0.5,size:0.05}); },   // 膝スライディング
+  plane(t,dt,K){ const r=kicker.root, w=2.4, sw=Math.sin(t*16)*0.9; r.position.x=KICK_TO.x+Math.sin(t*w)*1.4; r.position.z=KICK_TO.z-1.4+Math.cos(t*w)*1.4; r.rotation.y=R.baseRot+Math.PI/2+t*w;
+    K.armLz.t=K.armRz.t=1.57; K.armL.t=K.armR.t=0; K.leanZ.t=-0.55; K.lean.t=0.25; K.legL.t=sw; K.legR.t=-sw; kicker.mouth.visible=true; },                       // 両手を広げて飛行機
+  flex(t,dt,K){ const p=Math.sin(t*7); K.armLz.t=K.armRz.t=2.3; K.armL.t=K.armR.t=-0.5+p*0.2; K.lean.t=-0.3; K.head.t=-0.35; K.legL.t=0.3; K.legR.t=-0.3; kicker.root.position.y=-0.1+Math.max(0,p)*0.06; kicker.mouth.visible=true; },   // 筋肉ポーズ
+  rage(t,dt,K){ const s=Math.sin(t*15); K.legL.t=-0.8*Math.max(0,s); K.legR.t=-0.8*Math.max(0,-s); kicker.root.position.y=Math.abs(s)*0.06; K.armL.t=K.armR.t=0.5; K.armLz.t=K.armRz.t=0.25; K.headZ.t=Math.sin(t*19)*0.35; K.lean.t=0.25; kicker.mouth.visible=true;
+    if(Math.abs(s)>0.98&&Math.random()<0.3) burst({at:new THREE.Vector3(kicker.root.position.x,0.05,kicker.root.position.z),n:6,colors:['#6b8f55','#c9d6b8'],speed:1,up:0.8,grav:9.8,life:0.4,size:0.05}); },   // 地団駄
+  headhold(t,dt,K){ const k=Math.min(1,t/0.5); K.armLz.t=K.armRz.t=2.7; K.armL.t=K.armR.t=-0.7; kicker.root.position.y=-0.42*k; K.lean.t=0.65*k; K.head.t=0.5; K.legL.t=K.legR.t=-0.9*k; K.headZ.t=t>0.6?Math.sin(t*3)*0.2:0; } };   // 頭を抱えてしゃがむ
+const GOAL_R=['dance','jumpfall','slide','plane','flex'], MISS_R=['slump','rage','headhold'];
+// 待ち時間のクセ（9秒ごとに少しだけ）
+function idle2(now,K){ const c=now%9; if(c<6.2||c>8.6) return; const v=Math.floor(now/9)%4, u=(c-6.2)/2.4, e=Math.sin(u*Math.PI);
+  if(v===0){ K.legR.t=-0.55*Math.max(0,Math.sin(now*14))*e; }                                   // つま先トントン
+  else if(v===1){ K.armLz.t=K.armRz.t=0.25+2.6*e; K.lean.t=0.05-0.25*e; }                        // 伸び
+  else if(v===2){ kicker.root.position.y=Math.abs(Math.sin(now*9))*0.14*e; K.armLz.t=K.armRz.t=0.4+0.4*e; }   // その場でピョンピョン
+  else { K.headZ.t=Math.sin(now*3)*0.35*e; K.head.t=-0.15*e; } }                                  // キョロキョロ
+// 実績（今までの5つの実績はそのまま）
+ACH.push({id:'t_back',name:'後ろにも回れる',desc:'バク宙キックでゴール',tier:'bronze'},{id:'t_moon',name:'採点は10.0',desc:'ムーンサルトキックでゴール',tier:'silver'},
+  {id:'t_scorp',name:'サソリの一撃',desc:'スコーピオンキックでゴール',tier:'silver'},{id:'t_ninja',name:'ドロン',desc:'分身キックでゴール',tier:'bronze'},
+  {id:'t_rock',name:'発射オーライ',desc:'ロケットキックでゴール',tier:'bronze'},{id:'dex10',name:'技図鑑マスター',desc:'10個の技をぜんぶ出す',tier:'gold'},
+  {id:'t_all10',name:'全部入った!!（本当に）',desc:'10種類の技ぜんぶでゴール',tier:'gold'});
+Object.assign(ACH_TEST,{t_back:s=>(s.trick_backflip||0)>=1,t_moon:s=>(s.trick_moonsault||0)>=1,t_scorp:s=>(s.trick_scorpion||0)>=1,t_ninja:s=>(s.trick_ninja||0)>=1,t_rock:s=>(s.trick_rocket||0)>=1,
+  dex10:s=>(s.dex10||0)>=1, t_all10:s=>Object.keys(TRICKS).every(k=>(s['trick_'+k]||0)>=1)});
+{ const _l=learnTrick; learnTrick=function(t){ _l(t); if(learned.length>=Object.keys(TRICKS).length&&!(PG.st.dex10>=1)) PG.add('dex10'); }; }
+if(/dbg/.test(location.search)) Object.assign(window,{__TIP_PATH:TIP_PATH,__trickOf:trickOf,__R:R,__beginRun2:(sh,tr)=>beginRun(sh,tr,0.45)});
+{ const _b=beginRun; beginRun=function(shot,trick,lenH){ R.nj=R.rk=R.rkL=0; if(!shot.rs) shot.rs=Math.random()<0.45?pick(['skip','moon','crab','zigzag','robot']):'n'; R.runStyle=shot.rs; return _b(shot,trick,lenH); }; }
+{ const sm=document.querySelector('#hint small'); if(sm){ sm.style.fontSize='10.5px'; sm.style.lineHeight='1.45'; sm.innerHTML='技：輪 ／ 逆回りの輪 ／ 輪2回 ／ ジグザグ ／ N字<br>下げてから上 ／ 横に払う ／ 一瞬止める ／ 1秒ためる → 全10種類'; } }
+{ const d=ACH.find(a=>a.id==='dex'); if(d) d.desc='技図鑑に5つ登録する'; const t=ACH.find(a=>a.id==='t_all'); if(t) t.desc='宙返り・側転・トルネード・オーバーヘッド・ドロップぜんぶでゴール'; }
+{ const st=document.createElement('style'); st.textContent='#hint{bottom:calc(env(safe-area-inset-bottom,0px) + 86px)!important}'; document.head.appendChild(st); }   // 必殺シュートのボタンと重ならないように上げる
+
+// ===== やり直しで必殺技が何回でも使える抜け道をふさぐ（主「右上の3本線の最初からにすれば何回でもできちゃう」2026-09-25）=====
+// 1試合1回の「必殺シュート（無料分）」と「神の手」は、試合を最後までやった時だけ次の試合で復活する
+// 途中で「最初から」「やめる」・ページの再読み込みをしても、使った分は戻らない（使った瞬間に端末へ記録→試合が終わったら消す）
+// 必殺シュート券（有料の券）はもともと1枚ずつ減るので対象外。通信対戦も対象外
+const CARRY={ get(){ try{ return JSON.parse(localStorage.getItem('pk_carry')||'{}'); }catch(e){ return {}; } }, set(o){ try{ localStorage.setItem('pk_carry',JSON.stringify(o)); }catch(e){} } };
+setInterval(()=>{ if(M.mode==='online'||S.phase==='menu'||S.phase==='end') return; const c=CARRY.get(); let ch=false;
+  if(M.ultraUsed&&!c.ultra&&!(window.tixMode&&tixMode())){ c.ultra=1; ch=true; } if(M.godUsed&&!c.god){ c.god=1; ch=true; } if(ch) CARRY.set(c); },300);
+function carryClear(){ CARRY.set({}); }
+{ const _f=finish; finish=function(left){ if(M.mode!=='online') carryClear(); return _f(left); }; }
+{ const _f=ST.finish; ST.finish=function(){ carryClear(); return _f.apply(this,arguments); }; }
+{ const _s=startMode; startMode=function(mode){ const r=_s(mode); if(M.mode!=='online'){ const c=CARRY.get(), msg=[];
+    if(c.ultra&&!(window.tixMode&&tixMode())){ M.ultraUsed=true; msg.push('必殺シュート'); } if(c.god){ M.godUsed=true; msg.push('神の手'); }
+    if(msg.length) setTimeout(()=>toast(`<span class="ic">🔒</span><span>${msg.join('・')}は使ったまま<small>途中でやめた試合の分は戻らない。この試合を最後までやると次から復活</small></span>`,'',3800),600); }
+  return r; }; }
+if(/dbg/.test(location.search)) window.__finish=finish;
 
 sizeAll(); resetKick(); S.phase='menu'; hint.style.opacity=0; requestAnimationFrame(frame);
 })();

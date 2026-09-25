@@ -2625,7 +2625,8 @@ const GC_CODE='fukashi-pk';   // 主がGoatCounterでこの名前のアカウン
 const GA={ on:!!GC_CODE&&/github\.io$/.test(location.hostname), q:[] };
 function gaEvent(name){ if(!GA.on) return; const send=()=>window.goatcounter.count({path:name,title:name,event:true});
   if(window.goatcounter&&window.goatcounter.count) send(); else GA.q.push(name); }
-if(GA.on){ const s=document.createElement('script'); s.async=true; s.src='https://gc.zgo.at/count.js'; s.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;
+if(GA.on){ window.goatcounter=Object.assign(window.goatcounter||{},{path:()=>location.pathname});   /* ?openExternalBrowser=1 などのURLの後ろを外して、同じページとして数える */
+  const s=document.createElement('script'); s.async=true; s.src='https://gc.zgo.at/count.js'; s.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;
   s.onload=()=>{ const q=GA.q.splice(0); q.forEach(n=>window.goatcounter.count({path:n,title:n,event:true})); }; document.head.appendChild(s);   // 開いた人数（ページビュー・その日のユニーク）は自動で数える
   // 何をどれだけ遊んだか（イベント）
   { const _sm=startMode; startMode=function(mode){ gaEvent('play-'+(M.gkOnly||mode==='gk'?'gk':ST.on?'story':mode)); return _sm(mode); }; }

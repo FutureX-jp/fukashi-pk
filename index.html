@@ -339,7 +339,7 @@ function chibi(body,accent,shoe,skinC=0xd9a67e,hairC=0x1b1b1b,opt={}){
   return {root,squash,hips,neck,head,hair,mouth,eyes,arms,legs,feet,knees,elbows,sp};
 }
 function springs(c,dt,k=160,d=11){
-  for(const key in c.sp){const j=c.sp[key], ss=(key==='sy'||key==='sx'); j.v+=((ss?260:k)*(j.t-j.a)-(ss?8:d)*j.v)*dt; j.a+=j.v*dt;}
+  { const n=Math.max(1,Math.ceil(dt*120)), h=dt/n; for(let i=0;i<n;i++) for(const key in c.sp){const j=c.sp[key], ss=(key==='sy'||key==='sx'); j.v+=((ss?260:k)*(j.t-j.a)-(ss?8:d)*j.v)*h; j.a+=j.v*h;} }
   const s=c.sp;
   c.arms[0].rotation.x=s.armL.a; c.arms[1].rotation.x=s.armR.a; c.arms[0].rotation.z=-s.armLz.a; c.arms[1].rotation.z=s.armRz.a;
   c.legs[0].rotation.x=s.legL.a; c.legs[1].rotation.x=s.legR.a;
@@ -1212,7 +1212,7 @@ const RP={objs:null,frames:[],on:false,play_i:0,cam:null,endAt:0,
     for(let i=0;i<O.length;i++){ const o=O[i], k=i*10; f[k]=o.position.x; f[k+1]=o.position.y; f[k+2]=o.position.z; f[k+3]=o.quaternion.x; f[k+4]=o.quaternion.y; f[k+5]=o.quaternion.z; f[k+6]=o.quaternion.w; f[k+7]=o.scale.x; f[k+8]=o.scale.y; f[k+9]=o.scale.z; vis[i]=o.visible?1:0; }
     const X=[], ex=m=>{ if(!m||!m.parent) return; this.xAll.add(m); X.push({o:m,f:[m.position.x,m.position.y,m.position.z,m.quaternion.x,m.quaternion.y,m.quaternion.z,m.quaternion.w,m.scale.x,m.scale.y,m.scale.z]}); };
     for(const o of BSP.objs) ex(o.m); ex(gkHand); gkGhosts.forEach(ex);
-    this.frames.push({f,vis,x:X,flight:S.phase==='flight'||S.phase==='result'});
+    this.frames.push({f,vis,x:X,flight:S.phase==='flight'||S.phase==='result',tr:S.phase==='run'&&S.charged&&!!R.trick});
     if(this.frames.length>900) this.frames.shift();
     if(S.resolved&&!this.endAt) this.endAt=this.frames.length+45;             // 決まってから約0.75秒ぶん撮って止める
     if(this.endAt&&this.frames.length>=this.endAt) this.on=false; },
@@ -1221,7 +1221,7 @@ const RP={objs:null,frames:[],on:false,play_i:0,cam:null,endAt:0,
     if(this.xAll) for(const o of this.xAll) if(!seen.has(o)) o.visible=false; },
   can(){ return this.frames.length>40; },
   begin(){ // 放つ0.8秒前（約48フレーム前）から最後まで
-    let i0=this.frames.findIndex(x=>x.flight); if(i0<0) i0=0; this.play_i=Math.max(0,i0-48); this.on=false;
+    let i0=this.frames.findIndex(x=>x.flight); if(i0<0) i0=0; const it=this.frames.findIndex(x=>x.tr); this.play_i=Math.max(0,it>=0?Math.min(it-8,i0-48):i0-48); this.on=false;
     const tr=!!R.trick, sv=S.resolved==='save';
     this.cam=sv?'goal':tr?'side':pick(['side','low','goal']); { const f=(location.search.match(/rpcam=(\w+)/)||[])[1]; if(f) this.cam=f; }   // 検証用
     S.phase='replay'; camSmooth=null; if(window.NETS_) NETS_.reset(true); document.getElementById('replay').hidden=false; hideBanner(); trickEl().className=''; document.getElementById('gktrick').className=''; hideTurn(); trailOn=false; },
@@ -2862,6 +2862,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__FF:FF,__ST:ST,__stDone:s
 // 裏メニュー（賄賂）はストーリーの負けの時だけ。前にストーリーで負けた時の表示が、自主練・対戦の結果画面に残っていた（主「自主練に裏メニューいらない」）
 new MutationObserver(()=>{ if(!document.getElementById('end').hidden&&!ST.on) bribeRow.hidden=true; }).observe(document.getElementById('end'),{attributes:true,attributeFilter:['hidden']});
 { const _s=startMode; startMode=function(mode){ bribeRow.hidden=true; return _s(mode); }; }
+if(/dbg/.test(location.search)) window.__RP=RP;
 
 // ===== きせかえの見た目を良くする（主「ボールのプレビューないよ／横スクロールやめたい／カードにその物の絵が欲しい」2026-09-25）=====
 // ①ボールのタブ：主人公を隠して、選んだボールを画面の上の方に大きく出してクルクル回す

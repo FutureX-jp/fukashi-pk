@@ -1304,7 +1304,7 @@ function applyQuality(){ if(quality===2){ renderer.setPixelRatio(Math.min(device
 // ===== ループ =====
 let last=performance.now();
 function frame(now){
-  let realDt=Math.min(0.05,(now-last)/1000); last=now; if(PAUSE.on) realDt=0; hbTick(); stampTick(); TITLE.update(realDt);
+  let realDt=Math.min(0.05,(now-last)/1000); last=now; if(PAUSE.on) realDt=0; if(FF.on) realDt*=FF.X; hbTick(); stampTick(); TITLE.update(realDt);
   // スロー：ボールがゴール面の手前1mに来た瞬間だけ0.3倍
 
   let ts=S.timeScale;
@@ -2783,6 +2783,8 @@ if(/dbg/.test(location.search)) Object.assign(window,{__TIP_PATH:TIP_PATH,__tric
 { const sm=document.querySelector('#hint small'); if(sm){ sm.style.fontSize='10.5px'; sm.style.lineHeight='1.45'; sm.innerHTML='技：輪 ／ 逆回りの輪 ／ 輪2回 ／ ジグザグ ／ N字<br>下げてから上 ／ 横に払う ／ 一瞬止める ／ 1秒ためる → 全10種類'; } }
 { const d=ACH.find(a=>a.id==='dex'); if(d) d.desc='技図鑑に5つ登録する'; const t=ACH.find(a=>a.id==='t_all'); if(t) t.desc='宙返り・側転・トルネード・オーバーヘッド・ドロップぜんぶでゴール'; }
 { const st=document.createElement('style'); st.textContent='#hint{bottom:calc(env(safe-area-inset-bottom,0px) + 86px)!important}'; document.head.appendChild(st); }   // 必殺シュートのボタンと重ならないように上げる
+NM.b.push('ポリポリランド','ポリポリランド');   // 主「ポリポリランドって追加して必殺技に」2026-09-25（魚肉ソーセージと同じく2つ入れて出やすく）
+if(/dbg/.test(location.search)) window.__genName=genName;
 
 // ===== やり直しで必殺技が何回でも使える抜け道をふさぐ（主「右上の3本線の最初からにすれば何回でもできちゃう」2026-09-25）=====
 // 1試合1回の「必殺シュート（無料分）」と「神の手」は、試合を最後までやった時だけ次の試合で復活する
@@ -2799,6 +2801,135 @@ function carryClear(){ CARRY.set({}); }
     if(msg.length) setTimeout(()=>toast(`<span class="ic">🔒</span><span>${msg.join('・')}は使ったまま<small>途中でやめた試合の分は戻らない。この試合を最後までやると次から復活</small></span>`,'',3800),600); }
   return r; }; }
 if(/dbg/.test(location.search)) window.__finish=finish;
+
+// ===== 飛ばしたい人向け（主＋ゆいの要望 2026-09-25）=====
+// ①ストーリー：章の目標を達成したら、左上の章カードに「達成」スタンプ＋「残りを飛ばして次へ」ボタン
+// ②演出の早送り：蹴ってから次の番までの演出（助走・ため・技・スロー・リプレイ）を ⏩ で早送り。リプレイは丸ごと飛ばす
+//   三本線メニューに「演出の早送り：毎回」を置く（毎回自動で早送り＋リプレイ無し）。通信対戦では使えない（相手とずれるから）
+// ③会話（ストーリーの掛け合い）にも「スキップ ▶▶」
+const FF={on:false, X:4, auto:false};
+try{ FF.auto=localStorage.getItem('pk_ff')==='1'; }catch(e){}
+{ const st=document.createElement('style'); st.textContent=`
+#ffBtn{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);z-index:6;font:800 15px/1 var(--ui);color:#111;background:#f3f6ef;border:2px solid #111;border-radius:999px;padding:11px 16px;box-shadow:0 4px 0 #111;cursor:pointer}
+#ffBtn.on{background:#d8ff3c}
+#sthud{overflow:visible}
+#sthud .stamp{position:absolute;right:-34px;top:-14px;width:54px;height:54px;border-radius:50%;border:3px solid #ff3b30;color:#ff3b30;background:rgba(255,255,255,.92);display:grid;place-items:center;font:900 15px/1 var(--ui);transform:rotate(-14deg);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+#sthud .stamp.pop{animation:stampIn .45s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes stampIn{0%{transform:rotate(-14deg) scale(3);opacity:0}100%{transform:rotate(-14deg) scale(1);opacity:1}}
+#stDone{position:fixed;left:10px;top:calc(env(safe-area-inset-top,0px) + 118px);z-index:6;font:800 14px/1.2 var(--ui);color:#111;background:linear-gradient(180deg,#f2ff9a,#d8ff3c);border:2px solid #111;border-radius:14px;padding:10px 14px;box-shadow:0 4px 0 #111;cursor:pointer;animation:megaIn .45s cubic-bezier(.2,1.6,.4,1) both}
+#stDone small{display:block;font-weight:500;font-size:11px;opacity:.75}
+#sttalk .tskip{position:absolute;right:10px;top:10px;font:800 12px/1 var(--ui);color:#f3f6ef;background:rgba(0,0,0,.4);border:1px solid rgba(243,246,239,.45);border-radius:999px;padding:7px 11px;cursor:pointer}
+#sttalk .box{position:relative}`; document.head.appendChild(st); }
+// ---- ②早送り ----
+const ffBtn=document.createElement('button'); ffBtn.id='ffBtn'; ffBtn.type='button'; ffBtn.hidden=true; ffBtn.textContent='⏩ 飛ばす'; document.body.appendChild(ffBtn);
+const FF_PH=['run','charge','flight','result','replay'];
+function ffAllowed(){ if(M.mode==='online'||PAUSE.on) return false; if(!FF_PH.includes(S.phase)) return false;
+  if((S.phase==='run'||S.phase==='charge'||S.phase==='flight')&&humanKeeps()) return false;   // 自分が守る番はキーパーの反応を邪魔しない（決まってからは飛ばせる）
+  return true; }
+function ffStart(){ if(!ffAllowed()) return; FF.on=true; if(S.phase==='replay'){ RP.end(); } }
+ffBtn.addEventListener('click',e=>{ e.stopPropagation(); ffStart(); });
+setInterval(()=>{ const ok=ffAllowed(); if(!FF_PH.includes(S.phase)||M.mode==='online') FF.on=false;
+  if(ok&&FF.auto&&!FF.on&&S.phase!=='replay'&&!((S.phase==='flight')&&humanKeeps())) FF.on=true;
+  ffBtn.hidden=!ok||FF.on; },100);
+// 時間を早める：frame の最初の realDt を FF.X 倍（物理は240Hzの細かい刻みで回るので結果は同じ）
+// リプレイ：早送り中・毎回モードでは流さない
+{ const _c=RP.can.bind(RP); RP.can=function(){ return (FF.on||FF.auto)&&M.mode!=='online'?false:_c(); }; }
+// 三本線メニューに「演出の早送り」
+{ const vb=hbPanel.querySelector('[data-a="voice"]'); const b=document.createElement('button'); b.type='button'; b.className=vb.className; b.setAttribute('style',vb.getAttribute('style')); b.dataset.a='ff';
+  const lab=()=>b.textContent='演出の早送り：'+(FF.auto?'毎回（リプレイ無し）':'ボタンを押した時だけ'); lab(); vb.after(b);
+  b.addEventListener('click',e=>{ e.stopPropagation(); FF.auto=!FF.auto; try{ localStorage.setItem('pk_ff',FF.auto?'1':'0'); }catch(e){} lab(); }); }
+// ---- ①ストーリーの達成スタンプ＋次へ ----
+const stDone=document.createElement('button'); stDone.id='stDone'; stDone.type='button'; stDone.hidden=true; stDone.innerHTML='達成！残りを飛ばして次へ ▶<small>このまま最後まで蹴ってもOK</small>'; document.body.appendChild(stDone);
+let stStampSeen=-1;
+{ const _h=ST.hud.bind(ST); ST.hud=function(){ _h(); if(!this.on) return; const g=this.ch.goal, have=g.type==='tricks'?this.tricks:this.goals;
+    if(have>=g.n){ const s=document.createElement('div'); s.className='stamp'; s.textContent='達成'; if(stStampSeen!==this.idx){ s.classList.add('pop'); stStampSeen=this.idx; tone(880,0.25,'triangle',.14,1320); } stHud.appendChild(s); }
+    else if(stStampSeen===this.idx) stStampSeen=-1; }; }
+{ const _p=ST.play; ST.play=function(){ stStampSeen=-1; return _p.apply(this,arguments); }; }
+setInterval(()=>{ let show=false; if(ST.on&&ST.ch&&S.phase==='aim'&&!PAUSE.on&&stTalk.hidden&&document.getElementById('end').hidden){ const g=ST.ch.goal, have=g.type==='tricks'?ST.tricks:ST.goals; show=have>=g.n&&S.kick<KICKS; }
+  stDone.hidden=!show; },150);
+stDone.addEventListener('click',e=>{ e.stopPropagation(); if(stDone.hidden) return; stDone.hidden=true; clearGKSp(); hideBanner(); hideTurn(); document.getElementById('replay').hidden=true; recStop(); finish(); });
+// ---- ③会話のスキップ ----
+{ const box=stTalk.querySelector('.box'); const b=document.createElement('button'); b.type='button'; b.className='tskip'; b.textContent='スキップ ▶▶'; box.appendChild(b);
+  b.addEventListener('click',e=>{ e.stopPropagation(); const f=stTalk.onclick; let n=0; while(!stTalk.hidden&&stTalk.onclick===f&&f&&n++<200) f(); }); }
+if(/dbg/.test(location.search)) Object.assign(window,{__FF:FF,__ST:ST,__stDone:stDone});
+
+// ===== きせかえの見た目を良くする（主「ボールのプレビューないよ／横スクロールやめたい／カードにその物の絵が欲しい」2026-09-25）=====
+// ①ボールのタブ：主人公を隠して、選んだボールを画面の上の方に大きく出してクルクル回す
+// ②一覧は縦スクロールだけ（3列を画面幅にきっちり収める）
+// ③カードの絵：ボール＝その色のサッカーボール、服＝その配色のユニフォーム（背番号入り）、軌跡＝その色の線、ゴール演出＝その色の文字。2Dで描いて使い回す
+{ const st=document.createElement('style'); st.textContent=`
+#sksel .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;overflow-x:hidden!important;overscroll-behavior-x:none;touch-action:pan-y;width:100%;box-sizing:border-box}
+#sksel .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#sksel .card{min-width:0!important;max-width:100%!important;box-sizing:border-box}
+#sksel .card .in{min-width:0;overflow:hidden}
+#sksel .card .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;max-width:100%}
+#sksel .card .th{display:block;width:74%;max-width:92px;aspect-ratio:1/1;object-fit:contain;margin:0 auto;filter:drop-shadow(0 3px 0 rgba(0,0,0,.35))}`; document.head.appendChild(st); }
+const THUMB={};
+const hexS=n=>typeof n==='number'?'#'+n.toString(16).padStart(6,'0'):(n||'#ffffff');
+function shade(hex,k){ const c=new THREE.Color(hex); const h={}; c.getHSL(h); c.setHSL(h.h,h.s,Math.max(0,Math.min(1,h.l*k))); return '#'+c.getHexString(); }
+function thumbBall(id){ const cv=document.createElement('canvas'); cv.width=cv.height=128; const g=cv.getContext('2d'), c=64, r=54;
+  const s=SKINS[id], gacha=s&&s.gacha, col=gacha?hexS(s.ball):'#ffffff', t=gacha?s.ballType:0;
+  g.fillStyle='rgba(0,0,0,.25)'; g.beginPath(); g.ellipse(c,c+r+4,r*0.7,6,0,0,7); g.fill();
+  g.save(); g.beginPath(); g.arc(c,c,r,0,7); g.clip();
+  if(t===3){ const cg=g.createConicGradient?g.createConicGradient(0,c,c):null; if(cg){ ['#ff3b30','#ff9500','#ffd60a','#34c759','#0a84ff','#bf5af2','#ff3b30'].forEach((q,i)=>cg.addColorStop(i/6,q)); g.fillStyle=cg; } else g.fillStyle='#ff9500'; g.fillRect(0,0,128,128); }
+  else { const rg=g.createRadialGradient(c-18,c-20,6,c,c,r*1.1); rg.addColorStop(0,t===2?'#fff6c8':'#ffffff'); rg.addColorStop(0.35,col); rg.addColorStop(1,shade(col,t===2?0.45:0.62)); g.fillStyle=rg; g.fillRect(0,0,128,128); }
+  const pent=(x,y,rr,rot)=>{ g.beginPath(); for(let i=0;i<5;i++){ const a=rot+i*Math.PI*2/5; g.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr); } g.closePath(); g.fill(); };
+  g.fillStyle=t===2?'#5a4300':'#16181c'; pent(c,c,17,-Math.PI/2);
+  for(let i=0;i<5;i++){ const a=-Math.PI/2+Math.PI/5+i*Math.PI*2/5; pent(c+Math.cos(a)*52,c+Math.sin(a)*52,16,a+Math.PI/5); }
+  g.strokeStyle='rgba(0,0,0,.35)'; g.lineWidth=2; for(let i=0;i<5;i++){ const a=-Math.PI/2+i*Math.PI*2/5; g.beginPath(); g.moveTo(c+Math.cos(a)*17,c+Math.sin(a)*17); g.lineTo(c+Math.cos(a)*38,c+Math.sin(a)*38); g.stroke(); }
+  g.fillStyle='rgba(255,255,255,.55)'; g.beginPath(); g.ellipse(c-20,c-24,15,9,-0.6,0,7); g.fill();
+  g.restore(); g.strokeStyle='rgba(0,0,0,.55)'; g.lineWidth=3; g.beginPath(); g.arc(c,c,r,0,7); g.stroke();
+  return cv.toDataURL(); }
+function thumbShirt(id){ const cv=document.createElement('canvas'); cv.width=cv.height=128; const g=cv.getContext('2d'), s=SKINS[id]||SKINS.kicker;
+  const sh=hexS(s.shirt), tr=hexS(s.trim), so=hexS(s.shorts), lng=s.sleeve==='long';
+  g.lineJoin='round'; g.lineWidth=3; g.strokeStyle='#111';
+  // 短パン
+  g.fillStyle=so; g.beginPath(); g.moveTo(38,92); g.lineTo(90,92); g.lineTo(94,122); g.lineTo(68,122); g.lineTo(64,108); g.lineTo(60,122); g.lineTo(34,122); g.closePath(); g.fill(); g.stroke();
+  // シャツ
+  const body=()=>{ g.beginPath(); g.moveTo(44,14); g.lineTo(56,10); g.quadraticCurveTo(64,20,72,10); g.lineTo(84,14);
+    if(lng){ g.lineTo(114,40); g.lineTo(120,86); g.lineTo(104,88); g.lineTo(98,50); } else { g.lineTo(112,34); g.lineTo(102,52); g.lineTo(92,46); }
+    g.lineTo(92,98); g.lineTo(36,98); if(lng){ g.lineTo(36,50); g.lineTo(30,50); g.lineTo(24,88); g.lineTo(8,86); g.lineTo(14,40); } else { g.lineTo(36,46); g.lineTo(26,52); g.lineTo(16,34); } g.closePath(); };
+  let fill=sh; if(s.metal){ const lg=g.createLinearGradient(20,10,108,98); lg.addColorStop(0,'#fff3b0'); lg.addColorStop(0.45,sh); lg.addColorStop(1,shade(sh,0.55)); fill=lg; }
+  body(); g.fillStyle=fill; g.fill();
+  g.save(); body(); g.clip(); g.fillStyle=tr;
+  if(s.pattern===1||s.pattern===3){ g.globalAlpha=0.9; g.fillRect(36,56,56,6); }
+  if(s.pattern===2){ g.globalAlpha=0.35; for(let x=40;x<92;x+=12) g.fillRect(x,10,5,90); }
+  g.globalAlpha=1; g.fillRect(36,92,56,6); g.restore();
+  body(); g.stroke();
+  g.fillStyle=tr; g.beginPath(); g.moveTo(56,10); g.quadraticCurveTo(64,26,72,10); g.lineTo(68,10); g.quadraticCurveTo(64,18,60,10); g.closePath(); g.fill();   // 襟
+  const num=String(s.num??'').slice(0,3); if(num){ g.font='900 '+(num.length>2?20:26)+'px system-ui,sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.lineWidth=4; g.strokeStyle=shade(sh,0.35); g.strokeText(num,64,72); g.fillStyle=tr; g.fillText(num,64,72); }
+  return cv.toDataURL(); }
+function thumbTrail(o){ const cv=document.createElement('canvas'); cv.width=cv.height=128; const g=cv.getContext('2d'), t=o?o.trail:{c1:'#d8ff3c',c2:'#d8ff3c'};
+  const lg=g.createLinearGradient(10,110,110,20); lg.addColorStop(0,t.c1+'00'); lg.addColorStop(0.35,t.c1); lg.addColorStop(1,t.c2||t.c1);
+  g.strokeStyle=lg; g.lineCap='round'; g.lineWidth=14; g.beginPath(); g.moveTo(12,112); g.quadraticCurveTo(30,30,104,26); g.stroke();
+  g.lineWidth=5; g.strokeStyle='rgba(255,255,255,.7)'; g.beginPath(); g.moveTo(40,78); g.quadraticCurveTo(52,40,100,30); g.stroke();
+  g.fillStyle='#fff'; g.beginPath(); g.arc(106,26,13,0,7); g.fill(); g.strokeStyle='#111'; g.lineWidth=2.5; g.stroke(); g.fillStyle='#16181c'; g.beginPath(); g.arc(106,26,5,0,7); g.fill();
+  if(o){ g.font='30px system-ui,"Apple Color Emoji","Segoe UI Emoji"'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(o.icon||'✨',38,98); }
+  return cv.toDataURL(); }
+function thumbGoal(o){ const cv=document.createElement('canvas'); cv.width=cv.height=128; const g=cv.getContext('2d'), gd=o?o.goal:{text:'GOAL!!',col:'#ffd23f'};
+  g.strokeStyle='#e8eef2'; g.lineWidth=5; g.strokeRect(12,40,104,62); g.strokeStyle='rgba(232,238,242,.35)'; g.lineWidth=1.5; for(let x=22;x<116;x+=10){ g.beginPath(); g.moveTo(x,40); g.lineTo(x,102); g.stroke(); } for(let y=50;y<102;y+=10){ g.beginPath(); g.moveTo(12,y); g.lineTo(116,y); g.stroke(); }
+  const txt=(gd.text||'GOAL').replace(/[!！]+$/,'').slice(0,6); let fs=34; g.font='900 '+fs+'px system-ui,sans-serif'; while(g.measureText(txt).width>112&&fs>12){ fs-=2; g.font='900 '+fs+'px system-ui,sans-serif'; }
+  g.textAlign='center'; g.textBaseline='middle'; g.lineWidth=5; g.strokeStyle='#111'; g.strokeText(txt,64,70); g.fillStyle=gd.col||'#ffd23f'; g.fillText(txt,64,70);
+  g.font='22px system-ui,"Apple Color Emoji","Segoe UI Emoji"'; const e=o?(SHAPE[gd.rain]||o.icon||'🎊'):'🎊'; [[20,22],[62,16],[104,24]].forEach(([x,y])=>g.fillText(e,x,y));
+  return cv.toDataURL(); }
+function thumbFor(id){ const T=SKV.tab, key=T+':'+id; if(key in THUMB) return THUMB[key]; let u=null;
+  try{ if(T==='ball') u=thumbBall(id);
+    else if(T==='uniform') u=thumbShirt(id);
+    else if(T==='fx'){ const k=id.slice(2), o=GI[k]||null; u=id[0]==='t'?thumbTrail(o):thumbGoal(o); } }catch(e){ console.error('thumb '+e.name); u=null; }
+  return THUMB[key]=u; }
+{ const _k=kCards; kCards=function(ids){ const html=_k(ids); if(SKV.tab==='title') return html;
+    const box=document.createElement('div'); box.innerHTML=html;
+    box.querySelectorAll('.card').forEach(c=>{ if(c.classList.contains('lk')) return; const key=SKV.tab+':'+c.dataset.id; const u=thumbFor(c.dataset.id); if(!u) return; const ic=c.querySelector('.ic'); if(ic) ic.outerHTML=`<img class="th" alt="" src="${u}">`; });
+    return box.innerHTML; }; }
+// ①ボールのプレビュー
+const KB={saved:null};
+(function kbLoop(){ requestAnimationFrame(kbLoop); const on=SKV.on&&SKV.tab==='ball'&&!skSel.hidden;
+  if(on){ if(!KB.saved) KB.saved={p:ball.position.clone(),s:ball.scale.x,v:ball.visible}; kicker.root.visible=false;
+    const d=new THREE.Vector3(0,0.42,0.5).unproject(camera).sub(camera.position).normalize();
+    ball.position.copy(camera.position).addScaledVector(d,1.35); ball.scale.setScalar(1.9); ball.visible=true;
+    const t=performance.now()/1000; ball.rotation.set(0.35+Math.sin(t*0.7)*0.25,t*1.4,0); }
+  else if(KB.saved){ ball.position.copy(KB.saved.p); ball.scale.setScalar(KB.saved.s); ball.visible=KB.saved.v; KB.saved=null; if(SKV.on) kicker.root.visible=true; } })();
+if(/dbg/.test(location.search)) window.__SKV=SKV;
 
 sizeAll(); resetKick(); S.phase='menu'; hint.style.opacity=0; requestAnimationFrame(frame);
 })();

@@ -1821,7 +1821,7 @@ function bspRun(kind,tx,ty,ok){ const K=(BSP_DEF[kind]&&BSP_DEF[kind].base)||kin
   shoutEl.textContent=BSP_DEF[kind].shout; shoutEl.classList.add('on'); setTimeout(()=>shoutEl.classList.remove('on'),1600);
   const rect=(w,h,z)=>{ G2.block={x0:cx-w/2,x1:cx+w/2,y0:0,y1:h,z}; };
   if(K==='b0'){ G2.sx=2.3; rect(3.4,2.3,0.35); flash('#ffffff',0.5,200); burst({at:new THREE.Vector3(G2.cx,1.3,0.5),n:120,colors:['#ffffff','#111111'],speed:5,grav:0,life:0.8,size:0.08,add:true}); }
-  if(K==='b1'){ const m=new THREE.Mesh(new THREE.BoxGeometry(ok?4.4:2.2,2.6,0.3),new THREE.MeshStandardMaterial({map:brickTex(),roughness:0.9})); m.material.map.wrapS=m.material.map.wrapT=THREE.RepeatWrapping; m.material.map.repeat.set(3,2);
+  if(K==='b1'){ const m=new THREE.Mesh(new THREE.BoxGeometry(ok?4.4:2.2,2.6,0.3),new THREE.MeshStandardMaterial({map:(()=>{ const tx=brickTex().clone(); tx.wrapS=tx.wrapT=THREE.RepeatWrapping; tx.repeat.set(3,2); tx.needsUpdate=true; return tx; })(),roughness:0.9}));   /* 共有テクスチャの繰り返し設定が効かず白く抜けていた → 複製して繰り返し */
     m.position.set(cx,-1.4,0.9); m.castShadow=true; scene.add(m); BSP.objs.push({m,up:1.3}); rect(ok?4.4:2.2,2.6,0.9); burst({at:new THREE.Vector3(cx,0.05,0.9),n:90,colors:['#8b5a3c','#c9b8a0'],speed:4,up:2,grav:9.8,life:1,size:0.07}); tone(55,0.8,'sawtooth',.2,30); }
   if(K==='b2'){ G2.scale=1.8; rect(2.8,2.5,0.35); burst({at:new THREE.Vector3(G2.cx,1.2,0.4),n:200,colors:['#e63939','#ffd700','#ffffff'],speed:7,grav:1,life:1,size:0.1,add:true}); ring(new THREE.Vector3(G2.cx,1.1,0.4),0xffd700,10,0.5); }
   if(K==='b3'){ const skinM=new THREE.MeshStandardMaterial({color:0xc68a62,roughness:0.6}), gl=new THREE.MeshStandardMaterial({color:0xf3f6ef,roughness:0.6});
@@ -2455,7 +2455,7 @@ skinList=kOpen;
 // メニューに称号
 { const _r=TITLE.refresh; TITLE.refresh=function(){ _r.call(this); let el=this.menu.querySelector('.tmyttl'); if(!el){ el=document.createElement('div'); el.className='tmyttl'; this.menu.querySelector('.tcopy').after(el); } const t=myTitle(); el.textContent=t?'🏷️ '+NAME.hero+'「'+t+'」':''; el.hidden=!t; }; }
 { const st=document.createElement('style'); st.textContent=`#menu .tmyttl{align-self:center;margin-top:8px;font:800 12px/1 var(--ui);color:#111;background:#ffc83d;border:2px solid #111;border-radius:8px;padding:5px 10px;transform:rotate(-2deg)}`; document.head.appendChild(st); }
-if(/dbg/.test(location.search)) Object.assign(window,{__kOpen:kOpen,__GI:GI,__emoBurst:emoBurst,__onOpp:p=>onOppProfile(p),__applyRoles:()=>applyRoles(),__RIGS2:()=>RIGS,__trickTTS:(a,b,c)=>trickTTS(a,b,c),__NAMES:()=>NAMES});
+if(/dbg/.test(location.search)) Object.assign(window,{__kOpen:kOpen,__GI:GI,__emoBurst:emoBurst,__onOpp:p=>onOppProfile(p),__applyRoles:()=>applyRoles(),__RIGS2:()=>RIGS,__trickTTS:(a,b,c)=>trickTTS(a,b,c),__NAMES:()=>NAMES,__beginRun:(a,b,c)=>beginRun(a,b,c),__TRICKS:()=>Object.keys(TRICKS)});
 
 // ===== 技名の読み上げ（主の彼女「最初の爆裂みたいなところしか言わない」）=====
 // 録音のゆいの声（「出たぁぁ」「爆裂」など）が終わったら、技名そのものを合成音声で叫ぶ。技名は毎回ランダムなので録音できない

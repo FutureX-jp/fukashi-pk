@@ -2618,6 +2618,56 @@ shEl.addEventListener('click',e=>{ if(e.target===shEl) shEl.hidden=true; });
   document.querySelector('#end .box').appendChild(b); }
 if(/dbg/.test(location.search)) window.__shareOpen=shareOpen;
 
+// ===== 遊んだ人数の記録（主「何人遊んだか記録する方法はない？」2026-09-25）=====
+// GoatCounter（クッキー無し・個人情報を持たない・適度な公開利用なら無料）。公開版（github.io）の時だけ読み込む。claude.ai・CrazyGamesでは動かない
+// GC_CODE に主が作ったGoatCounterのサイト名（例 fukashi-pk → https://fukashi-pk.goatcounter.com）を入れると記録が始まる。空なら何もしない
+const GC_CODE='fukashi-pk';   // 主がGoatCounterでこの名前のアカウントを作る（2026-09-25 途中まで入力済み）
+const GA={ on:!!GC_CODE&&/github\.io$/.test(location.hostname), q:[] };
+function gaEvent(name){ if(!GA.on) return; const send=()=>window.goatcounter.count({path:name,title:name,event:true});
+  if(window.goatcounter&&window.goatcounter.count) send(); else GA.q.push(name); }
+if(GA.on){ const s=document.createElement('script'); s.async=true; s.src='https://gc.zgo.at/count.js'; s.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;
+  s.onload=()=>{ const q=GA.q.splice(0); q.forEach(n=>window.goatcounter.count({path:n,title:n,event:true})); }; document.head.appendChild(s);   // 開いた人数（ページビュー・その日のユニーク）は自動で数える
+  // 何をどれだけ遊んだか（イベント）
+  { const _sm=startMode; startMode=function(mode){ gaEvent('play-'+(M.gkOnly||mode==='gk'?'gk':ST.on?'story':mode)); return _sm(mode); }; }
+  { const _f=ST.finish.bind(ST); ST.finish=function(){ const i=ST.idx, before=ST.won(i); const r=_f(); if(!before&&ST.won(i)) gaEvent('story-clear-'+(i+1)); return r; }; }
+  { const _r=shReward; shReward=function(){ gaEvent('share'); return _r(); }; }
+  { const _p=gcPull; gcPull=function(n){ gaEvent('gacha-'+n); return _p(n); }; }
+  { const _o=startOnline; startOnline=function(me){ gaEvent('online-match'); return _o(me); }; }
+  addEventListener('appinstalled',()=>gaEvent('install'));
+  if(INST.env==='standalone') gaEvent('open-from-home');
+  if(INST.env==='line') gaEvent('open-in-line'); }
+
+// ===== 「○○人がフカしました!!」（主「どこかに何人プレイしたか表示したい」→ChatGPT案）=====
+// 数はGoatCounterの訪問数（4時間ごとに更新）。実人数と完全一致ではないので「フカしました」と言う
+// 0〜49：出さない／50〜99：「フカシ人口、増加中!!」／100〜：数字／1000・1万：派手に。節目を越えたのを初めて見た時だけお祝い
+const PLY={n:null};
+function plyLine(n){ if(n==null||n<50) return ''; if(n<100) return '🔥 フカシ人口、増加中!! 🔥'; const s=n.toLocaleString();
+  if(n>=10000) return `🌈 ${s}人突破!! もうフカシでは済まない 🌈`; if(n>=1000) return `💥 ${s}人突破!! フカシ人口、増殖中!! 💥`; return `🔥 いままで ${s}人がフカしました!! 🔥`; }
+{ const st=document.createElement('style'); st.textContent=`#menu .tply{align-self:center;margin-top:10px;font:800 13px/1.2 var(--ui);color:#fff;background:rgba(17,17,17,.78);border:2px solid #ffc83d;border-radius:999px;padding:7px 12px;text-shadow:0 1px 0 #000;white-space:nowrap;animation:tplyIn .5s cubic-bezier(.2,1.6,.4,1) both}
+#menu .tply.big{border-color:#DFFF24;color:#DFFF24;animation:tplyIn .5s cubic-bezier(.2,1.6,.4,1) both,tplyShake 2.8s ease-in-out 1s infinite}
+@keyframes tplyIn{0%{transform:scale(1.6);opacity:0}100%{transform:scale(1);opacity:1}} @keyframes tplyShake{0%,88%,100%{transform:rotate(0)}91%{transform:rotate(-3deg) scale(1.06)}94%{transform:rotate(3deg) scale(1.06)}}
+#end .plyme{font:800 14px/1.3 var(--ui);color:#ffc83d;margin-top:6px}`; document.head.appendChild(st); }
+function plyShow(){ const t=plyLine(PLY.n), m=document.getElementById('menu'); let el=m.querySelector('.tply');
+  if(!t){ if(el) el.remove(); return; } if(!el){ el=document.createElement('div'); el.className='tply'; const after=m.querySelector('.tmyttl')||m.querySelector('.tcopy'); after.after(el); }
+  el.textContent=t; el.classList.toggle('big',PLY.n>=1000);
+  // 節目（100・1000・1万）を初めて見た時だけお祝い
+  let seen=0; try{ seen=+localStorage.getItem('pk_ply_seen')||0; }catch(e){} const mile=[10000,1000,100].find(v=>PLY.n>=v&&seen<v);
+  if(mile){ try{ localStorage.setItem('pk_ply_seen',mile); }catch(e){} setTimeout(()=>{ toast(`<span class="ic">🎉</span><span>${mile.toLocaleString()}人突破!!<small>${mile>=10000?'日本、フカシ化（ネタです）':mile>=1000?'フカシ人口、'+mile.toLocaleString()+'人':mile+'人もフカした'}</small></span>`,'',4200,'#ffc83d'); confetti(); tone(880,0.4,'triangle',.16,1760); },900); } }
+function plySet(n){ if(!(n>=0)) return; PLY.n=n; try{ localStorage.setItem('pk_ply',JSON.stringify({n,t:Date.now()})); }catch(e){} plyShow(); }
+// 読み込み：前回の数をすぐ出す → 公開版ならGoatCounterから最新を取る（4時間キャッシュ）
+try{ const c=JSON.parse(localStorage.getItem('pk_ply')||'null'); if(c&&c.n>=0) PLY.n=c.n; }catch(e){}
+{ const m=location.search.match(/players=(\d+)/); if(m&&/dbg/.test(location.search)) PLY.n=+m[1]; }   // 検証用
+plyShow();
+if(GA.on){ fetch(`https://${GC_CODE}.goatcounter.com/counter/${encodeURIComponent(location.pathname)}.json`).then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.count) plySet(parseInt(String(j.count).replace(/[^\d]/g,''),10)); }).catch(()=>{}); }
+{ const _r=TITLE.refresh; TITLE.refresh=function(){ _r.call(this); plyShow(); }; }
+// 初めての試合の結果画面：「あなたで○○人目のフカシ!!」（1回だけ）
+new MutationObserver(()=>{ const end=document.getElementById('end'); if(end.hidden) return; let done=false; try{ done=!!localStorage.getItem('pk_ply_me'); }catch(e){}
+  const old=end.querySelector('.plyme'); if(old) old.remove(); if(done||!(PLY.n>=100)) return; try{ localStorage.setItem('pk_ply_me','1'); }catch(e){}
+  const d=document.createElement('div'); d.className='plyme'; d.textContent=`🎉 あなたで ${(PLY.n+1).toLocaleString()}人目のフカシ!!`; end.querySelector('#best').after(d);
+}).observe(document.getElementById('end'),{attributes:true,attributeFilter:['hidden']});
+// 共有文に人数（100人から）
+{ const _t=shareText; shareText=function(res){ const s=_t(res); return PLY.n>=100?s+`\n🔥 いま${PLY.n.toLocaleString()}人がフカシ中!! あなたも＋1人しない？`:s; }; }
+
 sizeAll(); resetKick(); S.phase='menu'; hint.style.opacity=0; requestAnimationFrame(frame);
 })();
 </script>

@@ -1,7 +1,8 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>フカシPK</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="apple-touch-icon" href="icon2-180.png">
+<link rel="icon" type="image/png" href="icon2-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="フカシPK">
@@ -939,7 +940,7 @@ function launch(){
   const th=THREE.MathUtils.clamp(Math.atan2(gx,Math.max(0.2,gy-0.3))*0.95,-1.45,1.45);
   const cx=gx-Math.sin(th)*1.0, cy=Math.max(0.3,gy-Math.cos(th)*1.0);
   R.wrong=Math.abs(tx)>1&&Math.sign(gx)!==Math.sign(tx); Object.assign(GK,{from:{cx:0,cy:0.95,th:0},to:{cx,cy,th},t0:0,dur:0.46+Math.random()*0.12,react:Math.random()*0.14,active:true});
-  R.gkSp=R.ultra?null:ST.on?(S.kick>0&&Math.random()<ST.ch.spRate?(Math.random()<0.5?'b'+ST.idx:pick(ST.spKeys())):null):((M.mode==='solo'?S.kick:M.turn)>0&&Math.random()<0.25)?pick(Object.keys(GKSP)):null; R.gkSpShown=false; R.gkSpOK=Math.random()<(R.gkSp&&R.gkSp[0]==='b'?0.85:0.7); if(R.gkSp){ GK.react=99; R.wrong=false; }
+  R.gkSp=R.ultra?null:ST.on?(S.kick>0&&Math.random()<ST.ch.spRate?(Math.random()<0.5?'b'+ST.idx:pick(ST.spKeys())):null):((M.mode==='solo'?S.kick:M.turn)>0&&Math.random()<0.25)?pick(Object.keys(GKSP).filter(k=>!/^bev/.test(k))):null; R.gkSpShown=false; R.gkSpOK=Math.random()<(R.gkSp&&R.gkSp[0]==='b'?0.85:0.7); if(R.gkSp){ GK.react=99; R.wrong=false; }
   S.t=0; S.phase='flight';
 }
 
@@ -1398,10 +1399,20 @@ document.querySelectorAll('#menu .mbtn[data-mode]').forEach(b=>b.addEventListene
 const PART1=6;
 const P2={"part":"第2部・フカシPK 外伝","intro":[["ゆい","あの激闘から半年"],["主人公","平和になったと思った"],["ゆい","PK大会から招待状です"],["主人公","また蹴るのかよ！"],["ゆい","第2部、開幕です！"]],"chapters":[{"title":"第7章・横幅の暴力","keeper":"横幅ダイゴ","desc":"横に広がることだけを極めた男","sp":["巨大化"],"goal":{"type":"goals","n":2},"pre":[["横幅ダイゴ","俺は横に強い！"],["主人公","縦には弱そうだな"],["ゆい","そこを突く作戦です！"],["横幅ダイゴ","俺の横幅を見ろ！"],["主人公","じゃあ上から蹴る！"]],"win":[["横幅ダイゴ","横幅が足りないだと！"],["ゆい","物理的な敗北です！"]],"lose":[["ゆい","横幅に負けました！"]],"look":{"shirt":"#FF4B4B","trim":"#FFFFFF","shorts":"#222222","sock":"#FFFFFF","boot":"#111111","pattern":"stripe","sleeve":"short","width":1.8,"arm":1.4,"leg":1,"hair":"坊主","hairColor":"#222222","female":false,"chest":"横","props":{"headband":true,"halo":false,"extraArms":0,"aura":null,"mic":false,"wall":false,"crown":null},"一言":"胴体だけ異様に横へ広く鉢巻で横幅を誇る"},"bsp":{"base":"b0","name":"横綱・超横幅包囲網！！","shout":"横にィィィ広がれ！！","trophy":"横幅がすごい"},"bribe":[["主人公","これで通してくれ"],["横幅ダイゴ","金より横幅だ！"],["ゆい","では帰りましょう"],["横幅ダイゴ","待て、金も好きだ！"]],"movie":{"react":"wall","stamp":"横幅で解決","talk":[["横幅ダイゴ","ケースが小さい"],["主人公","そこなのかよ"],["ゆい","横幅基準なんですね"],["横幅ダイゴ","もっと大きいのを頼む"]]},"ach":{"name":"横幅を突破","desc":"横幅ダイゴに勝つ"}},{"title":"第8章・レンガの逆襲","keeper":"レンガ田ブロック","desc":"何でもレンガにしたがる男","sp":["分身","巨大化"],"goal":{"type":"tricks","n":2},"pre":[["レンガ田ブロック","全てレンガにする！"],["主人公","ボールまでか？"],["ゆい","それは困ります！"],["レンガ田ブロック","ゴールもレンガだ！"],["主人公","じゃあ壁ごと抜く！"]],"win":[["レンガ田ブロック","レンガが負けただと！"],["ゆい","建築史が動きました！"]],"lose":[["ゆい","レンガには勝てません！"]],"look":{"shirt":"#A44A2A","trim":"#5C2415","shorts":"#7B3520","sock":"#A44A2A","boot":"#332016","pattern":"brick","sleeve":"long","width":1.3,"arm":1.2,"leg":1.2,"hair":"短髪","hairColor":"#4A2418","female":false,"chest":"壁","props":{"headband":false,"halo":false,"extraArms":0,"aura":null,"mic":false,"wall":true,"crown":null},"一言":"服も壁も全部レンガで本人まで建材に見える"},"bsp":{"base":"b1","name":"地上最強・レンガ城壁！！","shout":"積めェェェ！！","trophy":"建築確認済み"},"bribe":[["主人公","これで通してくれ"],["レンガ田ブロック","レンガ代なら受け取ろう"],["ゆい","何のレンガ代ですか？"],["レンガ田ブロック","俺の人生のだ"]],"movie":{"react":"wall","stamp":"建築費として受領","talk":[["レンガ田ブロック","ケースを壁にする"],["主人公","なんで壁にした"],["ゆい","金庫になりましたね"],["レンガ田ブロック","これで安心だ"]]},"ach":{"name":"壁を越えた男","desc":"レンガ田ブロックに勝つ"}},{"title":"第9章・筋肉再び","keeper":"筋肉ゴリ夫","desc":"筋肉を増やす速度が速すぎる男","sp":["巨大化","ゴッドハンド"],"goal":{"type":"goals","n":3},"pre":[["筋肉ゴリ夫","筋肉は前作を超えた！"],["主人公","誰と競ってるんだ"],["ゆい","ムキムキ守選手です！"],["筋肉ゴリ夫","あいつはまだ細い！"],["主人公","基準がおかしい！"]],"win":[["筋肉ゴリ夫","まだ増やせるのに！"],["ゆい","これ以上は危険です！"]],"lose":[["ゆい","筋肉が勝ちました！"]],"look":{"shirt":"#174E9C","trim":"#FFD700","shorts":"#174E9C","sock":"#FFFFFF","boot":"#111111","pattern":"gold","sleeve":"none","width":1.7,"arm":1.8,"leg":1.6,"hair":"坊主","hairColor":"#111111","female":false,"chest":"筋","props":{"headband":true,"halo":false,"extraArms":0,"aura":null,"mic":false,"wall":false,"crown":null},"一言":"筋肉がユニフォームを押し広げて鉢巻まで筋肉仕様"},"bsp":{"base":"b2","name":"超絶・筋肉膨張壁！！","shout":"もっとデカくゥゥ！！","trophy":"筋肉の限界突破"},"bribe":[["主人公","これで通してください"],["筋肉ゴリ夫","金では筋肉は動かん"],["ゆい","受け取ってますよ"],["筋肉ゴリ夫","筋肉は動かん、腕は動く"]],"movie":{"react":"arms","stamp":"筋肉経費","talk":[["筋肉ゴリ夫","これは何に使える？"],["主人公","好きに使え"],["ゆい","プロテイン禁止ですよ"],["筋肉ゴリ夫","では肉を買う"]]},"ach":{"name":"筋肉二世撃破","desc":"筋肉ゴリ夫に勝つ"}},{"title":"第10章・腕の反乱","keeper":"手数多十八郎","desc":"腕が多すぎて名前まで増えた男","sp":["分身","ゴッドハンド"],"goal":{"type":"tricks","n":3},"pre":[["手数多十八郎","腕は十八本ある！"],["主人公","前より増えてない？"],["ゆい","前作より二本多いです！"],["手数多十八郎","努力の成果だ！"],["主人公","努力の方向がおかしい！"]],"win":[["手数多十八郎","腕が足りなかった！"],["ゆい","十八本でも無理でした！"]],"lose":[["ゆい","十八本は反則級です！"]],"look":{"shirt":"#6A35B8","trim":"#F7D64A","shorts":"#3D206D","sock":"#F7D64A","boot":"#171717","pattern":"zigzag","sleeve":"short","width":1.2,"arm":1,"leg":1.1,"hair":"ロング","hairColor":"#171717","female":false,"chest":"18","props":{"headband":false,"halo":false,"extraArms":18,"aura":null,"mic":false,"wall":false,"crown":null},"一言":"普通の体なのに腕だけ十八本、胸に堂々と18"},"bsp":{"base":"b3","name":"十八手・全方位封殺！！","shout":"全部の手で来いィィ！！","trophy":"腕が多すぎる"},"bribe":[["主人公","これで通してくれ"],["手数多十八郎","手数料は十八倍だ"],["ゆい","金まで腕基準ですか"],["手数多十八郎","当然だろう"]],"movie":{"react":"arms","stamp":"十八手数料","talk":[["手数多十八郎","どの手で受け取る？"],["主人公","一番近い手でいい"],["ゆい","全部伸びました！"],["手数多十八郎","全部もらう"]]},"ach":{"name":"十八本を突破","desc":"手数多十八郎に勝つ"}},{"title":"第11章・神の副業","keeper":"ゴッド田エンジェル","desc":"神なのに副業でPKをしている男","sp":["巨大化","ゴッドハンド"],"goal":{"type":"goals","n":4},"pre":[["ゴッド田エンジェル","私は神である"],["主人公","また神かよ！"],["ゆい","神が増えました！"],["ゴッド田エンジェル","本業は神だ"],["主人公","PKは副業なのかよ！"]],"win":[["ゴッド田エンジェル","副業で負けた……"],["ゆい","神にも確定申告です！"]],"lose":[["ゆい","神の副業が強すぎます！"]],"look":{"shirt":"#FFFFFF","trim":"#FFD700","shorts":"#FFFFFF","sock":"#FFFFFF","boot":"#FFD700","pattern":"gold","sleeve":"long","width":1.5,"arm":1.5,"leg":1.4,"hair":"ロング","hairColor":"#F2D7B6","female":false,"chest":"神","props":{"headband":false,"halo":true,"extraArms":0,"aura":"#FFD700","mic":false,"wall":false,"crown":"gold"},"一言":"神々しいのに胸に『副業』と書きたい顔をしている"},"bsp":{"base":"b4","name":"天罰・ゴッド巨大掌！！","shout":"神の手を見よォォ！！","trophy":"神にも副業あり"},"bribe":[["主人公","神様、これでお願いします"],["ゴッド田エンジェル","神に金を渡すか"],["ゆい","副業収入ですね"],["ゴッド田エンジェル","……経費にする"]],"movie":{"react":"grab","stamp":"神の経費","talk":[["ゴッド田エンジェル","これは寄付か？"],["主人公","そういうことにして"],["ゆい","脱税はダメですよ"],["ゴッド田エンジェル","では領収書をくれ"]]},"ach":{"name":"神の副業を阻止","desc":"ゴッド田エンジェルに勝つ"}},{"title":"第12章・正体不明","keeper":"？？？","desc":"全ての技を知る謎の守護者","sp":["巨大化","分身","ゴッドハンド"],"goal":{"type":"tricks","n":4},"pre":[["？？？","お前の蹴りは知っている"],["主人公","俺を知ってるのか？"],["ゆい","妙に声が似てますね"],["？？？","最後まで蹴ってみろ"],["主人公","正体を暴いてやる！"]],"win":[["？？？","やはり俺には勝てたか"],["ゆい","その声……まさか！"]],"lose":[["ゆい","まだ正体は謎のままです！"]],"look":{"shirt":"#202020","trim":"#E63939","shorts":"#202020","sock":"#E63939","boot":"#111111","pattern":"plain","sleeve":"short","width":1.2,"arm":1.1,"leg":1.1,"hair":"短髪","hairColor":"#171717","female":false,"chest":"？","props":{"headband":false,"halo":false,"extraArms":0,"aura":"#E63939","mic":false,"wall":false,"crown":null},"一言":"黒い覆面風の雰囲気で主人公と同じ背格好"},"bsp":{"base":"b5","name":"終極・完全無欠ゴール封鎖！！","shout":"ここは絶対に通さん！！","trophy":"最後の謎を蹴破れ"},"bribe":[["主人公","これで通してくれ"],["？？？","その手は知っている"],["ゆい","知ってるって何を？"],["？？？","……俺なら払う"]],"movie":{"react":"close","stamp":"謎の取引成立","talk":[["？？？","この金額では足りない"],["主人公","お前、賄賂に詳しいな"],["ゆい","妙ですね……"],["？？？","……気のせいだ"]]},"ach":{"name":"正体を蹴り抜け","desc":"？？？に勝つ"}}],"ending":{"talk":[["主人公","お前は一体誰なんだ"],["？？？","俺はお前だ"],["主人公","……は？"],["ゆい","やっぱりそうでしたか"],["主人公","どういうことだよ！"],["ゆい","半年前のあなたです"],["主人公","俺が俺とPKしてたのか！"],["？？？","フカシPKは終わらない"]],"roll":[["第2部主演","主人公"],["実況総監督","ゆい"],["横幅監修","横幅ダイゴ"],["レンガ設計","レンガ田ブロック"],["筋肉増量","筋肉ゴリ夫"],["腕数管理","手数多十八郎"],["神業担当","ゴッド田エンジェル"],["謎の守護者","主人公"],["必殺技命名","フカシ"],["謎演出監修","フカシ"],["ボール担当","主人公"],["ゴール担当","フカシ"],["賄賂会計","ゆい"],["全部実況","ゆい"]],"last":"昨日の自分を、今日の自分が蹴り飛ばした。","after":"次は誰と蹴ります？"},"platNew":"フカシの頂点・完全版"};
 
+// ===== ストーリー第3部（第13〜18章）＝ ChatGPT案 2026-09-26「第3部・最終稿は蹴り飛ばせ」（主「ストーリー性はしっかりある？新キャラ欲しい、使い回しではなく」）=====
+// 黒幕ゼンブ・カイセイが試合の記録を「校正」して、失敗や偶然を消そうとする話。6人のキーパーは黒幕の校正装置で、第18章は黒幕本人
+// ボスは全員新しい見た目（頭・顔・手・背中・周りに浮かぶ物）と、全員ちがう必殺セーブ（斜め・巻き戻し・重力反転・無音・白紙・結果改稿）。
+// 必殺セーブにはそれぞれ「攻略法」があり、そこを狙えば破れる（p3fx.js）。今までの巨大化・分身・ゴッドハンドは使わない（sp:[]）
+const PART2=12;
+const P3={"part": "第3部・最終稿は蹴り飛ばせ", "story": "第2部の決着後、主人公はPKから離れようとする。しかし過去の試合記録が少しずつ書き換えられ、ゆいの実況や主人公の存在まで消え始める。黒幕ゼンブ・カイセイは、物語から「無駄」「失敗」「偶然」を消し、完璧なPKだけを残そうとしていた。主人公は自分の過去すら編集されたと知り、再びPKへ戻る。6人のキーパーは黒幕の校正装置だった。最後はゆいの実況が改変前の記録を呼び戻し、主人公が自分で結末を決める。勝利後もPKは続き、フカシPKは終わらない。", "villain": {"name": "ゼンブ・カイセイ", "look": "黒紫の服に赤ペンを持つ最終編集者。頭に赤ペン帽、片側だけ黒い眼鏡、背中に校正記号板、周囲に赤い句読点が浮かぶ", "motive": "PKから失敗や偶然を消し、誰もが納得する完璧な結末だけを残したい"}, "intro": [["ゆい", "大会が終わったはずだった"], ["主人公", "俺もそう思ってた"], ["ゆい", "でも記録が変なの"], ["主人公", "何が変なんだ？"], ["ゆい", "私の実況が消えてる"], ["主人公", "俺の試合まで？"], ["黒幕", "不要な部分を修正しました"], ["主人公", "誰だ、お前"], ["ゆい", "そしてまたPKが始まる"]], "chapters": [{"title": "第13章・傾いたピッチ", "keeper": "ナナメ・ゲート", "desc": "世界を斜めにして守るキーパー", "sp": [], "goal": {"type": "tricks", "n": 3}, "pre": [["ゆい", "また変な大会ね"], ["主人公", "今度は何を盛るんだ"], ["ナナメ・ゲート", "角度を盛ります"], ["主人公", "角度を盛るなよ"], ["ゆい", "もう競技じゃない"], ["ナナメ・ゲート", "正解は傾いている"], ["主人公", "じゃあ真っ直ぐ蹴る"], ["ゆい", "そこだけは普通なのね"], ["黒幕", "第一校正を開始する"]], "win": [["ナナメ・ゲート", "真っ直ぐは強いな"], ["主人公", "普通も武器だろ"], ["ゆい", "珍しく正論ね"], ["黒幕", "次は時間を直します"], ["主人公", "時間まで触るのか"]], "lose": [["ナナメ・ゲート", "角度が足りない"], ["ゆい", "まず床を見て"]], "look": {"shirt": "#F4C542", "trim": "#173F5F", "shorts": "#173F5F", "sock": "#173F5F", "boot": "#111111", "pattern": "zigzag", "sleeve": "long", "width": 1, "arm": 1, "leg": 1, "hair": "短髪", "hairColor": "#173F5F", "skinTint": "#cfe6de", "female": false, "chest": "斜", "props": {"headband": false, "halo": false, "extraArms": 0, "aura": "#F4C542", "mic": false, "wall": false, "crown": null, "emo": {"head": ["📐", 0.34, -0.6], "face": "monocle", "hand": ["🧭", 0.26], "back": ["📏", 0.5, "spin"], "float": ["∠", "#173F5F"]}}, "一言": "測量士みたいな斜め装束"}, "bsp": {"base": "tilt", "name": "天地斜め45度セーブ！！", "shout": "角度は正義だ！！", "trophy": "斜めでも真っ直ぐ", "counter": "画面中央の水平線へ真っ直ぐ狙うと決まる"}, "bribe": [["主人公", "その定規ほしい"], ["ナナメ・ゲート", "勝てばどうぞ"], ["ゆい", "景品の基準が変"], ["主人公", "蹴る理由が増えた"]], "movie": {"react": "wall", "stamp": "傾斜注意", "talk": [["主人公", "地面まで斜めかよ"], ["ゆい", "酔う前に蹴って"], ["ナナメ・ゲート", "測定完了です"], ["主人公", "測定より得点だ"]]}, "ach": {"name": "水平線突破", "desc": "傾いたピッチを制した"}, "icon": "📐"}, {"title": "第14章・秒読みキーパー", "keeper": "クロノ・パッチ", "desc": "失敗を三秒だけ修正するキーパー", "sp": [], "goal": {"type": "goals", "n": 2}, "pre": [["ゆい", "今度は時計か"], ["主人公", "PKに時効はある？"], ["クロノ・パッチ", "失敗は消せます"], ["主人公", "それ反則じゃない？"], ["ゆい", "大会規則を読んで"], ["クロノ・パッチ", "読んだら戻します"], ["主人公", "読む時間も無駄"], ["ゆい", "そこは同意する"], ["黒幕", "記録を修正します"]], "win": [["クロノ・パッチ", "修正できない"], ["主人公", "失敗も記録だ"], ["ゆい", "珍しくいいこと言う"], ["黒幕", "歴史を直します"], ["ゆい", "それは止めないとね"]], "lose": [["クロノ・パッチ", "もう一度どうぞ"], ["主人公", "今のは無しだろ"]], "look": {"shirt": "#5B5FEF", "trim": "#F2F2F2", "shorts": "#20264D", "sock": "#F2F2F2", "boot": "#111111", "pattern": "stripe", "sleeve": "long", "width": 1, "arm": 1, "leg": 1, "hair": "短髪", "hairColor": "#20264D", "skinTint": "#f4efe6", "female": false, "chest": "秒", "props": {"headband": false, "halo": false, "extraArms": 0, "aura": "#5B5FEF", "mic": false, "wall": false, "crown": null, "emo": {"head": ["⏳", 0.28, 0], "face": "glasses", "hand": ["⏱️", 0.26], "back": ["🕰️", 0.55, "tick"], "float": ["num", "#5B5FEF"]}}, "一言": "時計だらけの時間管理人"}, "bsp": {"base": "rewind", "name": "三秒前へ完全修正！！", "shout": "やり直しです！！", "trophy": "三秒を超えた男", "counter": "最初の一撃を中央へ当てると巻き戻せない"}, "bribe": [["主人公", "砂時計くれない？"], ["クロノ・パッチ", "三秒しかありません"], ["ゆい", "短すぎるでしょ"], ["主人公", "逆に欲しくなった"]], "movie": {"react": "arms", "stamp": "再試行", "talk": [["主人公", "今の時間返せ"], ["ゆい", "返されたじゃん"], ["クロノ・パッチ", "記録は残ります"], ["黒幕", "記録は私が選びます"]]}, "ach": {"name": "時間外ゴール", "desc": "巻き戻しを突破した"}, "icon": "⏳"}, {"title": "第15章・逆さまの重力", "keeper": "リバース・ベル", "desc": "重力の向きを鐘で切り替えるキーパー", "sp": [], "goal": {"type": "tricks", "n": 4}, "pre": [["ゆい", "今度は上下ね"], ["主人公", "ゴールは下にあるぞ"], ["リバース・ベル", "下とは限りません"], ["主人公", "面倒な世界だ"], ["ゆい", "世界観まで変えないで"], ["リバース・ベル", "鐘が決めます"], ["主人公", "じゃあ鐘より速く蹴る"], ["ゆい", "理屈が雑すぎる"], ["黒幕", "物理法則を更新します"]], "win": [["リバース・ベル", "重力に勝つとは"], ["主人公", "重力も盛れるんだな"], ["ゆい", "感心する所じゃない"], ["黒幕", "次は空間を削ります"], ["主人公", "削るな、増やせ"]], "lose": [["リバース・ベル", "上へどうぞ"], ["ゆい", "それはゴールじゃない"]], "look": {"shirt": "#D94F70", "trim": "#3B1F47", "shorts": "#3B1F47", "sock": "#3B1F47", "boot": "#111111", "pattern": "plain", "sleeve": "long", "width": 1, "arm": 1, "leg": 1, "hair": "短髪", "hairColor": "#3B1F47", "skinTint": "#e6d8f0", "female": false, "chest": "逆", "props": {"headband": false, "halo": false, "extraArms": 0, "aura": "#D94F70", "mic": false, "wall": false, "crown": null, "emo": {"head": ["🔔", 0.32, 3.14159], "face": "stargoggle", "hand": ["🔨", 0.3], "back": ["🪨", 0.42, "bob"], "float": ["🪨", "bob"]}}, "一言": "上下が逆の鐘鳴らし"}, "bsp": {"base": "grav", "name": "上下反転グラビティ！！", "shout": "重力、交代！！", "trophy": "落ちても上へ", "counter": "中央より少し上を狙うと反転後も枠内に残る"}, "bribe": [["主人公", "その鐘いくら？"], ["リバース・ベル", "値札も浮きます"], ["ゆい", "商売になってない"], ["主人公", "じゃあ無料で"]], "movie": {"react": "grab", "stamp": "上下反転", "talk": [["主人公", "足場どこだよ"], ["ゆい", "足元じゃない？"], ["リバース・ベル", "今日は天井です"], ["主人公", "明日は床にして"]]}, "ach": {"name": "反重力ストライカー", "desc": "重力反転を突破した"}, "icon": "🔔"}, {"title": "第16章・音を消す守護者", "keeper": "サイレンス・ミュート", "desc": "音の振動でシュートをずらすキーパー", "sp": [], "goal": {"type": "goals", "n": 3}, "pre": [["ゆい", "静かなボスね"], ["主人公", "逆に怖いな"], ["サイレンス・ミュート", "音を消します"], ["主人公", "じゃあ実況も？"], ["ゆい", "それは困る"], ["サイレンス・ミュート", "実況だけ残します"], ["ゆい", "私だけ特別？"], ["主人公", "俺も特別にして"], ["黒幕", "声も記録します"]], "win": [["サイレンス・ミュート", "音が読まれた"], ["主人公", "耳より目で蹴った"], ["ゆい", "実況の勝利でもある"], ["黒幕", "次は名前を消す"], ["ゆい", "それは私が許さない"]], "lose": [["サイレンス・ミュート", "静かに失敗です"], ["ゆい", "静かすぎる"]], "look": {"shirt": "#23A6A6", "trim": "#103C3C", "shorts": "#103C3C", "sock": "#103C3C", "boot": "#111111", "pattern": "brick", "sleeve": "long", "width": 1, "arm": 1, "leg": 1, "hair": "短髪", "hairColor": "#103C3C", "skinTint": "#dfe4e4", "female": false, "chest": "静", "props": {"headband": false, "halo": false, "extraArms": 0, "aura": "#23A6A6", "mic": false, "wall": false, "crown": null, "emo": {"head": "earmuff", "face": "mask", "hand": "fork", "back": ["🔊", 0.46, "pulse"], "float": ["🎵", "🎶"]}}, "一言": "無音と爆音を操る防音係"}, "bsp": {"base": "silence", "name": "無音反響ゼロ距離！！", "shout": "音を消します！！", "trophy": "無音を聞き分けろ", "counter": "低い角（左右どちらでも）を狙うと音の波を避ける"}, "bribe": [["主人公", "その音叉ほしい"], ["サイレンス・ミュート", "音が出ません"], ["ゆい", "音叉の意味がない"], ["主人公", "逆に欲しい"]], "movie": {"react": "close", "stamp": "無音警報", "talk": [["主人公", "静かなのにうるさい"], ["ゆい", "矛盾してるね"], ["サイレンス・ミュート", "矛盾も消します"], ["黒幕", "矛盾こそ消すべきです"]]}, "ach": {"name": "無音突破", "desc": "音の波を読んで突破した"}, "icon": "🔇"}, {"title": "第17章・白紙のキーパー", "keeper": "ブランク・ノート", "desc": "触れた場所のルールを白紙にするキーパー", "sp": [], "goal": {"type": "tricks", "n": 2}, "pre": [["ゆい", "最後の手前ね"], ["主人公", "嫌な予感しかしない"], ["ブランク・ノート", "余計なものを消します"], ["主人公", "俺まで消すなよ"], ["ゆい", "それは困る"], ["ブランク・ノート", "主人公は残します"], ["主人公", "じゃあ蹴れるな"], ["ゆい", "そこだけ図太い"], ["黒幕", "最終稿を用意します"]], "win": [["ブランク・ノート", "残ったのは一行"], ["主人公", "それで十分だ"], ["ゆい", "次で全部決まる"], ["黒幕", "最終稿は私です"], ["主人公", "なら書き直す"]], "lose": [["ブランク・ノート", "白紙です"], ["ゆい", "何も残らないね"]], "look": {"shirt": "#F7F7F7", "trim": "#222222", "shorts": "#222222", "sock": "#222222", "boot": "#111111", "pattern": "gold", "sleeve": "long", "width": 1, "arm": 1, "leg": 1, "hair": "短髪", "hairColor": "#e9e9e9", "skinTint": "#fbfaf5", "female": false, "chest": "白", "props": {"headband": false, "halo": false, "extraArms": 0, "aura": null, "mic": false, "wall": false, "crown": null, "emo": {"head": ["🗒️", 0.3, 0.2], "face": "paperglasses", "hand": "eraser", "back": "frame", "float": ["📄", "flutter"]}}, "一言": "白紙だらけの編集者"}, "bsp": {"base": "blank", "name": "全部白紙リセット！！", "shout": "そこ、白紙です！！", "trophy": "白紙に一筆", "counter": "白紙四角の外、ゴールの端を狙うと判定が残る"}, "bribe": [["主人公", "その消しゴム便利？"], ["ブランク・ノート", "何でも消せます"], ["ゆい", "それは危険すぎる"], ["主人公", "宿題に使える"]], "movie": {"react": "wall", "stamp": "白紙化", "talk": [["主人公", "俺の台詞まで消すな"], ["ゆい", "まだ残ってるよ"], ["ブランク・ノート", "最終稿へ進みます"], ["黒幕", "次が最後の校正です"]]}, "ach": {"name": "白紙を蹴り抜け", "desc": "消去判定を突破した"}, "icon": "📄"}, {"title": "第18章・最終校正", "keeper": "ゼンブ・カイセイ", "desc": "PKの結果そのものを書き換える黒幕", "sp": [], "goal": {"type": "goals", "n": 4}, "pre": [["ゆい", "ここが最後ね"], ["主人公", "黒幕がキーパーか"], ["ゼンブ・カイセイ", "物語を正します"], ["主人公", "勝手に直すなよ"], ["ゆい", "実況は私が続ける"], ["ゼンブ・カイセイ", "実況も修正対象です"], ["ゆい", "それは断る"], ["主人公", "俺も蹴るのを断らない"], ["ゼンブ・カイセイ", "では最終校正です"]], "win": [["ゼンブ・カイセイ", "なぜ結末が変わらない"], ["主人公", "結末まで盛るからだ"], ["ゆい", "盛りすぎは欠点じゃない"], ["ゼンブ・カイセイ", "では好きに続けてください"], ["ゆい", "実況はまだ終わらない"]], "lose": [["ゼンブ・カイセイ", "稿を戻します"], ["ゆい", "もう一度蹴って"]], "look": {"shirt": "#E8D34F", "trim": "#5A2A82", "shorts": "#5A2A82", "sock": "#5A2A82", "boot": "#111111", "pattern": "stripe", "sleeve": "long", "width": 1, "arm": 1, "leg": 1, "hair": "短髪", "hairColor": "#2a1a3a", "skinTint": "#8a6aa0", "female": false, "chest": "校", "props": {"headband": false, "halo": false, "extraArms": 0, "aura": "#E8D34F", "mic": false, "wall": false, "crown": null, "emo": {"head": "pencap", "face": "halfblack", "hand": "redpen", "back": "board", "float": ["、。！？", "#e0202e"]}}, "一言": "PKの結果を添削する最終編集者"}, "bsp": {"base": "rewrite", "name": "結果改稿・全部採用！！", "shout": "この結末、直します！！", "trophy": "最終稿は自分で書く", "counter": "自分の技（フカシ）で蹴ると、結末を書き換えられない"}, "bribe": [["主人公", "その赤ペンくれ"], ["ゼンブ・カイセイ", "何を直します？"], ["ゆい", "まず自分の台詞"], ["主人公", "必殺技を短くしろ"]], "movie": {"react": "grab", "stamp": "最終校正", "talk": [["主人公", "結末まで添削するな"], ["ゆい", "私の実況で戻す"], ["ゼンブ・カイセイ", "物語は続きます"], ["主人公", "なら蹴り続ける"]]}, "ach": {"name": "最終稿突破", "desc": "書き換えられた結末を取り戻した"}, "icon": "🖍️"}], "ending": {"talk": [["ゼンブ・カイセイ", "なぜ修正できない"], ["主人公", "完璧じゃないからだ"], ["ゆい", "失敗も実況する"], ["主人公", "変な技も使う"], ["ゼンブ・カイセイ", "それが君の物語か"], ["ゆい", "私たちで決める"], ["主人公", "勝手に直すな"], ["ゼンブ・カイセイ", "では筆を置きます"], ["ゆい", "試合終了、ではなく"], ["主人公", "次のPKへ行くぞ"]], "roll": [["企画", "第3部・最終校正"], ["監督", "ナナメ・ゲート"], ["時間係", "クロノ・パッチ"], ["演出", "リバース・ベル"], ["音響", "サイレンス・ミュート"], ["編集", "ブランク・ノート"], ["脚本", "ゼンブ・カイセイ"], ["実況", "ゆい"], ["選手", "主人公"], ["記録", "改変前のPK大会"], ["記録", "外伝・第2部"], ["記録", "最終校正戦"], ["備考", "フカシは継続中"], ["次回", "未定"]], "last": "フカシPKは、まだ終わらない", "after": "次の結末は、まだ盛れる"}, "platNew": "最終稿は蹴り飛ばせ"};
+P2.ending.part=P2.part; P3.ending.part=P3.part;   // エンディングのスタッフロールの見出しに使う
+const P3I=P3.chapters.map(c=>c.icon);   // きせかえのボススキンのアイコン
+
 // ===== ストーリーモード（シナリオは ChatGPT 作・2026-09-25）=====
 const STORY=[{"title": "伝説のPK部", "keeper": "ゴール・キーパー田", "desc": "何でも止めると言い張る自称・守護神", "read": 0.098, "spRate": 0.1, "sp": ["巨大化"], "goal": {"type": "goals", "n": 3}, "pre": [["ゴール・キーパー田", "俺の名はキーパー田！"], ["主人公", "名前がそのまますぎるだろ！"], ["ゆい", "さあ始まりました謎のPK！"], ["ゴール・キーパー田", "全部止めて伝説になる！"], ["主人公", "じゃあ伝説を終わらせる！"]], "win": [["キーパー田", "俺のゴールが……穴だらけに！"]], "lose": [["ゆい", "キーパー田、まさかの大金星です！"]], "readRaw": 0.15}, {"title": "笑う壁", "keeper": "壁谷ガン太", "desc": "壁になることしか考えていない男", "read": 0.195, "spRate": 0.2, "sp": ["分身"], "goal": {"type": "goals", "n": 3}, "pre": [["壁谷ガン太", "俺は人間をやめて壁になる！"], ["主人公", "最初から壁みたいな顔だな"], ["ゆい", "壁谷選手、顔面から壁です！"], ["壁谷ガン太", "左右から挟み撃ちだ！"], ["主人公", "なら真ん中をぶち抜く！"]], "win": [["壁谷ガン太", "壁が……ボールに負けただと！？"]], "lose": [["ゆい", "壁谷選手、完全に壁でした！"]], "readRaw": 0.3}, {"title": "筋肉の神", "keeper": "ムキムキ守", "desc": "筋肉でボールを受け止めようとする怪物", "read": 0.293, "spRate": 0.3, "sp": ["巨大化", "ゴッドハンド"], "goal": {"type": "tricks", "n": 2}, "pre": [["ムキムキ守", "筋肉は裏切らない！"], ["主人公", "PKに筋肉関係あるか？"], ["ゆい", "あります！たぶん！"], ["ムキムキ守", "俺の腕は大地をも掴む！"], ["主人公", "じゃあ空から蹴る！"]], "win": [["ムキムキ守", "筋肉でも……軌道は読めん！"]], "lose": [["ゆい", "筋肉がすべてを解決しました！"]], "readRaw": 0.45}, {"title": "千手観音GK", "keeper": "手数田ゴロウ", "desc": "腕が多すぎてユニフォームが足りない男", "read": 0.3, "spRate": 0.32, "sp": ["分身", "ゴッドハンド"], "goal": {"type": "tricks", "n": 3}, "pre": [["手数田ゴロウ", "見える……すべての軌道が！"], ["主人公", "腕まで増やしてきたぞ！"], ["ゆい", "腕が多すぎて実況席も困惑！"], ["手数田ゴロウ", "百本の手で止めてやる！"], ["主人公", "なら百一本目の技だ！"]], "win": [["手数田ゴロウ", "この俺の手が……届かないだと！"]], "lose": [["ゆい", "手数田選手、手数が多すぎます！"]], "readRaw": 0.6}, {"title": "禁断の守護神", "keeper": "ゴッド・オブ・ゴール", "desc": "自分を神だと思い込んでいる究極GK", "read": 0.375, "spRate": 0.4, "sp": ["巨大化", "分身", "ゴッドハンド"], "goal": {"type": "goals", "n": 4}, "pre": [["ゴッド・オブ・ゴール", "神にPKを挑むとは愚かだな"], ["主人公", "神ならボールくらい避けろ！"], ["ゆい", "主人公、急に煽りました！"], ["ゴッド・オブ・ゴール", "その一言……許さん！"], ["主人公", "俺の必殺技で神を超える！"]], "win": [["ゴッド・オブ・ゴール", "神を……超えただと……！？"]], "lose": [["ゆい", "神の前に、ボールは無力でした……！"]], "readRaw": 0.75}, {"title": "フカシの頂点", "keeper": "ゆい・ザ・ゴール", "desc": "実況席から現れた最後のボス。実は全てを操っていた", "read": 0.45, "spRate": 0.48, "sp": ["巨大化", "分身", "ゴッドハンド"], "goal": {"type": "tricks", "n": 4}, "pre": [["ゆい", "ここまで来ると思ってたよ"], ["主人公", "ゆい……お前が黒幕か！"], ["ゆい・ザ・ゴール", "そう。今までのGKは全部私"], ["主人公", "じゃあ最後は実況なしだ！"], ["ゆい", "残念。私がゴールを守ります"]], "win": [["ゆい", "……実況してた私がラスボスでした"], ["主人公", "だったら次は、俺が実況する！"]], "lose": [["ゆい", "はい、ここでCM入りまーす！"]], "readRaw": 0.9}];
 P2.chapters.forEach((c,k)=>{ STORY.push({title:c.title.replace(/^第\d+章・/,''),keeper:c.keeper,desc:c.desc,read:[.36,.39,.42,.44,.47,.5][k],spRate:[.3,.33,.36,.38,.4,.42][k],sp:c.sp,goal:c.goal,pre:c.pre,win:c.win,lose:c.lose,part:2}); });
-STORY[PART1].intro=P2.intro; STORY[STORY.length-1].ending=P2.ending;   /* 名前の差し替え（names.js）に乗せるため STORY の中に持つ */
+P3.chapters.forEach((c,k)=>{ STORY.push({title:c.title.replace(/^第\d+章・/,''),keeper:c.keeper,desc:c.desc,read:[.5,.52,.54,.56,.58,.6][k],spRate:[.42,.44,.46,.48,.5,.52][k],sp:c.sp,goal:c.goal,pre:c.pre,win:c.win,lose:c.lose,part:3}); });
+STORY[PART1].intro=P2.intro; STORY[PART2-1].ending=P2.ending; STORY[PART2].intro=P3.intro; STORY[STORY.length-1].ending=P3.ending;   /* 名前の差し替え（names.js）に乗せるため STORY の中に持つ */
 const ST={on:false,idx:0,ch:null,goals:0,tricks:0,
   spKeys(){ const m={'巨大化':'giant','分身':'clone','ゴッドハンド':'hand'}; const a=(this.ch.sp||[]).map(x=>m[x]||x).filter(k=>GKSP[k]); return a.length?a:Object.keys(GKSP); },
   prog(){ try{ return +localStorage.getItem('pk_story')||0; }catch(e){ return 0; } },
@@ -1412,14 +1423,14 @@ const ST={on:false,idx:0,ch:null,goals:0,tricks:0,
   cond(ch){ return ch.goal.type==='tricks'?`必殺技でゴール ${ch.goal.n}本`:`5本中 ${ch.goal.n}本ゴール`; },
   hud(){ stHud.hidden=!this.on||S.phase==='menu'; if(!this.on) return; const g=this.ch.goal, have=g.type==='tricks'?this.tricks:this.goals;
     stHud.innerHTML=`<b>第${this.idx+1}章 VS ${this.ch.keeper}</b><span>${g.type==='tricks'?'必殺技でゴール':'ゴール'} ${have}/${g.n}${g.type==='goals'?'':'（普通のゴールは数えない）'}</span>`; stHud.classList.toggle('ok',have>=g.n); },
-  list(){ const n=this.prog(); stList.innerHTML=STORY.map((c,i)=>(i===0?'<div class="ph">第1部</div>':i===PART1?`<div class="ph">${n>=PART1?P2.part:'第2部 ？？？（第1部クリアで開く）'}</div>`:'')+`<button class="mbtn${i===n?' main':''}" data-i="${i}" ${i>n?'disabled':''} type="button">第${i+1}章　${i>n?'？？？':c.title}<small>${i>n?'前の章をクリアすると開く':(i<n?(this.won(i)?'✔ クリア ／ ':'💰 賄賂で通過 ／ '):'')+'VS '+c.keeper+' ・ '+this.cond(c)}</small></button>`).join('');
+  list(){ const n=this.prog(); stList.innerHTML=STORY.map((c,i)=>(i===0?'<div class="ph">第1部</div>':i===PART1?`<div class="ph">${n>=PART1?P2.part:'第2部 ？？？（第1部クリアで開く）'}</div>`:i===PART2?`<div class="ph">${n>=PART2?P3.part:'第3部 ？？？（第2部クリアで開く）'}</div>`:'')+`<button class="mbtn${i===n?' main':''}" data-i="${i}" ${i>n?'disabled':''} type="button">第${i+1}章　${i>n?'？？？':c.title}<small>${i>n?'前の章をクリアすると開く':(i<n?(this.won(i)?'✔ クリア ／ ':'💰 賄賂で通過 ／ '):'')+'VS '+c.keeper+' ・ '+this.cond(c)}</small></button>`).join('');
     stList.querySelectorAll('button[data-i]').forEach(b=>b.addEventListener('click',()=>this.play(+b.dataset.i))); stSel.hidden=false; document.getElementById('menu').hidden=true; },
   play(i,skipTalk){ audio(); this.idx=i; this.ch=STORY[i]; stSel.hidden=true; document.getElementById('end').hidden=true;
     const go=()=>{ this.on=true; this.goals=0; this.tricks=0; startMode('solo'); this.on=true; demo=false; hint.style.opacity=0; this.hud(); showTurn('VS '+this.ch.keeper,this.cond(this.ch),true); };
     if(skipTalk) go(); else talk((this.ch.intro&&this.prog()<=i?this.ch.intro:[]).concat(this.ch.pre),go,`第${i+1}章　${this.ch.title}`); },
   finish(){ S.phase='end'; hideTurn(); const g=this.ch.goal, have=g.type==='tricks'?this.tricks:this.goals, ok=have>=g.n; this.hud();
     if(ok){ this.save(this.idx+1); this.mark('pk_story_win',this.idx); PG.add('story'+this.idx); PG.coin(100,'章クリア'); if(S.goals===5) PG.add('perfect5'); fireworks(); confetti(); vplay('win',{cut:false}); } else vplay('lose',{cut:false});
-    talk(ok?this.ch.win:this.ch.lose,()=>{ if(ok&&(this.idx===PART1-1||this.idx===STORY.length-1)){ END.start(null,this.idx===PART1-1?null:this.ch.ending); return; } const sub=document.querySelector('#end .sub'), big=document.querySelector('#end .big');
+    talk(ok?this.ch.win:this.ch.lose,()=>{ if(ok&&(this.idx===PART1-1||this.idx===PART2-1||this.idx===STORY.length-1)){ END.start(null,this.idx===PART1-1?null:this.ch.ending); return; } const sub=document.querySelector('#end .sub'), big=document.querySelector('#end .big');
       sub.textContent=ok?`第${this.idx+1}章 クリア！`:`第${this.idx+1}章 失敗…`; big.innerHTML=`<b>${have}</b><span> / ${g.n}</span>`;
       document.getElementById('best').textContent=ok?`スキン「${this.ch.keeper}」が使えるようになった ／ `+(this.idx+1<STORY.length?'次の章が開いた':'全章クリア！ 必殺シュートがどのモードでも使える'):this.cond(this.ch);
       const r=document.getElementById('retry'); r.hidden=false; r.textContent=ok&&this.idx+1<STORY.length?'NEXT':'RETRY'; r.onclick=null;
@@ -1469,7 +1480,7 @@ function ultraTick(){ const show=S.phase==='aim'&&humanKicks()&&!M.ultraUsed&&do
 ultraBtn.addEventListener('click',e=>{ e.stopPropagation(); if(!ultraOK()||M.ultraUsed) return; audio(); ultraArmed=!ultraArmed; ultraBtn.dataset.k=''; if(ultraArmed){ tone(660,0.3,'sawtooth',.18,1320); flash('#ffd23f',0.35,250); } });
 // ===== 賄賂（負けた時のネタメニュー）：コインか広告60秒で「次の章へ」。賄賂で進んだ章はスキンをもらえない =====
 const BRIBE={"prices": [100, 300, 600, 1000, 1500, 2500], "btnCoin": "💰 賄賂を渡す", "btnAd": "📺 広告を見て賄賂する", "talk": [[["主人公", "これ……袖の下です"], ["ゴール・キーパー田", "袖ないけど金はあるな"], ["ゆい", "最低の解決方法ですね！"], ["ゴール・キーパー田", "よし、見なかったことにしよう"]], [["主人公", "壁谷さん、これで通して"], ["壁谷ガン太", "壁の修理費くらいあるな"], ["ゆい", "修理する壁はどこですか？"], ["壁谷ガン太", "心の壁だ"], ["主人公", "急に深いな"]], [["主人公", "筋肉代です"], ["ムキムキ守", "金で筋肉は買えん！"], ["ゆい", "でも受け取りましたね"], ["ムキムキ守", "プロテイン代だ"]], [["主人公", "これで通してください"], ["手数田ゴロウ", "手が多いと金も受け取りやすい"], ["ゆい", "完全に悪役ですよ！"], ["手数田ゴロウ", "俺は何も見ていない"], ["主人公", "手はいっぱい見てるけど"]], [["主人公", "神様、これを……"], ["ゴッド・オブ・ゴール", "金など必要ない"], ["ゆい", "じゃあ返してください"], ["ゴッド・オブ・ゴール", "……必要になった"], ["主人公", "神って何だよ"]], [["主人公", "ゆい、これで通してくれ"], ["ゆい", "実況者に賄賂ですか？"], ["主人公", "最後くらい楽させてくれ"], ["ゆい", "……倍額なら考えます"], ["主人公", "お前が一番悪い！"]]], "ending": [["ゆい", "ついに最後まで来ました！"], ["主人公", "俺は一度も勝ってないけどな"], ["ゆい", "でも全員にお金を渡しました"], ["主人公", "これが……大人のサッカーだ"], ["ゆい", "感動の最終回ですね！"], ["主人公", "感動する要素どこだよ"], ["ゆい", "ちなみにスキンは一個もありません"], ["主人公", "そこはくれよ！！"], ["ゆい", "お金で買ってください"], ["主人公", "最後まで金かよ！！"]]};
-BRIBE.prices.push(3000,3500,4000,4500,5000,6000); P2.chapters.forEach(c=>BRIBE.talk.push(c.bribe));
+BRIBE.prices.push(3000,3500,4000,4500,5000,6000,6500,7000,7500,8000,8500,9000); P2.chapters.concat(P3.chapters).forEach(c=>BRIBE.talk.push(c.bribe));
 const bribeRow=document.createElement('div'); bribeRow.id='bribeRow'; bribeRow.hidden=true; document.querySelector('#end .box').appendChild(bribeRow);
 { const st=document.createElement('style'); st.textContent=`#bribeRow{display:grid;gap:8px;width:min(340px,calc(100vw - 32px));margin-top:6px;padding:10px;border-radius:16px;border:2px dashed rgba(255,200,61,.6);background:rgba(58,37,0,.35)}
 #bribeRow .h{font:800 12px/1.3 var(--ui);color:#ffc83d;letter-spacing:.08em} #bribeRow button{font:800 15px/1.2 var(--ui);border:0;border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left}
@@ -1487,7 +1498,7 @@ function adSim(sec,done){ const d=document.createElement('div'); d.id='adSim'; d
   draw(); const iv=setInterval(()=>{ n--; if(n<=0){ clearInterval(iv); d.remove(); done(); } else draw(); },1000); }
 function doBribe(paid){ const i=ST.idx, ch=STORY[i]; PG.add('bribes'); ST.mark('pk_story_bribe',i); ST.save(i+1);
   document.getElementById('end').hidden=true; bribeRow.hidden=true; tone(1200,0.2,'square',.12,2400); crowd(1.0,.25);
-  const lines=(BRIBE.talk[i]||[]), last=i===PART1-1||i+1>=STORY.length;
+  const lines=(BRIBE.talk[i]||[]), last=i===PART1-1||i===PART2-1||i+1>=STORY.length;
   MOV.start(i,lines,()=>{ const fin=()=>{ if(last){ ST.on=false; ST.hud(); resetKick(); document.getElementById('menu').hidden=false; S.phase='menu'; } else ST.play(i+1); };
     if(last) talk(BRIBE.ending||[],fin,'賄賂エンディング'); else fin(); },null,paid); }
 // v24以前に勝った章は「勝ち」として移す（賄賂は v25 から）
@@ -1502,11 +1513,11 @@ const SKINS={
   kicker:{name:'いつもの10番',desc:'赤の情熱ストライカー',shirt:0xFF2D55,trim:0xffffff,shorts:0xffffff,sock:0xFF2D55,band:0xffffff,bands:2,boot:0xFF2D55,boot2:0x111111,num:10,pattern:1,hair:0x3a2414,hairStyle:'Hair_SimpleParted',skinTint:0xf2dccb},
   keeper:{name:'いつものキーパー',desc:'鉄壁の守護神（黄緑）',shirt:0xD8FF3C,trim:0x0C1620,shorts:0x0C1620,sock:0xD8FF3C,band:0x0C1620,bands:1,boot:0x111111,boot2:0xD8FF3C,num:1,pattern:2,sleeve:'long',gloves:true,dark:true,hair:0x141010,hairStyle:'Hair_Buzzed'}
 };
-P2.chapters.forEach(c=>BOSS_LOOKS.push(Object.assign({keeper:c.keeper},c.look)));
+P2.chapters.concat(P3.chapters).forEach(c=>BOSS_LOOKS.push(Object.assign({keeper:c.keeper},c.look)));
 BOSS_LOOKS.forEach((b,i)=>{ SKINS['boss'+i]={ name:b.keeper, desc:b['一言']||'', boss:i,
   shirt:hexN(b.shirt), trim:hexN(b.trim), shorts:hexN(b.shorts), sock:hexN(b.sock), band:hexN(b.trim), bands:1, boot:hexN(b.boot), boot2:hexN(b.trim),
   num:b.chest||'', pattern:PAT[b.pattern]||0, sleeve:b.sleeve||'long', gloves:true, metal:b.pattern==='gold'?0.6:0, dark:!!b.dark,
-  hair:hexN(b.hairColor||0x1a1410), hairStyle:HAIR[b.hair]||'Hair_Buzzed', female:!!b.female,
+  hair:hexN(b.hairColor||0x1a1410), hairStyle:HAIR[b.hair]||'Hair_Buzzed', female:!!b.female, skinTint:b.skinTint?hexN(b.skinTint):undefined,
   width:+b.width||1, arm:+b.arm||1, leg:+b.leg||1, props:b.props||{} }; });
 // ---- 小物 ----
 const brickTex=(()=>{ let t=null; return ()=>{ if(t) return t; const c=document.createElement('canvas'); c.width=256; c.height=256; const g=c.getContext('2d'); g.fillStyle='#d9d2c5'; g.fillRect(0,0,256,256);
@@ -1557,10 +1568,10 @@ function applyRoles(){ if(!HK) return; const my=mySkin();
   const gk=ST.on?('boss'+ST.idx):humanKeeps()?(my==='kicker'?'keeper':my):(window.oppSkin?oppSkin('keeper'):'keeper');
   wear('kicker',kk); wear('keeper',SKINS[gk]?gk:'keeper'); }
 // ---- スキンを選ぶ画面（ChatGPT案 2026-09-25：上半分に3Dでくるくる・名前と一言・横スクロールのカード・レア度・装備ボタン・効果音）----
-const RARITY={kicker:'N',boss0:'R',boss1:'R',boss2:'SR',boss3:'SR',boss4:'SSR',boss5:'LEGEND',boss6:'SR',boss7:'SR',boss8:'SSR',boss9:'SSR',boss10:'LEGEND',boss11:'LEGEND'};
+const RARITY={kicker:'N',boss0:'R',boss1:'R',boss2:'SR',boss3:'SR',boss4:'SSR',boss5:'LEGEND',boss6:'SR',boss7:'SR',boss8:'SSR',boss9:'SSR',boss10:'LEGEND',boss11:'LEGEND',boss12:'SR',boss13:'SR',boss14:'SSR',boss15:'SSR',boss16:'LEGEND',boss17:'LEGEND'};
 if(SKINS.boss11) SKINS.boss11.name='もうひとりの主人公';
 const RCOL={N:'#9aa4ad',R:'#3f8cff',SR:'#b35cff',SSR:'#ffc83d',LEGEND:'linear-gradient(90deg,#ff4d5a,#ffc83d,#d8ff3c,#39d0ff,#b35cff)'};
-const ICON={kicker:'⚽',boss0:'🧤',boss1:'🧱',boss2:'💪',boss3:'🙌',boss4:'👑',boss5:'🎤',boss6:'↔️',boss7:'🏯',boss8:'🦍',boss9:'✋',boss10:'😇',boss11:'🎭'};
+const ICON={kicker:'⚽',boss0:'🧤',boss1:'🧱',boss2:'💪',boss3:'🙌',boss4:'👑',boss5:'🎤',boss6:'↔️',boss7:'🏯',boss8:'🦍',boss9:'✋',boss10:'😇',boss11:'🎭',boss12:P3I[0],boss13:P3I[1],boss14:P3I[2],boss15:P3I[3],boss16:P3I[4],boss17:P3I[5]};
 const SKV={on:false,id:'kicker',rot:0,drag:null,pose:0};
 const skSel=document.createElement('div'); skSel.id='sksel'; skSel.hidden=true;
 skSel.innerHTML=`<div class="top"><div class="lock" hidden>🔒</div><div class="tag"></div></div>
@@ -1632,9 +1643,10 @@ PG.load();
 const ACH=[{"id": "g1", "name": "初ゴール、いただき！", "desc": "ゴールを1本決める", "tier": "bronze"}, {"id": "g100", "name": "蹴りすぎ注意", "desc": "ゴール通算100本", "tier": "silver"}, {"id": "g1000", "name": "蹴球中毒", "desc": "ゴール通算1,000本", "tier": "gold"}, {"id": "t_flip", "name": "宙を舞う馬鹿", "desc": "宙返りキックでゴール", "tier": "bronze"}, {"id": "t_cart", "name": "側転して何になる", "desc": "側転キックでゴール", "tier": "bronze"}, {"id": "t_torn", "name": "竜巻注意報", "desc": "トルネードキックでゴール", "tier": "bronze"}, {"id": "t_bicy", "name": "頭おかしい高さ", "desc": "オーバーヘッドでゴール", "tier": "bronze"}, {"id": "t_drop", "name": "足から行け", "desc": "ドロップキックでゴール", "tier": "bronze"}, {"id": "s100", "name": "止めすぎィ！", "desc": "セーブ通算100回", "tier": "silver"}, {"id": "god", "name": "神、降臨", "desc": "神セーブを使う", "tier": "bronze"}, {"id": "ultra", "name": "必殺技とは何なのか", "desc": "必殺シュートを使う", "tier": "bronze"}, {"id": "st0", "name": "第一関門突破", "desc": "ストーリー第1章に勝つ", "tier": "bronze"}, {"id": "st1", "name": "第二関門突破", "desc": "ストーリー第2章に勝つ", "tier": "bronze"}, {"id": "st2", "name": "第三関門突破", "desc": "ストーリー第3章に勝つ", "tier": "bronze"}, {"id": "st3", "name": "第四関門突破", "desc": "ストーリー第4章に勝つ", "tier": "silver"}, {"id": "st4", "name": "第五関門突破", "desc": "ストーリー第5章に勝つ", "tier": "silver"}, {"id": "st5", "name": "そして伝説へ", "desc": "最終章に勝つ", "tier": "gold"}, {"id": "br1", "name": "話が早い", "desc": "賄賂を1回渡す", "tier": "bronze"}, {"id": "br10", "name": "金で解決", "desc": "賄賂を10回渡す", "tier": "silver"}, {"id": "share", "name": "布教活動", "desc": "シュート動画を共有する", "tier": "bronze"}, {"id": "online", "name": "全国大会（通信）", "desc": "通信対戦をする", "tier": "bronze"}, {"id": "win", "name": "勝ったぞオイ！", "desc": "CPU戦で勝つ", "tier": "bronze"}, {"id": "sudden", "name": "まだ終わってねえ！", "desc": "サドンデスで勝つ", "tier": "silver"}, {"id": "post", "name": "そこ狙う！？", "desc": "ポストに当てる", "tier": "bronze"}, {"id": "shoe", "name": "靴、飛んだぞ", "desc": "シュートで靴が脱げる", "tier": "bronze"}, {"id": "face", "name": "顔面で止める男", "desc": "顔面ブロックで止める", "tier": "silver"}, {"id": "skin", "name": "着替えました", "desc": "ボスのスキンを装備する", "tier": "bronze"}, {"id": "dex", "name": "技が多すぎる", "desc": "技図鑑をコンプリート（5つの技を出す）", "tier": "silver"}, {"id": "t_all", "name": "全部入った！", "desc": "5種類の技ぜんぶでゴール", "tier": "gold"}, {"id": "perfect", "name": "本当に全部決めた", "desc": "1試合で5本全部決める", "tier": "gold"}, {"id": "sp_b0", "name": "名前がそのまま", "desc": "キーパー田の「究極・キーパー田ァァァ！！」を見る", "tier": "silver"}, {"id": "sp_b1", "name": "それもう壁です", "desc": "壁谷の「鉄壁・ガン太ウォール！！」を見る", "tier": "silver"}, {"id": "sp_b2", "name": "筋肉で止めた", "desc": "ムキムキ守の「超筋肉・マッスルゴール！！」を見る", "tier": "silver"}, {"id": "sp_b3", "name": "手数が多すぎる", "desc": "手数田の「百手・ゴロウ乱舞！！」を見る", "tier": "silver"}, {"id": "sp_b4", "name": "神に止められた", "desc": "ゴッドの「神罰・ゴッドハンド！！！」を見る", "tier": "silver"}, {"id": "sp_b5", "name": "実況者が止めた", "desc": "ゆいの「実況終了・ゆいゴール！！」を見る", "tier": "gold"}, {"id": "movie", "name": "闇取引", "desc": "賄賂ムービーを見る", "tier": "bronze"}, {"id": "true_end", "name": "フカシPK、完", "desc": "真エンディングを見る", "tier": "gold"}, {"id": "stamp", "name": "圧が強い", "desc": "メガ文字スタンプを送る", "tier": "bronze"}];
 const PLAT={"name": "フカシの頂点", "desc": "全実績コンプリート", "yui": "「あなた……本当に全部やったんですか？」「……暇なんですか？」"};
 const ACH_TEST={"stamp":s=>(s.stamps||0)>=1,"sp_b0":s=>(s.sp_b0||0)>=1,"sp_b1":s=>(s.sp_b1||0)>=1,"sp_b2":s=>(s.sp_b2||0)>=1,"sp_b3":s=>(s.sp_b3||0)>=1,"sp_b4":s=>(s.sp_b4||0)>=1,"sp_b5":s=>(s.sp_b5||0)>=1,"movie":s=>(s.bribeMovie||0)>=1,"true_end":s=>(s.trueEnding||0)>=1,"g1":s=>(s.goals||0)>=1,"g100":s=>(s.goals||0)>=100,"g1000":s=>(s.goals||0)>=1000,"t_flip":s=>(s.trick_flip||0)>=1,"t_cart":s=>(s.trick_cartwheel||0)>=1,"t_torn":s=>(s.trick_tornado||0)>=1,"t_bicy":s=>(s.trick_bicycle||0)>=1,"t_drop":s=>(s.trick_drop||0)>=1,"s100":s=>(s.saves||0)>=100,"god":s=>(s.godUsed||0)>=1,"ultra":s=>(s.ultraUsed||0)>=1,"st0":s=>(s.story0||0)>=1,"st1":s=>(s.story1||0)>=1,"st2":s=>(s.story2||0)>=1,"st3":s=>(s.story3||0)>=1,"st4":s=>(s.story4||0)>=1,"st5":s=>(s.story5||0)>=1,"br1":s=>(s.bribes||0)>=1,"br10":s=>(s.bribes||0)>=10,"share":s=>(s.shares||0)>=1,"online":s=>(s.online||0)>=1,"win":s=>(s.cpuWins||0)>=1,"sudden":s=>(s.suddenWins||0)>=1,"post":s=>(s.posts||0)>=1,"shoe":s=>(s.shoes||0)>=1,"face":s=>(s.faces||0)>=1,"skin":s=>(s.skinWorn||0)>=1,"dex":s=>(s.dexComplete||0)>=1,"t_all":s=>(s.trick_flip||0)>=1&&(s.trick_cartwheel||0)>=1&&(s.trick_tornado||0)>=1&&(s.trick_bicycle||0)>=1&&(s.trick_drop||0)>=1,"perfect":s=>(s.perfect5||0)>=1};
-P2.chapters.forEach((c,k)=>{ const i=PART1+k; ACH.push({id:'st'+i,name:c.ach.name,desc:c.ach.desc,tier:k>=4?'gold':'silver'}); ACH.push({id:'sp_b'+i,name:c.bsp.trophy,desc:c.keeper+'の特別セーブを見る',tier:'bronze'});
+P2.chapters.concat(P3.chapters).forEach((c,k)=>{ const i=PART1+k; ACH.push({id:'st'+i,name:c.ach.name,desc:c.ach.desc,tier:k%6>=4?'gold':'silver'}); ACH.push({id:'sp_b'+i,name:c.bsp.trophy,desc:c.keeper+'の特別セーブを見る',tier:'bronze'});
   ACH_TEST['st'+i]=s=>(s['story'+i]||0)>=1; ACH_TEST['sp_b'+i]=s=>(s['sp_b'+i]||0)>=1; });
 ACH.push({id:'true_end2',name:P2.platNew,desc:'第2部の最後まで蹴り抜く',tier:'gold'}); ACH_TEST.true_end2=s=>(s.trueEnding2||0)>=1;
+ACH.push({id:'true_end3',name:P3.platNew,desc:'第3部の最後まで蹴り抜く',tier:'gold'}); ACH_TEST.true_end3=s=>(s.trueEnding3||0)>=1;
 // トースト（上から出る）
 const toastBox=document.createElement('div'); toastBox.id='toasts'; document.body.appendChild(toastBox);
 { const st=document.createElement('style'); st.textContent=`#toasts{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 70px);transform:translateX(-50%);z-index:9;display:grid;gap:6px;pointer-events:none;width:min(360px,calc(100vw - 32px))}
@@ -1659,7 +1671,7 @@ const achSel=document.createElement('div'); achSel.id='achsel'; achSel.hidden=tr
 #achBack{font:800 14px/1 var(--ui);color:#f3f6ef;background:transparent;border:0;text-decoration:underline;padding:10px;cursor:pointer}`; document.head.appendChild(st); }
 function achList(){ const n=ACH.filter(a=>PG.got.includes(a.id)).length, pl=PG.got.includes('platinum');
   achSel.querySelector('.plat').innerHTML=`<span class="ic">${pl?'🏆':'🔒'}</span><span style="flex:1">${PLAT.name}<small>${pl?(PLAT.yui||PLAT.desc):'実績を全部取るともらえる'}</small><div class="bar"><i style="width:${n/ACH.length*100}%"></i></div><small>${n} / ${ACH.length}　・　🪙 ${PG.coins}コイン</small></span>`;
-  achSel.querySelector('.list').innerHTML=ACH.map(a=>{ const ok=PG.got.includes(a.id), spoil=!ok&&['sp_b5','st5','true_end','true_end2'].includes(a.id); return `<div class="a ${ok?'ok':'no'}" style="--c:${TIERC[a.tier]||'#888'}"><span class="ic">🏆</span><span>${spoil?'？？？':a.name}<small>${spoil?'最終章の秘密':a.desc}</small></span><span class="t">${a.tier}</span></div>`; }).join('');
+  achSel.querySelector('.list').innerHTML=ACH.map(a=>{ const ok=PG.got.includes(a.id), spoil=!ok&&['sp_b5','st5','true_end','true_end2','true_end3','st11','sp_b11','st17','sp_b17'].includes(a.id); return `<div class="a ${ok?'ok':'no'}" style="--c:${TIERC[a.tier]||'#888'}"><span class="ic">🏆</span><span>${spoil?'？？？':a.name}<small>${spoil?'最終章の秘密':a.desc}</small></span><span class="t">${a.tier}</span></div>`; }).join('');
   achSel.hidden=false; document.getElementById('menu').hidden=true; }
 document.getElementById('achBack').addEventListener('click',()=>{ achSel.hidden=true; document.getElementById('menu').hidden=false; });
 { const b=document.createElement('button'); b.className='mbtn'; b.type='button'; b.id='achBtn'; b.style.textAlign='center'; b.innerHTML='実績・トロフィー'; const tts=document.getElementById('ttsBtn'); tts.parentNode.insertBefore(b,tts); b.addEventListener('click',achList); }
@@ -1675,7 +1687,7 @@ ST.arr('pk_story_win').forEach(i=>{ PG.st['story'+i]=PG.st['story'+i]||1; }); if
 const MOVIE={"title": "フカシPK――闇取引編", "stamp": "取引成立", "stamp2": "スキンはもらえません", "boss": [{"react": "cry", "stamp": "名前で稼いだ男", "talk": [["ゴール・キーパー田", "……これ全部俺に？"], ["主人公", "はい"], ["ゴール・キーパー田", "俺、名前しか取り柄ないけど？"], ["主人公", "そこが取り柄です"], ["ゴール・キーパー田", "（なぜか感動して泣く）"]]}, {"react": "wall", "stamp": "鉄壁の守銭奴", "talk": [["壁谷ガン太", "……"], ["主人公", "なんで壁出した！？"], ["壁谷ガン太", "取引は壁越しにする"], ["主人公", "意味わかんねえよ！"]]}, {"react": "close", "stamp": "筋肉、金に屈する", "talk": [["ムキムキ守", "金では俺は動かん！"], ["主人公", "じゃあ帰ります"], ["ムキムキ守", "待て"], ["主人公", "動いたじゃん"], ["ムキムキ守", "プロテイン代だ！！"]]}, {"react": "arms", "stamp": "手数料18倍", "talk": [["主人公", "多い多い多い！"], ["手数田ゴロウ", "手数料だ"], ["主人公", "手が多いだけだろ！"]]}, {"react": "grab", "stamp": "神も金には弱い", "talk": [["ゴッド・オブ・ゴール", "神に金を渡すか"], ["主人公", "受け取らないんですか？"], ["ゴッド・オブ・ゴール", "金など必要ない"], ["ゴッド・オブ・ゴール", "……待て"], ["主人公", "神ィ！！"]]}, {"react": "headset", "stamp": "最終章だけボッタクリ", "talk": [["主人公", "……いくら？"], ["ゆい", "倍"], ["主人公", "高っ！"], ["ゆい", "最終章ですよ？"], ["主人公", "足元見てるだろ！"], ["ゆい", "実況者には特別料金です"]]}]};
 const AD_BRIBE=[['その広告料が袖の下です','俺にも広告料が入るのか！','広告料GET！'],['壁谷さんのレンガ代になります','広告を見るだけで壁が建つ！','レンガ代確保！'],['広告料でプロテインが買えます','広告を見る筋肉も必要だ！','筋肉スポンサー！'],['広告料を受け取ってください','全部の手で受け取ろう！','広告料18倍！'],['神にも広告料が入ります','広告もまた神の恵み！','神スポンサー成立！'],
   ['広告料は私に入ります','お前が受け取るのかよ！','ゆいに広告収入！',1],['スポンサー料が入ります','もっとデカい広告を出せ！','広告も横幅！'],['広告料でレンガが買えます','最高のスポンサーだ！','広告でレンガ！'],['広告料で肉が買えます','契約しよう。今すぐだ！','肉スポンサー成立！'],['広告料をどうぞ','全部の手で受け取る！','18手広告契約！'],['広告料が入ります','経費で処理しておこう','神の広告収入！'],['広告料が支払われます','……この仕組み、知ってる','広告料……？']];
-P2.chapters.forEach(c=>MOVIE.boss.push(c.movie));
+P2.chapters.concat(P3.chapters).forEach(c=>MOVIE.boss.push(c.movie));
 const MOV={on:false,t:0,i:0,done:null,lines:[],cuts:[],saved:null,bills:[],caseG:null,lidG:null,glow:null,spot:null,ev:{}};
 const mvEl=document.createElement('div'); mvEl.id='movie'; mvEl.hidden=true;
 mvEl.innerHTML='<div class="bar t"></div><div class="bar b"></div><canvas class="grain"></canvas><div class="ttl"></div><div class="sub"><b></b><span></span></div><div class="stamp"></div><div class="big"></div><button class="skip" type="button">スキップ ▶▶</button>';
@@ -1816,7 +1828,7 @@ const BSP_DEF={
   b4:{name:'神罰・ゴッドハンド！！！',shout:'神にィィィ！！挑むなァァァ！！',trophy:'神に止められた'},
   b5:{name:'実況終了・ゆいゴール！！',shout:'はい！そこは私のゴールです！！',trophy:'実況者が止めた'}};
 Object.keys(BSP_DEF).forEach(k=>{ GKSP[k]=BSP_DEF[k].name.replace(/！+$/,''); });
-P2.chapters.forEach((c,k)=>{ BSP_DEF['b'+(PART1+k)]=c.bsp; GKSP['b'+(PART1+k)]=c.bsp.name.replace(/！+$/,''); });
+P2.chapters.concat(P3.chapters).forEach((c,k)=>{ BSP_DEF['b'+(PART1+k)]=c.bsp; GKSP['b'+(PART1+k)]=c.bsp.name.replace(/！+$/,''); });
 const BSP={objs:[],t:0,kind:null,dim:0};
 function bspRun(kind,tx,ty,ok){ const K=(BSP_DEF[kind]&&BSP_DEF[kind].base)||kind; BSP.kind=kind; BSP.t=0; const cx=THREE.MathUtils.clamp(tx,-HALF+0.3,HALF-0.3), G2=GK;
   PG.add('sp_'+kind);
@@ -1854,9 +1866,9 @@ document.body.appendChild(endEl);
 #ending .last{position:absolute;inset:0;display:grid;place-items:center;padding:0 24px;text-align:center;background:#000;color:#fff;font:800 22px/1.6 var(--ui);opacity:0;transition:opacity 1.2s;pointer-events:none} #ending .last.on{opacity:1}
 #ending .skip{position:absolute;right:12px;top:calc(env(safe-area-inset-top,0px) + 12px);font:800 12px/1 var(--ui);color:#fff;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:8px 12px}`; document.head.appendChild(st); }
 endEl.querySelector('.skip').addEventListener('click',()=>END.finish());
-END.start=function(done,data){ this.done=done; this.E=data||ENDING; this.p2=!!data; talk(this.E.talk,()=>this.roll(),this.p2?'第2部 エンディング':'真エンディング'); };
+END.start=function(done,data){ this.done=done; this.E=data||ENDING; this.p2=!!data; talk(this.E.talk,()=>this.roll(),this.p2?(data.part===P3.part?'第3部 エンディング':'第2部 エンディング'):'真エンディング'); };
 END.roll=function(){ this.on=true; this.t=0; S.phase='ending'; endEl.hidden=false; document.getElementById('end').hidden=true; hideTurn(); stHud.hidden=true; document.querySelector('.hud').style.visibility='hidden';
-  const inn=endEl.querySelector('.in'); inn.innerHTML='<h1>フカシPK</h1><div class="r"><b>'+(this.p2?P2.part:'TRUE END')+'</b></div>'+this.E.roll.map(([r,n])=>`<div class="r"><small>${r}</small><b>${n}</b></div>`).join('')+'<div class="r" style="margin-top:60px"><b>THANK YOU FOR PLAYING</b></div>';
+  const inn=endEl.querySelector('.in'); inn.innerHTML='<h1>フカシPK</h1><div class="r"><b>'+(this.p2?(this.E.part||P2.part):'TRUE END')+'</b></div>'+this.E.roll.map(([r,n])=>`<div class="r"><small>${r}</small><b>${n}</b></div>`).join('')+'<div class="r" style="margin-top:60px"><b>THANK YOU FOR PLAYING</b></div>';
   inn.style.transition='none'; inn.style.transform='translateY(0)'; this.len=Math.max(18,this.E.roll.length*1.25+6);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{ inn.style.transition=`transform ${this.len}s linear`; inn.style.transform=`translateY(calc(-100% - ${innerHeight}px))`; }));
   vplay('win',{cut:false}); this.fw=0; camSmooth=null; };
@@ -1864,7 +1876,7 @@ END.anim=function(dt){ if(!this.on) return; this.t+=dt; this.fw-=dt; if(this.fw<
   if(this.t>this.len&&!this.lastShown){ this.lastShown=true; const l=endEl.querySelector('.last'); l.textContent=this.E.last; l.classList.add('on'); }
   if(this.t>this.len+4) this.finish(); };
 END.cam=function(){ if(!this.on) return; const u=this.t*0.08; if(!camSmooth) camSmooth={p:new THREE.Vector3(),l:new THREE.Vector3()}; camSmooth.p.set(Math.sin(u)*16,6+Math.sin(u*0.7)*2,6+Math.cos(u)*16); camSmooth.l.set(0,1.5,3); camera.position.copy(camSmooth.p); };
-END.finish=function(){ if(!this.on) return; this.on=false; this.lastShown=false; endEl.hidden=true; endEl.querySelector('.last').classList.remove('on'); PG.add(this.p2?'trueEnding2':'trueEnding'); const E=this.E||ENDING;
+END.finish=function(){ if(!this.on) return; this.on=false; this.lastShown=false; endEl.hidden=true; endEl.querySelector('.last').classList.remove('on'); PG.add(this.p2?(this.E.part===P3.part?'trueEnding3':'trueEnding2'):'trueEnding'); const E=this.E||ENDING;
   ST.on=false; ST.hud(); resetKick(); S.phase='menu'; document.getElementById('menu').hidden=false; camSmooth=null;
   if(E.after) setTimeout(()=>toast(`<span class="ic">🎤</span><span>${NAME.yui}<small>${E.after}</small></span>`,'',6000,'#ff8fd8'),600);
   const d=this.done; this.done=null; if(d) d(); };
@@ -2160,7 +2172,7 @@ window.NETS_=NETS; if(/dbg/.test(location.search)){ window.__NETS=NETS; window._
 // ④ 試合の区切り：RETRY／NEXT／モードを選ぶ を押した時だけ、3分に1回まで・その日の1試合目のあとは出さない
 // 公開版では adSim をCrazyGames SDKの rewarded / midgame に差し替える（提出前チェックリスト）
 const AD={earned:0,track:false,matches:0,last:Date.now(),bypass:false,used:false, MID_GAP:180000};
-{ const _coin=PG.coin.bind(PG); PG.coin=(n,why)=>{ _coin(n,why); if(AD.track) AD.earned+=n; }; }
+{ const _coin=PG.coin.bind(PG); PG.coin=(n,why)=>{ _coin(n,why); if(AD.track&&!/イベント|レベルアップ|依頼達成|ログイン|ランキング/.test(why||'')) AD.earned+=n; }; }   // 1回きりのごほうびは「広告で2倍」の対象にしない（レビュー B7）
 { const _sm=startMode; startMode=function(mode){ AD.earned=0; AD.track=true; AD.used=false; return _sm(mode); }; }
 { const _a=adSim; adSim=function(sec,done){ return _a(sec,()=>{ AD.last=Date.now(); done(); }); }; }   // 賄賂の広告も含め、広告を見た直後に区切り広告を重ねない
 const adRow=document.createElement('div'); adRow.id='adRow'; adRow.hidden=true; document.querySelector('#end .box').appendChild(adRow);
@@ -2571,7 +2583,7 @@ GI.s_1={id:'s_1',type:'title',name:'布教の鬼',rar:'SR',desc:'10回共有し�
 GI.s_2={id:'s_2',type:'title',name:'フカシ伝道師',rar:'LEGEND',desc:'30回共有した人だけの称号',title:'フカシ伝道師',icon:'🏷️',noGacha:true};
 GI.s_3={id:'s_3',type:'goal',name:'布教GOAL',rar:'LEGEND',desc:'30回共有した人だけのゴール演出',goal:{text:'みんな見てくれ!!',col:'#39D0FF',rain:'star',fw:'#39D0FF'},icon:'📣',noGacha:true};
 function shSt(){ try{ return Object.assign({n:0,day:'',today:0},JSON.parse(localStorage.getItem('pk_share')||'{}')); }catch(e){ return {n:0,day:'',today:0}; } }
-function shReward(){ const s=shSt(), d=new Date().toISOString().slice(0,10); if(s.day!==d){ s.day=d; s.today=0; } let coin=0; const got=[];
+function shReward(){ const s=shSt(), d=new Date(Date.now()+9*3600000).toISOString().slice(0,10);   // 日本時間で日替わり（依頼と同じ） if(s.day!==d){ s.day=d; s.today=0; } let coin=0; const got=[];
   if(s.today>=SH_DAILY_MAX){ try{ localStorage.setItem('pk_share',JSON.stringify(s)); }catch(e){} toast('<span class="ic">📣</span><span>共有ありがとう！<small>ごほうびは1日'+SH_DAILY_MAX+'回まで。また明日！</small></span>','',2600); return; }   /* 不正対策（主OK 2026-09-25）：節目の回数も1日3回までしか数えない＝連打で節目を取れない */
   s.today++; s.n++; coin+=SH_DAILY;
   const st=SH_STEPS.find(x=>x.n===s.n); if(st){ coin+=st.coin; const g=GACHA.st(); g.tix=g.tix||{}; if(st.tix) g.tix.ultra=(g.tix.ultra||0)+st.tix; for(const k of[st.title,st.goal]) if(k) g.own[k]=1; GACHA.save(g); got.push(st.txt); }
@@ -2639,9 +2651,12 @@ if(GA.on){ window.goatcounter=Object.assign(window.goatcounter||{},{path:()=>loc
   addEventListener('appinstalled',()=>gaEvent('install'));
   if(INST.env==='standalone') gaEvent('open-from-home');
   if(INST.env==='line') gaEvent('open-in-line'); }
+// 遊んだ人数（主「来場者数の表示ってどうなってるの？」2026-09-26）：ページの数え方（/fukashi-pk）は公開カウンターが0を返す（GoatCounterの仕様で取れない）ので、
+// 端末ごとに1回だけ「player」イベントを送って、その数を「○○人がフカしました」に使う（players.js）
+if(GA.on){ let done=false; try{ done=!!localStorage.getItem('pk_counted'); }catch(e){} if(!done){ gaEvent('player'); try{ localStorage.setItem('pk_counted','1'); }catch(e){} } }
 
 // ===== 「○○人がフカしました!!」（主「どこかに何人プレイしたか表示したい」→ChatGPT案）=====
-// 数はGoatCounterの訪問数（4時間ごとに更新）。実人数と完全一致ではないので「フカしました」と言う
+// 数はGoatCounterの「player」イベント数＝端末ごとに1回（analytics.js・2026-09-26からこの数え方。ページ閲覧数は公開カウンターで取れなかった）。実人数と完全一致ではないので「フカしました」と言う
 // 0〜49：出さない／50〜99：「フカシ人口、増加中!!」／100〜：数字／1000・1万：派手に。節目を越えたのを初めて見た時だけお祝い
 const PLY={n:null};
 function plyLine(n){ if(n==null||n<50) return ''; if(n<100) return '🔥 フカシ人口、増加中!! 🔥'; const s=n.toLocaleString();
@@ -2661,7 +2676,7 @@ function plySet(n){ if(!(n>=0)) return; PLY.n=n; try{ localStorage.setItem('pk_p
 try{ const c=JSON.parse(localStorage.getItem('pk_ply')||'null'); if(c&&c.n>=0) PLY.n=c.n; }catch(e){}
 { const m=location.search.match(/players=(\d+)/); if(m&&/dbg/.test(location.search)) PLY.n=+m[1]; }   // 検証用
 plyShow();
-if(GA.on){ fetch(`https://${GC_CODE}.goatcounter.com/counter/${encodeURIComponent(location.pathname)}.json`).then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.count) plySet(parseInt(String(j.count).replace(/[^\d]/g,''),10)); }).catch(()=>{}); }
+if(GA.on){ fetch(`https://${GC_CODE}.goatcounter.com/counter/player.json`).then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.count) plySet(parseInt(String(j.count).replace(/[^\d]/g,''),10)); }).catch(()=>{}); }
 { const _r=TITLE.refresh; TITLE.refresh=function(){ _r.call(this); plyShow(); }; }
 // 初めての試合の結果画面：「あなたで○○人目のフカシ!!」（1回だけ）
 new MutationObserver(()=>{ const end=document.getElementById('end'); if(end.hidden) return; let done=false; try{ done=!!localStorage.getItem('pk_ply_me'); }catch(e){}
@@ -2978,6 +2993,689 @@ ultraBtn.addEventListener('click',()=>{ if(ultraArmed) vp2('ultra_ok',{cut:true}
 { const _s=startMode; startMode=function(mode){ const r=_s(mode); if(M.mode!=='online'&&M.ultraUsed&&CARRY.get().ultra) setTimeout(()=>vp2('ultra_used'),700); return r; }; }
 // 最初の試合のあとメニューに戻った時に1回だけ「いつでもフカしにおいで！」
 new MutationObserver(()=>{ const m=document.getElementById('menu'); if(m.hidden||V2.any||!AD||!(AD.matches>=1)) return; V2.any=1; setTimeout(()=>vp2('anytime'),500); }).observe(document.getElementById('menu'),{attributes:true,attributeFilter:['hidden']});
+
+// ===== 画面の拡大と横スクロールを止める（主「ホームで画面を縮めることが出来てスクロールモードになった。横方向はどこでもやめて」2026-09-26）=====
+// iPhoneは user-scalable=no を無視するので、2本指（ピンチ）の拡大をJSでも止める。ダブルタップ拡大は touch-action:pan-y で止まる（全体に効く）。縦のスクロール（一覧など）はそのまま
+document.querySelectorAll('meta[name=viewport]').forEach(m=>m.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover'));
+{ const st=document.createElement('style'); st.textContent=`html,body{overflow-x:hidden!important;max-width:100vw;overscroll-behavior:none;touch-action:pan-y;-webkit-text-size-adjust:100%}`; document.head.appendChild(st); }
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{ if(e.touches.length>1) e.preventDefault(); },{passive:false});
+// 何かのはずみで横にずれていたら戻す
+addEventListener('scroll',()=>{ if(scrollX!==0) scrollTo(0,scrollY); },{passive:true});
+
+// ===== 演出を作り直す（主「演出のやつがショボすぎる。しっかりアニメーションを凝って（チャッピーと相談して）」2026-09-26）=====
+// ChatGPT案（fx2_design.json）：ゴール演出11種を「0秒／0.3秒／1秒…」の台本で、軌跡12種を「線・粒・ボールの周り・当たった瞬間の一発ネタ」で
+// 画面いっぱいの2D（文字・粒・集中線）を重ねる GFX と、それを時間で並べる台本（GSCRIPT）で作る。早送り中は台本ごと速く流す
+const GFX=(()=>{
+  const root=document.createElement('div'); root.id='gfx'; root.innerHTML='<canvas></canvas><div class="tx"></div>'; document.body.appendChild(root);
+  const st=document.createElement('style'); st.textContent=`
+#gfx{position:fixed;inset:0;z-index:7;pointer-events:none;overflow:hidden;contain:strict}
+#gfx canvas{position:absolute;inset:0;width:100%;height:100%}
+#gfx .tx{position:absolute;inset:0;display:grid;place-items:center;perspective:600px}
+#gfx .w{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font:900 72px/1 var(--ui);white-space:nowrap;letter-spacing:.02em;-webkit-text-stroke:3px #111;paint-order:stroke fill;will-change:transform,opacity}
+#gfx .w .in{display:inline-block;will-change:transform}
+#gfx .w span.c{display:inline-block;will-change:transform,opacity}
+#gfx .w.fill .c{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+#gfx .w.rainbow .c{background:linear-gradient(90deg,#ff3b30,#ff9500,#ffd60a,#34c759,#0a84ff,#bf5af2,#ff3b30);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gfxRb .6s linear infinite}
+@keyframes gfxRb{to{background-position:300% 0}}
+#gfx .w.fire{filter:drop-shadow(0 0 6px #ffcc00) drop-shadow(0 0 14px #ff5a00) drop-shadow(0 0 26px #ff2200);animation:gfxFire .12s steps(2) infinite}
+@keyframes gfxFire{50%{filter:drop-shadow(0 0 9px #fff200) drop-shadow(0 0 18px #ff7a00) drop-shadow(0 0 34px #ff1a00)}}
+#gfx .w.multi{text-shadow:4px 4px 0 #111,8px 8px 0 var(--s1),12px 12px 0 #111,16px 16px 0 var(--s2),20px 20px 0 #111}
+#gfx .w.glow{filter:drop-shadow(0 0 10px var(--gl)) drop-shadow(0 0 22px var(--gl))}`; document.head.appendChild(st);
+  const cv=root.querySelector('canvas'), g=cv.getContext('2d'), tx=root.querySelector('.tx'); let W=0,H=0;
+  function size(){ const d=Math.min(2,devicePixelRatio||1); W=innerWidth; H=innerHeight; cv.width=W*d; cv.height=H*d; g.setTransform(d,0,0,d,0,0); } size(); addEventListener('resize',size);
+  const SPR={}; function spr(ch){ if(SPR[ch]) return SPR[ch]; const c=document.createElement('canvas'); c.width=c.height=96; const x=c.getContext('2d'); x.font='76px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(ch,48,54); return SPR[ch]=c; }
+  const P=[], RAYS=[], T=[]; let last=performance.now(), raf=0, speed=1;
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  function add(p){ P.push(Object.assign({t:0,life:2,g:0,vx:0,vy:0,rot:rnd(-3,3),vr:rnd(-4,4),s:40,a:1,drag:0,grow:0,sw:0,fade:.3},p)); kick(); }
+  function kick(){ if(!raf){ last=performance.now(); raf=requestAnimationFrame(loop); } }
+  function loop(now){ raf=0; const dt=Math.min(0.05,(now-last)/1000)*speed; last=now; g.clearRect(0,0,W,H);
+    for(let i=RAYS.length-1;i>=0;i--){ const r=RAYS[i]; r.t+=dt; if(r.t>r.life){ RAYS.splice(i,1); continue; } const a=1-Math.pow(r.t/r.life,2), cx=W/2, cy=H*0.38;
+      g.save(); g.globalAlpha=a*0.9; g.fillStyle=r.col; for(let k=0;k<r.n;k++){ const an=Math.random()*6.283, r0=rnd(0.28,0.5)*Math.min(W,H), r1=Math.hypot(W,H), w=rnd(0.004,0.02);
+        g.beginPath(); g.moveTo(cx+Math.cos(an)*r0,cy+Math.sin(an)*r0); g.lineTo(cx+Math.cos(an-w)*r1,cy+Math.sin(an-w)*r1); g.lineTo(cx+Math.cos(an+w)*r1,cy+Math.sin(an+w)*r1); g.closePath(); g.fill(); } g.restore(); }
+    for(let i=P.length-1;i>=0;i--){ const p=P[i]; p.t+=dt; if(p.t>p.life||p.dead){ P.splice(i,1); continue; }
+      if(p.orb){ p.ang+=p.w*dt; p.rad+=p.dr*dt; p.x=p.cx+Math.cos(p.ang)*p.rad; p.y=p.cy+Math.sin(p.ang)*p.rad*0.8; }
+      else { p.vy+=p.g*dt; if(p.drag){ const k=Math.exp(-p.drag*dt); p.vx*=k; p.vy*=k; } p.x+=(p.vx+Math.sin(p.t*3+p.rot)*p.sw)*dt; p.y+=p.vy*dt; }
+      p.rot+=p.vr*dt; p.s+=p.grow*dt; const f=p.t/p.life, a=p.a*(f>1-p.fade?(1-f)/p.fade:1)*(p.pop?Math.min(1,p.t/0.08):1), sc=p.pop?Math.min(1,0.3+p.t/0.12):1;
+      g.save(); g.globalAlpha=Math.max(0,a); g.translate(p.x,p.y); g.rotate(p.rot); const s=Math.min(p.s*sc,p.ch?320:130);
+      if(p.ch) g.drawImage(spr(p.ch),-s/2,-s/2,s,s);
+      else { g.globalCompositeOperation='lighter'; const gr=g.createRadialGradient(0,0,0,0,0,s/2); gr.addColorStop(0,'#fff'); gr.addColorStop(0.35,p.col); gr.addColorStop(1,'rgba(0,0,0,0)'); g.fillStyle=gr; g.beginPath(); g.arc(0,0,s/2,0,7); g.fill(); }
+      g.restore(); }
+    if(P.length||RAYS.length) raf=requestAnimationFrame(loop); else g.clearRect(0,0,W,H); }
+  const pick1=a=>Array.isArray(a)?a[(Math.random()*a.length)|0]:a;
+  const who=(o,x)=>typeof o==='string'&&o[0]==='#'?{col:o}:{ch:pick1(o)};
+  // ---- 粒の出し方 ----
+  const pat={
+    fall(o,n){ for(let i=0;i<n;i++) setTimeout(()=>add(Object.assign(who(o),{x:rnd(0,W),y:rnd(-80,-20),vy:rnd(260,560),vx:rnd(-40,40),g:220,sw:rnd(20,70),s:rnd(30,58),life:rnd(2.2,3.2),fade:.25})),rnd(0,700)/speed); },
+    fountain(o,n,at){ const [x,y]=at||[W/2,H+20]; for(let i=0;i<n;i++) setTimeout(()=>add(Object.assign(who(o),{x:x+rnd(-30,30),y,vx:rnd(-420,420),vy:rnd(-1500,-900)*(H/800),g:1500*(H/800),s:rnd(30,56),life:rnd(1.8,2.6)})),rnd(0,500)/speed); },
+    burst(o,n,at,pw=1){ const [x,y]=at||[W/2,H*0.38]; for(let i=0;i<n;i++){ const an=rnd(0,6.283), v=rnd(250,1100)*pw; add(Object.assign(who(o),{x,y,vx:Math.cos(an)*v,vy:Math.sin(an)*v,drag:2.2,g:350,s:rnd(26,60),life:rnd(1.1,1.8)})); } },
+    swirl(o,n,inward){ for(let i=0;i<n;i++) add(Object.assign(who(o),{orb:1,cx:W/2,cy:H*0.4,ang:rnd(0,6.283),rad:inward?rnd(260,420):rnd(20,120),dr:inward?-220:160,w:rnd(3.5,6)*(Math.random()<.5?1:-1),s:rnd(28,50),life:rnd(1.4,2.2)})); },
+    cannon(o,n,at){ const [x,y]=at||[W/2,H*0.42]; for(let i=0;i<n;i++) setTimeout(()=>{ const an=rnd(0,6.283), v=rnd(60,260); add(Object.assign(who(o),{x:x+rnd(-20,20),y:y+rnd(-20,20),vx:Math.cos(an)*v,vy:Math.sin(an)*v,s:rnd(10,24),grow:rnd(120,260),life:rnd(0.6,0.9),fade:.4,vr:rnd(-6,6)})); },rnd(0,600)/speed); },
+    stick(o,n){ for(let i=0;i<n;i++) setTimeout(()=>add(Object.assign(who(o),{x:rnd(W*0.08,W*0.92),y:rnd(H*0.12,H*0.8),vy:30,s:rnd(80,150),pop:1,life:rnd(1.2,1.8),vr:0,rot:rnd(-.4,.4)})),rnd(0,500)/speed); },
+    wall(o,rows){ const bw=Math.max(40,W/7), bh=bw*0.62, cols=Math.ceil(W/bw)+1; rows=rows||Math.ceil(H/bh);
+      for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) setTimeout(()=>add(Object.assign(who(o),{wall:1,x:c*bw+(r%2?bw/2:0),y:H-bh/2-r*bh,s:bw*1.25,rot:0,vr:0,pop:1,life:3.4})),(r*55+c*6)/speed); },
+    collapse(){ for(const p of P) if(p.wall){ p.wall=0; p.vx=rnd(-500,500); p.vy=rnd(-900,-200); p.g=1800; p.vr=rnd(-8,8); p.life=p.t+rnd(1,1.6); p.fade=.3; } } };
+  // ---- 文字 ----
+  let tw=null;
+  function text(t,o={}){ clearText(); const el=document.createElement('div'); el.className='w '+(o.cls||''); const L=[...t].length;
+    el.style.fontSize=Math.min(o.big?140:96,Math.floor(W*0.8/Math.max(3.2,L*0.92)))+'px';
+    const cols=o.colors||['#fff','#ffd23f']; el.style.setProperty('--g',`linear-gradient(180deg,${cols.join(',')})`); el.style.setProperty('--s1',cols[1]||cols[0]); el.style.setProperty('--s2',cols[2]||cols[0]); el.style.setProperty('--gl',cols[1]||cols[0]);
+    if(!o.cls||!/rainbow/.test(o.cls)) el.classList.add('fill');
+    el.innerHTML='<span class="in">'+[...t].map(c=>`<span class="c">${c===' '?'&nbsp;':c}</span>`).join('')+'</span>'; tx.appendChild(el); tw=el; return el; }
+  function clearText(){ tx.innerHTML=''; tw=null; }
+  const an=(el,kf,ms,opt={})=>el&&el.animate(kf,Object.assign({duration:ms/speed,easing:'cubic-bezier(.2,1.4,.4,1)',fill:'forwards'},opt));
+  const inner=()=>tw&&tw.querySelector('.in'), chars=()=>tw?[...tw.querySelectorAll('.c')]:[];
+  const tfx={
+    slam(){ an(inner(),[{transform:'scale(3.4) rotate(-8deg)',opacity:0},{transform:'scale(.88) rotate(2deg)',opacity:1,offset:.65},{transform:'scale(1)',opacity:1}],280); },
+    zoom(from=0.04){ an(inner(),[{transform:`scale(${from})`,opacity:0},{transform:'scale(1.25)',opacity:1,offset:.7},{transform:'scale(1)',opacity:1}],420); },
+    type(){ chars().forEach((c,i)=>an(c,[{transform:'scale(2.6) translateY(-30px)',opacity:0},{transform:'scale(1)',opacity:1}],220,{delay:i*70/speed,fill:'both'})); },
+    split(){ const e=inner(); if(!e) return; an(e,[{transform:'translateX(-60%) scaleX(.4)',opacity:0},{transform:'translateX(8%) scaleX(1.1)',opacity:1,offset:.7},{transform:'none',opacity:1}],360); },
+    shake(ms=700,px=10){ const k=[]; for(let i=0;i<10;i++) k.push({transform:`translate(${rnd(-px,px)}px,${rnd(-px,px)}px) rotate(${rnd(-3,3)}deg)`}); k.push({transform:'none'}); an(tw,k.map(x=>({transform:'translate(-50%,-50%) '+x.transform})),ms,{easing:'linear'}); },
+    grow(k=1.2,ms=300){ an(inner(),[{transform:'scale(1)'},{transform:`scale(${k})`}],ms,{easing:'ease-out'}); },
+    spin(ms=500){ an(inner(),[{transform:'rotate(0) scale(1)'},{transform:'rotate(360deg) scale(1.15)'}],ms,{easing:'ease-in-out'}); },
+    toViewer(){ an(inner(),[{transform:'scale(1)',opacity:1},{transform:'scale(7)',opacity:0}],420,{easing:'ease-in'}); },
+    shrink(){ an(inner(),[{transform:'scale(1)',opacity:1},{transform:'scale(0) rotate(-20deg)',opacity:0}],320,{easing:'ease-in'}); },
+    pop(){ const cs=chars(); cs.forEach(c=>{ const a=rnd(0,6.283), d=rnd(160,420); an(c,[{transform:'none',opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px) rotate(${rnd(-540,540)}deg) scale(.4)`,opacity:0}],520,{easing:'cubic-bezier(.1,.8,.3,1)'}); });
+      const r=tw.getBoundingClientRect(); pat.burst('#ffffff',24,[r.left+r.width/2,r.top+r.height/2],0.7); },
+    corners(){ const cs=chars(); cs.forEach((c,i)=>{ const q=i%4, dx=(q%2?1:-1)*rnd(90,160), dy=(q<2?-1:1)*rnd(90,200); an(c,[{transform:'none'},{transform:`translate(${dx}px,${dy}px) rotate(${rnd(-90,90)}deg)`,offset:.5},{transform:'none'}],700,{easing:'ease-in-out'}); }); },
+    cls(c){ tw&&tw.classList.add(c); }, uncls(c){ tw&&tw.classList.remove(c); } };
+  // ---- 画面 ----
+  const cvs=()=>renderer.domElement;
+  const scr={
+    flash(c,a=.8,ms=260){ flash(c,a,ms/speed); },
+    shake(v){ S.shake=Math.max(S.shake||0,v); },
+    slow(f,sec){ S.timeScale=f; T.push(setTimeout(()=>{ if(S.timeScale===f) S.timeScale=1; },sec*1000)); },
+    cam(k,ms=500){ const c=cvs(); c.style.transition=`transform ${ms/speed}ms cubic-bezier(.2,.9,.3,1)`; c.style.transformOrigin='50% 40%'; c.style.transform=k===1?'':`scale(${k})`; },
+    filt(f,ms){ const c=cvs(); c.style.filter=f; T.push(setTimeout(()=>{ c.style.filter=''; },ms/speed)); },
+    rays(col='#fff',sec=0.6,n=26){ RAYS.push({col,life:sec,t:0,n}); kick(); },
+    fw(cols){ fireworksC(cols); } };
+  // ---- 音 ----
+  const snd={ don(){ tone(90,0.45,'sine',.7,38); tone(160,0.12,'square',.08); }, boom(){ tone(60,0.9,'sawtooth',.45,28); tone(110,0.5,'sine',.6,40); },
+    charin(n=1){ for(let i=0;i<n;i++) setTimeout(()=>{ tone(1760+rnd(-100,300),0.1,'square',.05); tone(2640,0.14,'triangle',.05); },i*70); },
+    kasha(){ tone(4200,0.03,'square',.08); setTimeout(()=>tone(2600,0.05,'square',.06),40); }, rise(){ tone(260,0.7,'sawtooth',.08,1900); },
+    kira(n=6){ for(let i=0;i<n;i++) setTimeout(()=>tone(1400+i*260,0.09,'triangle',.06),i*55); }, gara(n=8){ for(let i=0;i<n;i++) setTimeout(()=>tone(rnd(90,220),0.07,'square',.09),i*60); },
+    shara(){ [880,1175,1480,1760,2350].forEach((f,i)=>setTimeout(()=>tone(f,0.16,'triangle',.06),i*60)); }, bachi(n=4){ for(let i=0;i<n;i++) setTimeout(()=>tone(rnd(900,1600),0.04,'square',.1,rnd(150,300)),i*50); } };
+  // ---- 台本 ----
+  let on=false, restoreBanner=null;
+  function run(script,{preview=false}={}){ if(preview) clearAll(); else stop(); on=true; speed=(window.FF&&FF.on)?FF.X:1;
+    if(!preview&&window.banner){ banner.style.visibility='hidden'; restoreBanner=()=>{ banner.style.visibility=''; }; }
+    let end=0; for(const [t,f] of script){ end=Math.max(end,t); T.push(setTimeout(()=>{ try{ f(); }catch(e){ console.error('gfx '+e.name); } },t*1000/speed)); }
+    T.push(setTimeout(stop,(end+0.6)*1000/speed)); return end; }
+  function stop(){ T.splice(0).forEach(clearTimeout); clearText(); if(restoreBanner){ restoreBanner(); restoreBanner=null; } const c=cvs(); c.style.transform=''; c.style.filter=''; if(S.timeScale!==1&&on) S.timeScale=1; on=false; }
+  function clearAll(){ stop(); P.length=0; RAYS.length=0; }
+  return {pat,text,tfx,scr,snd,run,stop,clearAll,add,get W(){return W;},get H(){return H;},get on(){return on;},rnd};
+})();
+// ===== ゴール演出の台本（ChatGPT案を時間どおりに）=====
+const {pat:gp,tfx:gt,scr:gs,snd:gn}=GFX; const gtx=(t,o)=>GFX.text(t,o);
+const BILL=['💴','💸','💵'], PROT=['🥛','🥤'];
+const GSCRIPT={
+  'いつもの':g=>[[0,()=>{ gs.flash('#fff',.8,80); gn.don(); }],[.1,()=>{ gtx(g.text||'GOAL!!',{colors:['#fff','#ffd23f','#ffb000']}); gt.slam(); }],[.3,()=>gt.grow(1.15,200)],[.35,()=>gt.shake(500,6)],
+    [.6,()=>gp.fountain('#ffd800',26)],[1,()=>gs.rays('#fff',.35)],[1.5,()=>gt.shake(500,4)],[1.2,()=>gs.fw(['#d8ff3c','#fff'])],[2,()=>gp.fall('#ffd800',14)],[2.7,()=>gt.shrink()]],
+  '桜満開ゴール':g=>[[0,()=>{ gs.flash('#ff9fbd',.7,160); gn.shara(); }],[.1,()=>{ gtx(g.text,{colors:['#fff','#ff9fbd','#ff5c9a']}); gt.type(); }],[.45,()=>gt.grow(1.3,220)],[.5,()=>gp.fountain('🌸',40)],[.8,()=>gt.shake(600,8)],
+    [.9,()=>gs.cam(1.06)],[1.2,()=>gp.cannon('🌸',26)],[1.8,()=>gp.swirl('#ffb7c5',30)],[1.9,()=>gp.fall('🌸',50)],[2.5,()=>gt.spin(420)],[2.9,()=>{ gt.shrink(); gs.cam(1); }]],
+  '黄色いGOAL':g=>[[0,()=>{ gs.flash('#fff000',.8,200); gn.don(); }],[.1,()=>{ gtx(g.text,{colors:['#fffbd0','#ffe600','#ffb800'],cls:'glow',big:1}); gt.slam(); }],[.25,()=>gt.cls('glow')],[.5,()=>{ gp.burst('⭐',45); gn.kira(8); }],
+    [.9,()=>gs.rays('#fff000',.5,34)],[1.3,()=>gt.shake(700,14)],[2,()=>gp.cannon('⭐',22)],[2.7,()=>gt.shrink()]],
+  'レンガ崩落ゴール':g=>[[0,()=>{ gs.flash('#000',.55,160); gn.don(); }],[.1,()=>{ gtx(g.text,{colors:['#fff','#ffb08a','#b94a2c'],cls:'multi',big:1}); gt.slam(); }],[.3,()=>gt.split()],
+    [.5,()=>{ gp.fall('🧱',65); gn.gara(12); }],[.8,()=>gs.shake(.9)],[.8,()=>gs.cam(1.08)],[1,()=>gp.cannon('🧱',18)],[1.4,()=>gt.shake(600,12)],[2,()=>{ gp.burst('#a9472d',30,[GFX.W/2,GFX.H*0.75]); gn.gara(6); }],[2.6,()=>{ gt.pop(); gs.cam(1); gn.don(); }]],
+  '札束ゴール':g=>[[0,()=>{ gs.flash('#00c853',.6,200); gn.don(); }],[.1,()=>{ gtx(g.text,{colors:['#fff6b0','#ffd700','#00c853']}); gt.zoom(); }],[.35,()=>gt.shake(700,16)],[.5,()=>{ gp.fall(BILL,100); gn.charin(10); }],
+    [1.3,()=>gt.grow(1.12,200)],[1.8,()=>{ gp.cannon(BILL,26); gn.kasha(); }],[2.3,()=>{ gp.stick('💴',1); gn.kasha(); }],[2.7,()=>gt.shrink()]],
+  'フカシ爆発':g=>[[0,()=>gs.filt('invert(1)',90)],[.08,()=>{ gtx(g.text,{colors:['#fff','#ffd000','#ff2d00'],cls:'fire',big:1}); gt.zoom(0.02); gn.rise(); }],[.3,()=>gt.grow(1.6,220)],[.45,()=>gt.corners()],
+    [.7,()=>{ gp.burst('#ff3b00',80); gn.boom(); }],[.9,()=>{ gs.shake(1.1); gs.cam(1.12); }],[.95,()=>gp.cannon('#ffd000',30)],[1.1,()=>gt.grow(1.9,300)],[1.5,()=>gt.spin(480)],[2,()=>{ gs.flash('#ff2200',.5,200); gt.toViewer(); gn.don(); }],[2.5,()=>{ gs.cam(1); gtx(g.text,{colors:['#fff','#ffd000','#ff2d00'],cls:'fire'}); gt.pop(); }]],
+  '筋肉ゴール':g=>[[0,()=>{ gs.flash('#ff3030',.6,200); gn.don(); }],[.1,()=>{ gtx(g.text,{colors:['#fff','#ff9090','#ff3030'],big:1}); gt.split(); }],[.35,()=>{ gt.grow(1.35,220); gt.shake(600,10); }],
+    [.6,()=>{ gp.fall(PROT,55); }],[1,()=>gp.fountain('#ffffff',50)],[1.3,()=>{ gt.cls('multi'); for(let i=0;i<4;i++) setTimeout(()=>tone(70,0.12,'square',.25),i*110); }],[1.7,()=>{ gs.shake(1); gs.cam(1.08); }],[2.1,()=>gp.cannon(PROT,20)],[2.7,()=>{ gt.shrink(); gs.cam(1); gn.charin(); }]],
+  '札束大噴火':g=>[[0,()=>{ gs.flash('#00ff66',.7,220); gn.boom(); }],[.1,()=>{ gtx(g.text,{colors:['#fff6b0','#ffd700','#00c853'],cls:'multi',big:1}); gt.zoom(); }],[.35,()=>{ gp.fountain(BILL,140); gn.charin(16); }],
+    [.6,()=>gs.cam(1.12)],[.6,()=>gp.fall(BILL,60)],[.9,()=>gp.burst(BILL,50)],[1.2,()=>gt.shake(700,16)],[1.5,()=>gs.fw(['#ffd700','#00ff66','#ffffff'])],[1.9,()=>gp.cannon(BILL,40)],
+    [2.3,()=>{ gp.stick('💰',1); gs.shake(1); gn.don(); }],[2.8,()=>{ gt.pop(); gs.cam(1); gn.charin(6); }]],
+  'レンガ地獄':g=>[[0,()=>gs.flash('#000',.95,300)],[.1,()=>{ gtx(g.text,{colors:['#fff','#ff9070','#ff3a20'],big:1}); gt.slam(); gn.don(); }],[.3,()=>{ gt.pop(); gp.burst('🧱',30); }],
+    [.5,()=>{ gp.wall('🧱'); for(let i=0;i<10;i++) setTimeout(()=>tone(180+i*20,0.05,'square',.1),i*70); }],[1.1,()=>gs.shake(1.2)],[1.3,()=>{ gp.collapse(); gn.gara(14); }],[1.6,()=>{ gp.burst('🧱',60,[GFX.W/2,GFX.H*0.6],1.3); gn.boom(); gs.cam(1.14); }],
+    [2,()=>{ gtx(g.text,{colors:['#fff','#ff9070','#ff3a20'],cls:'multi',big:1}); gt.zoom(); }],[2.5,()=>gt.spin(420)],[2.9,()=>{ gt.toViewer(); gs.cam(1); }]],
+  '全てをフカすゴール':g=>[[0,()=>{ gs.filt('grayscale(1)',900); }],[.1,()=>{ gtx(g.text,{cls:'rainbow',big:1}); gt.zoom(0.02); gn.rise(); }],[.4,()=>gt.corners()],
+    [.6,()=>{ gp.burst(BILL,30); gp.burst('🧱',30); gp.burst('⭐',30); gp.fountain('🌸',30); gp.fountain(PROT,20); gn.charin(8); }],[.9,()=>gs.filt('invert(1)',160)],[1,()=>{ gp.swirl(['💴','🧱','⭐','🌸'],60,true); gs.cam(1.16); }],
+    [1.3,()=>{ gp.burst(['💴','🧱','⭐','🌸','🥛','✨'],120,null,1.4); gn.boom(); gs.flash('#fff',.8,200); }],[1.6,()=>gt.grow(1.5,260)],[1.9,()=>{ gs.shake(1.4); gs.rays('#fff',.8,40); }],[2.1,()=>gt.spin(360)],
+    [2.4,()=>{ gt.toViewer(); gs.fw(['#ff00ff','#ffd700','#00ffff','#ffffff']); }],[2.7,()=>{ gs.slow(0.05,0.15); }],[2.85,()=>{ gtx(g.text,{cls:'rainbow',big:1}); gt.pop(); gs.cam(1); gn.don(); gn.charin(4); }]],
+  '布教GOAL':g=>[[0,()=>{ gs.flash('#fff',.8,200); }],[.1,()=>{ gtx(g.text,{colors:['#fff','#39d0ff','#ff4fa3']}); gt.type(); gn.kira(10); }],[.5,()=>gt.grow(1.3,240)],[.6,()=>gp.cannon('#ffffff',40)],[.9,()=>gt.shake(600,12)],
+    [1.2,()=>gs.rays('#39d0ff',.5)],[1.4,()=>{ gt.grow(1.7,220); gn.kasha(); setTimeout(()=>gn.kasha(),120); setTimeout(()=>gn.kasha(),240); }],[1.7,()=>{ gp.fountain(['🌸','⭐','💴','🧱'],60); gn.don(); }],
+    [2,()=>{ gs.fw(['#39d0ff','#ff4fa3','#ffd700']); confetti(); }],[2.3,()=>{ gt.cls('rainbow'); gt.uncls('fill'); }],[2.6,()=>gt.grow(2,200)],[2.9,()=>{ gt.pop(); gp.cannon(['📣','✨'],20); }]] };
+const GKEY={'桜満開ゴール':1,'黄色いGOAL':1,'レンガ崩落ゴール':1,'札束ゴール':1,'フカシ爆発':1,'筋肉ゴール':1,'札束大噴火':1,'レンガ地獄':1,'全てをフカすゴール':1,'布教GOAL':1};
+function goalScriptFor(o){ if(!o) return GSCRIPT['いつもの']({text:'GOAL!!'}); const f=GSCRIPT[o.name]; return f?f(o.goal):GSCRIPT['いつもの'](o.goal); }
+// 自分のゴール：新しい演出（いつものも作り直し）。今までの降るだけ＋花火はやめる
+window.GOALFX=()=>{ if(!S.shotMine) return false; const id=GACHA.eq('goal'), o=id&&GI[id]&&GACHA.owned(id)?GI[id]:null;
+  GFX.run(goalScriptFor(o)); setTimeout(()=>{ S.bannerT=Math.max(S.bannerT,3.3); },0); return true; };
+{ const _r=resetKick; resetKick=function(){ GFX.clearAll(); return _r.apply(this,arguments); }; }
+{ const _b=RP.begin.bind(RP); RP.begin=function(){ GFX.clearAll(); return _b(); }; }
+// きせかえのプレビュー：本番と同じ台本を流す
+{ const _k=kPrev; kPrev=function(id){ if(id.startsWith('g:')){ const k=id.slice(2), o=k&&GI[k]?GI[k]:null; GFX.run(goalScriptFor(o),{preview:true}); return; } if(id.startsWith('t:')){ TPREV(id.slice(2)); return; } return _k(id); }; }
+{ const _b=document.getElementById('skBack'); _b&&_b.addEventListener('click',()=>GFX.clearAll()); }
+// ===== シュートの軌跡（ChatGPT案）：飛んでいる間の粒・ボールの周り・スロー・当たった瞬間の一発ネタ =====
+const TSPEC={
+  '燃えすぎシュート':{p:'🔥',rate:.025,n:2,sz:.2,impact:()=>{ gp.burst('🔥',36,TSC()); gs.flash('#ff6a00',.4,200); gn.don(); }},
+  'キラキラ普通弾':{p:'✨',rate:.035,n:2,sz:.14,impact:()=>{ gp.burst('✨',22,TSC(),.7); gn.kira(4); }},
+  'ハート直撃':{p:'❤️',rate:.035,n:1,ring:'💗',sz:.16,impact:()=>{ gp.cannon('❤️',26,TSC()); tone(1320,0.12,'triangle',.08,1760); }},
+  '星くずキック':{p:'⭐',rate:.04,n:1,ring:'⭐',sz:.16,impact:()=>{ gp.burst('⭐',30,TSC()); gn.charin(); }},
+  'ビリビリ危険球':{p:'⚡',rate:.02,n:2,side:1,sz:.2,impact:()=>{ gs.flash('#ffff00',.6,160); gp.burst('⚡',34,TSC(),1.2); gn.bachi(6); }},
+  '札束シュート':{p:'💸',rate:.03,n:2,ring:'💴',sz:.2,impact:()=>{ gp.cannon(BILL,30,TSC()); gn.charin(5); }},
+  'プロテイン噴射':{p:'🥛',rate:.03,n:2,fount:1,sz:.2,impact:()=>{ gp.burst('#ffffff',50,TSC(),1.1); gs.flash('#ffffff',.35,220); gn.don(); }},
+  '虹色フカシ':{p:'🌈',rate:.035,n:1,ring:'✨',sz:.24,impact:()=>{ gp.burst(['#ff3b30','#ffd60a','#34c759','#0a84ff','#bf5af2'],60,TSC(),1.2); gs.flash('#fff',.4,180); gn.rise(); }},
+  '桜吹雪キック':{p:'🌸',rate:.02,n:3,ring:'🌸',sz:.2,impact:()=>{ gp.cannon('🌸',40,TSC()); gn.shara(); }},
+  'ゴッド雷撃':{p:'⚡',rate:.015,n:3,side:1,sz:.3,launch:()=>gs.flash('#fff',.6,120),slow:[.35,.2],impact:()=>{ gs.flash('#ffff66',.8,240); gp.burst('⚡',60,TSC(),1.4); gs.shake(1); gn.boom(); gs.rays('#fff066',.4); }},
+  '札束の嵐':{p:'💸',rate:.012,n:3,ring:'💴',ring2:1,sz:.26,slow:[.3,.2],impact:()=>{ gp.burst(BILL,80,TSC(),1.3); gp.cannon(BILL,40,TSC()); gs.shake(.9); gn.boom(); gn.charin(10); }},
+  '伝説の七色閃光':{p:'🌈',rate:.012,n:3,ring:'✨',ring2:1,sz:.3,launch:()=>gs.flash('#fff',.9,160),slow:[.2,.25],inv:1,impact:()=>{ gs.rays('#fff',.7,44); gp.burst(['#ff0000','#ff8800','#ffff00','#00ff00','#00ccff','#4400ff','#ff00ff'],120,TSC(),1.5); gp.stick('✨',6); gn.boom(); gn.kira(10); gs.flash('#fff',.7,220); }} };
+function TSC(){ const v=pos.clone().project(camera); return [(v.x+1)/2*innerWidth,(1-v.y)/2*innerHeight]; }
+function myTrailItem(){ const id=GACHA.eq('trail'); return id&&GI[id]&&GACHA.owned(id)?GI[id]:null; }
+const TR2={acc:0,ang:0,phase:null,slowDone:false,hit:false};
+(function trLoop(){ requestAnimationFrame(trLoop); const it=myTrailItem(), sp=it&&TSPEC[it.name], mine=S.shotMine;
+  if(S.phase!==TR2.phase){ if(S.phase==='flight'&&sp&&mine){ TR2.slowDone=false; TR2.hit=false; if(sp.launch) sp.launch(); } TR2.phase=S.phase; }
+  if(!sp||!mine||S.phase!=='flight') { if(sp&&mine&&S.phase==='result'&&!TR2.hit&&S.resolved&&S.resolved!=='miss'){ TR2.hit=true; sp.impact(); } return; }
+  TR2.acc+=1/60; TR2.ang+=0.35;
+  if(TR2.acc>=sp.rate){ TR2.acc=0; for(let i=0;i<sp.n;i++) emoBurst(sp.p,pos,{n:1,speed:sp.side?1.6:0.5,up:sp.fount?1.4:0.2,grav:sp.fount?3:0.6,life:0.7,size:sp.sz,spread:0.18});
+    if(sp.ring){ for(const k of sp.ring2?[0,2.09,4.19]:[0,3.14]){ const a=TR2.ang+k; emoBurst(sp.ring,new THREE.Vector3(pos.x+Math.cos(a)*0.3,pos.y+Math.sin(a)*0.3,pos.z),{n:1,speed:0.05,up:0,grav:0,life:0.35,size:sp.sz*0.8,spread:0}); } } }
+  if(sp.slow&&!TR2.slowDone&&pos.z<3.2){ TR2.slowDone=true; gs.slow(sp.slow[0],sp.slow[1]); if(sp.inv) gs.filt('invert(1)',160); } })();
+// きせかえの軌跡プレビュー：画面の手前をボールが横切る（2D）＋当たった一発ネタ
+function TPREV(k){ const it=k?GI[k]:null, sp=it&&TSPEC[it.name]; GFX.clearAll(); const W=innerWidth,H=innerHeight, y0=H*0.42;
+  const col=it&&it.trail?it.trail.c1:'#d8ff3c'; let t=0; const iv=setInterval(()=>{ t+=0.03; const x=-40+(W+80)*Math.min(1,t/0.9), y=y0-Math.sin(Math.min(1,t/0.9)*Math.PI)*H*0.12;
+    GFX.add({col,x,y,s:26,life:0.5,vr:0}); if(sp) GFX.add({ch:sp.p,x:x+GFX.rnd(-10,10),y:y+GFX.rnd(-10,10),vx:GFX.rnd(-40,40),vy:GFX.rnd(-40,40),s:30,life:0.6}); GFX.add({ch:'⚽',x,y,s:34,life:0.06,vr:0,rot:t*12,fade:0.01});
+    if(t>=0.9){ clearInterval(iv); if(sp){ const at=[W*0.8,y0]; const orig=TSC; try{ TSC=()=>at; sp.impact(); } finally { TSC=orig; } } } },30); }
+if(/dbg/.test(location.search)) Object.assign(window,{__GFX:GFX,__GSCRIPT:GSCRIPT,__goalScriptFor:goalScriptFor,__TPREV:TPREV});
+
+// ===== 第3部の新ボス：見た目の小物と、全員ちがう必殺セーブ（ChatGPT案 2026-09-26）=====
+// 小物：頭・顔・手・背中・周りに浮かぶ物。絵文字はそのまま大きな板（スプライト）で、眼鏡・マスク・音叉・消しゴム・額縁・赤ペンなどは単純な形で作る
+const P3X={tex:{}};
+function p3Tex(key,draw,w=128,h=128){ if(P3X.tex[key]) return P3X.tex[key]; const c=document.createElement('canvas'); c.width=w; c.height=h; draw(c.getContext('2d'),w,h); const t=new THREE.CanvasTexture(c); t.encoding=THREE.sRGBEncoding; return P3X.tex[key]=t; }
+function p3Sprite(tex,s){ const m=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false})); m.scale.set(s,s,1); return m; }
+const p3Emo=(ch,s)=>p3Sprite(p3Tex('e'+ch,(g,w,h)=>{ g.font=`${w*0.8}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif`; g.textAlign='center'; g.textBaseline='middle'; g.fillText(ch,w/2,h*0.56); }),s);
+const p3Txt=(t,col,s)=>p3Sprite(p3Tex('t'+t+col,(g,w,h)=>{ g.font=`900 ${w*0.7}px system-ui,sans-serif`; g.textAlign='center'; g.textBaseline='middle'; g.lineWidth=10; g.strokeStyle='#fff'; g.strokeText(t,w/2,h*0.55); g.fillStyle=col; g.fillText(t,w/2,h*0.55); }),s);
+const p3M=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:new THREE.Color(c).convertSRGBToLinear(),roughness:0.5},o));
+const P3FACE={
+  monocle(){ const g=new THREE.Group(); const r=new THREE.Mesh(new THREE.TorusGeometry(0.032,0.006,8,24),p3M('#d4a017',{metalness:.8,roughness:.3})); r.position.set(-0.04,0,0); g.add(r); const ch=new THREE.Mesh(new THREE.CylinderGeometry(0.002,0.002,0.12,4),p3M('#d4a017')); ch.position.set(-0.07,-0.06,-0.01); ch.rotation.z=0.4; g.add(ch); return g; },
+  glasses(){ const g=new THREE.Group(), m=p3M('#222'); for(const x of[-0.038,0.038]){ const r=new THREE.Mesh(new THREE.TorusGeometry(0.028,0.005,8,24),m); r.position.x=x; g.add(r); } const b=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.004,0.004),m); g.add(b); return g; },
+  halfblack(){ const g=P3FACE.glasses(); const l=new THREE.Mesh(new THREE.CircleGeometry(0.027,20),new THREE.MeshBasicMaterial({color:0x000000})); l.position.set(0.038,0,0.002); g.add(l); return g; },
+  stargoggle(){ const g=new THREE.Group(); for(const x of[-0.04,0.04]){ const s=p3Emo('⭐',0.07); s.position.set(x,0,0.01); g.add(s); } const b=new THREE.Mesh(new THREE.TorusGeometry(0.1,0.008,6,30),p3M('#3B1F47')); b.rotation.x=Math.PI/2; b.position.z=-0.08; g.add(b); return g; },
+  mask(){ const t=p3Tex('mask',(g,w,h)=>{ g.fillStyle='#f4f4f0'; g.beginPath(); g.ellipse(w/2,h/2,w*0.42,h*0.48,0,0,7); g.fill(); g.fillStyle='#111'; g.fillRect(w*0.28,h*0.4,w*0.14,h*0.05); g.fillRect(w*0.58,h*0.4,w*0.14,h*0.05); g.fillRect(w*0.38,h*0.72,w*0.24,h*0.03); });
+    const m=new THREE.Mesh(new THREE.PlaneGeometry(0.17,0.2),new THREE.MeshBasicMaterial({map:t,transparent:true})); return m; },
+  paperglasses(){ const g=new THREE.Group(), m=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.9}); for(const x of[-0.04,0.04]){ const r=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.035,0.004),m); r.position.x=x; g.add(r); } return g; } };
+const P3HEAD={
+  earmuff(){ const g=new THREE.Group(), m=p3M('#23A6A6'), d=p3M('#103C3C'); for(const x of[-0.1,0.1]){ const c=new THREE.Mesh(new THREE.SphereGeometry(0.045,12,10),m); c.scale.set(0.7,1,1); c.position.set(x,0.04,0); g.add(c); } const b=new THREE.Mesh(new THREE.TorusGeometry(0.1,0.01,6,24,Math.PI),d); b.position.y=0.05; g.add(b); return g; },
+  pencap(){ const g=new THREE.Group(); const c=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.09,0.2,16),p3M('#e0202e')); c.position.y=0.25; g.add(c); const t=new THREE.Mesh(new THREE.ConeGeometry(0.07,0.1,16),p3M('#b3141f')); t.position.y=0.4; g.add(t); const clip=new THREE.Mesh(new THREE.BoxGeometry(0.015,0.16,0.02),p3M('#d0d0d0',{metalness:.8})); clip.position.set(0,0.25,0.085); g.add(clip); return g; } };
+const P3HAND={
+  fork(){ const g=new THREE.Group(), m=p3M('#c8ccd0',{metalness:.9,roughness:.25}); const h=new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,0.14,6),m); h.position.y=-0.07; g.add(h); for(const x of[-0.02,0.02]){ const p=new THREE.Mesh(new THREE.BoxGeometry(0.01,0.14,0.01),m); p.position.set(x,0.07,0); g.add(p); } const u=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.01,0.01),m); g.add(u); return g; },
+  eraser(){ const g=new THREE.Group(); const a=new THREE.Mesh(new THREE.BoxGeometry(0.22,0.1,0.12),p3M('#f8f8f8')); g.add(a); const b=new THREE.Mesh(new THREE.BoxGeometry(0.1,0.104,0.124),p3M('#3a7bd5')); b.position.x=0.04; g.add(b); return g; },
+  redpen(){ const g=new THREE.Group(); const b=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.4,10),p3M('#e0202e')); g.add(b); const t=new THREE.Mesh(new THREE.ConeGeometry(0.02,0.06,10),p3M('#f2d8a0')); t.position.y=-0.23; t.rotation.x=Math.PI; g.add(t); return g; } };
+const P3BACK={
+  frame(){ const g=new THREE.Group(), m=p3M('#d4a017',{metalness:.7,roughness:.3}); for(const [w,h,x,y] of[[0.6,0.05,0,0.3],[0.6,0.05,0,-0.3],[0.05,0.6,0.3,0],[0.05,0.6,-0.3,0]]){ const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,0.04),m); b.position.set(x,y,0); g.add(b); } return g; },
+  board(){ const t=p3Tex('board',(g,w,h)=>{ g.fillStyle='#1d1030'; g.fillRect(0,0,w,h); g.strokeStyle='#e0202e'; g.lineWidth=8; g.strokeRect(6,6,w-12,h-12); g.fillStyle='#e0202e'; g.font='900 44px system-ui'; g.textAlign='center'; g.fillText('×  ✓',w/2,h*0.42); g.fillText('〃 ト',w/2,h*0.82); },256,256);
+    return new THREE.Mesh(new THREE.PlaneGeometry(0.42,0.42),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide})); } };
+{ const _bp=buildProps; buildProps=function(H,sk){ _bp(H,sk); const E=sk.props&&sk.props.emo; if(!E) return; const B=H.bones, add=(bone,o)=>{ B[bone].add(o); H.propsG.push(o); return o; };
+  // 頭
+  if(typeof E.head==='string'){ const o=P3HEAD[E.head](); add('Head',o); }
+  else if(E.head){ const [ch,s,rot]=E.head, o=p3Emo(ch,s); o.position.set(0,0.3,0); if(rot) o.material.rotation=rot; add('Head',o); }
+  // 顔
+  if(E.face&&P3FACE[E.face]){ const o=P3FACE[E.face](); o.position.set(0,0.07,0.11); add('Head',o); }
+  // 手（右手）
+  if(typeof E.hand==='string'){ const o=P3HAND[E.hand](); o.position.set(0,-0.08,0.02); add('hand_r',o); }
+  else if(E.hand){ const o=p3Emo(E.hand[0],E.hand[1]); o.position.set(0,-0.1,0.05); add('hand_r',o); }
+  // 背中
+  let back=null;
+  if(typeof E.back==='string'){ back=P3BACK[E.back](); back.position.set(0,0.12,-0.2); add('spine_03',back); }
+  else if(E.back){ back=p3Emo(E.back[0],E.back[1]); back.position.set(0,0.15,-0.22); add('spine_03',back); const mode=E.back[2], o=back;
+    H.anim.push(t=>{ if(mode==='spin') o.material.rotation=t*2; else if(mode==='tick') o.material.rotation=Math.sin(t*6)*0.15; else if(mode==='bob') o.position.y=0.15+Math.sin(t*2.4)*0.05; else if(mode==='pulse'){ const k=E.back[1]*(1+Math.max(0,Math.sin(t*8))*0.18); o.scale.set(k,k,1); } }); }
+  if(back&&typeof E.back==='string') H.anim.push(t=>{ back.rotation.z=E.back==='board'?Math.sin(t*1.2)*0.35:Math.sin(t*1.5)*0.08; });
+  // 周りに浮かぶ物（体の周りを回る）
+  if(E.float){ const items=[]; const [a,b]=E.float;
+    const mk=i=>{ if(a==='num') return p3Txt(String((i%12)+1),b,0.14); if(a==='∠') return p3Txt(i%2?'∠':'°',b,0.15); if(a==='、。！？') return p3Txt(a[i%4],b,0.17); if(b==='🎶') return p3Emo(i%2?'🎵':'🎶',0.15); return p3Emo(a,a==='📄'?0.17:0.14); };
+    const n=a==='num'?12:8; for(let i=0;i<n;i++){ const o=mk(i); add('spine_02',o); items.push(o); }
+    H.anim.push(t=>{ items.forEach((o,i)=>{ const an=t*0.9+i/n*Math.PI*2, r=0.52; o.position.set(Math.cos(an)*r,0.1+(b==='bob'?Math.sin(t*2+i)*0.12:b==='flutter'?Math.sin(t*3+i*1.7)*0.1:Math.sin(an*2)*0.05),Math.sin(an)*r); if(b==='flutter') o.material.rotation=Math.sin(t*4+i)*0.6; }); }); } }; }
+// ===== 必殺セーブ：6つの仕組み。「攻略法」の所を狙ったシュートは破れる（ok=false）=====
+const P3W={   // 弱点：蹴った狙い（S.shot）が当てはまれば必殺セーブが破れる
+  tilt:s=>Math.abs(s.curve||0)<0.3&&s.ty>0.8&&s.ty<1.7,                 // 真ん中の高さへ真っ直ぐ
+  rewind:s=>Math.abs(s.tx)<1.1,                                          // 最初の一撃を中央へ
+  grav:s=>s.ty>1.3&&s.ty<2.2&&Math.abs(s.tx)<2.4,                        // 中央より少し上
+  silence:s=>s.ty<0.8&&Math.abs(s.tx)>2.0,                               // 低い角
+  blank:s=>Math.abs(s.tx)>2.6,                                           // 白紙の外＝ゴールの端
+  rewrite:()=>!!R.trick };                                               // 自分の技（フカシ）で蹴る＝金色の元の軌道
+function p3Kind(){ return ST.on&&ST.ch&&ST.ch.part===3?'b'+ST.idx:null; }
+{ const _l=launch; launch=function(){ const r=_l.apply(this,arguments); const k=p3Kind();
+    if(k&&R.gkSp&&!R.ultra){ R.gkSp=k; const base=BSP_DEF[k].base, s=S.shot||{}; R.gkSpOK=!(P3W[base]&&P3W[base](s)); R.p3weak=!R.gkSpOK; }
+    return r; }; }
+const cvsR=()=>renderer.domElement;
+function p3Screen(tf,ms,filter){ const c=cvsR(); c.style.transition=`transform ${Math.min(300,ms/3)}ms ease, filter 150ms`; c.style.transform=tf; if(filter) c.style.filter=filter; setTimeout(()=>{ c.style.transform=''; c.style.filter=''; },ms); }
+const P3SP={
+  tilt(ok){ p3Screen('rotate(-14deg) scale(1.12)',1100); GFX.pat.burst(['📐','📏'],18,null,.8); for(let i=0;i<6;i++) GFX.add({ch:'∠',x:GFX.rnd(0,innerWidth),y:GFX.rnd(0,innerHeight*.6),s:60,life:1,pop:1,vr:0}); tone(300,0.5,'triangle',.1,140); },
+  rewind(ok){ flash('#ffffff',0.8,160); p3Screen('scale(1.05)',900,'sepia(1) saturate(1.6)'); GFX.pat.swirl(['⏪','⏱️','⌛'],24,true); tone(1200,0.6,'sawtooth',.06,200); setTimeout(()=>tone(200,0.4,'sawtooth',.06,1200),500); },
+  grav(ok){ tone(880,0.8,'sine',.12); setTimeout(()=>tone(880,0.6,'sine',.08),120); p3Screen('scaleY(-1)',850); GFX.pat.fountain('🪨',16,[innerWidth/2,innerHeight*0.2]); },
+  silence(ok){ p3Screen('',1000,'grayscale(1) contrast(1.2)'); for(let i=0;i<4;i++) setTimeout(()=>ring(new THREE.Vector3(GK.cx||0,1.1,0.5),0x23A6A6,9,0.5),i*150); GFX.pat.burst(['🔇','🎵'],14,null,.6); if(typeof AC!=='undefined'&&AC&&AC.state==='running'){ AC.suspend().then(()=>setTimeout(()=>AC.resume(),700)).catch(()=>{}); } },
+  blank(ok){ const m=new THREE.Mesh(new THREE.PlaneGeometry(5.2,2.5),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.78})); m.position.set(0,1.22,0.5); m.scale.setScalar(0.05); scene.add(m); BSP.objs.push({m,grow:1,d:0}); GFX.pat.burst('📄',24,null,.9); tone(2400,0.08,'square',.06); },
+  rewrite(ok){ GFX.text('✕',{colors:['#ff4d4d','#e0202e','#8a0010'],big:1}); GFX.tfx.slam(); setTimeout(()=>GFX.stop(),900); flash('#e0202e',0.35,200); const hud=document.querySelector('.hud'); if(hud){ hud.style.opacity=0; setTimeout(()=>hud.style.opacity='',900); } for(let i=0;i<10;i++) GFX.add({ch:['🖍️','✏️'][i%2],x:GFX.rnd(0,innerWidth),y:GFX.rnd(0,innerHeight*.7),s:54,life:1.1,pop:1}); tone(150,0.5,'square',.12,80); } };
+{ const _b=bspRun; bspRun=function(kind,tx,ty,ok){ const r=_b(kind,tx,ty,ok); const K=BSP_DEF[kind]&&BSP_DEF[kind].base;
+    if(P3SP[K]){ try{ P3SP[K](ok); }catch(e){ console.error('p3sp '+e.name); } if(ok) GK.block={x0:-HALF,x1:HALF,y0:0,y1:GOAL_H,z:0.35}; else GK.block=null; }
+    return r; }; }
+// 必殺セーブで止められた時は、攻略法を出す（次に狙えるように）。破った時は「攻略成功！」
+{ const _rs=resolve; resolve=function(r){ const k=p3Kind(), sp=k&&R.gkSp===k, base=sp&&BSP_DEF[k].base; const out=_rs.apply(this,arguments);
+    if(sp&&R.gkSpShown){ const c=BSP_DEF[k].counter; if(r==='goal'&&R.p3weak) setTimeout(()=>toast(`<span class="ic">🎯</span><span>攻略成功！<small>${BSP_DEF[k].name.replace(/！+$/,'')}を破った</small></span>`,'',2600,'#d8ff3c'),700);
+      else if(r!=='goal'&&c) setTimeout(()=>toast(`<span class="ic">💡</span><span>攻略法<small>${c}</small></span>`,'',4200,'#ffc83d'),900); }
+    return out; }; }
+if(/dbg/.test(location.search)) Object.assign(window,{__P3W:P3W,__P3SP:P3SP});
+// 攻略法どおりに蹴った時は、キーパーを逆へ飛ばす（必殺セーブの演出は出すが、ちゃんと決まる）
+{ const _t=triggerGK; triggerGK=function(){ const r=_t.apply(this,arguments); if(R.p3weak&&GK.to){ const s=Math.sign((S.shot&&S.shot.tx)||1)||1; GK.to={cx:-s*1.3,cy:0.5,th:-s*1.25}; GK.hand=null; } return r; }; }
+{ const _b=beginRun; beginRun=function(){ R.p3weak=false; return _b.apply(this,arguments); }; }
+
+// ===== ランキング（主「ランキングをやろう」2026-09-26）=====
+// ストーリーモードの「フカシスコア」を競う（主「ストーリーモードではできないの？自主練のはいらない」）。各章の今シーズン最高点の合計が自分の点数。2週間ごとのシーズン、上位50人を表示、上位10人にごほうび
+// サーバー：Supabase（主のFutureXアカウント）。RK_CFG が空の間は「準備中」。?rankmock で端末内の仮サーバーを使って試せる
+// ズル対策（サーバー側 SQL）：点数は0〜1200だけ受け付け／同じ端末は1シーズン1行（最高点だけ残る）／20秒以内の連続送信は拒否／名前は12文字まで
+const RK_CFG={url:'https://dlohqycgfieuzzcumpdn.supabase.co',key:'sb_publishable_s6QftnXjccH_66GmrCjM_Q_e6dgoKka'};   // FutureX の Supabase（FukashiPK・Tokyo）。publishable key はブラウザに出して良い鍵   // Supabase の Project URL と anon key（公開して良い鍵）をここに入れる
+const RK_BASE=Date.parse('2026-09-21T00:00:00+09:00'), RK_LEN=14*86400000;   // シーズン0＝2026/9/21(月)〜10/5(月)
+const rkSeason=(t=Date.now())=>Math.floor((t-RK_BASE)/RK_LEN);
+const rkEnd=s=>RK_BASE+(s+1)*RK_LEN;
+const RK_MOCK=/rankmock/.test(location.search);
+function rkDev(){ let d=null; try{ d=localStorage.getItem('pk_dev'); if(!d){ d=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g,()=>(Math.random()*16|0).toString(16))); localStorage.setItem('pk_dev',d); } }catch(e){ d=d||'00000000-0000-4000-8000-000000000000'; } return d; }
+const RK_ON=()=>RK_MOCK||!!(RK_CFG.url&&RK_CFG.key);
+// ---- サーバー呼び出し ----
+async function rkCall(fn,body){
+  if(RK_MOCK) return rkMock(fn,body);
+  const r=await fetch(`${RK_CFG.url}/rest/v1/rpc/${fn}`,{method:'POST',headers:{'apikey':RK_CFG.key,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok){ let m=''; try{ m=(await r.json()).message||''; }catch(e){} throw new Error(fn+' '+r.status+' '+m); } return r.json(); }
+// 点数を送る。サーバーは1回に＋5400点までしか受け付けないので（電波なしで何章も進めた時など）、超えていたら 5400 ずつ 21秒おきに刻んで送る
+let rkStepT=null;
+async function rkSubmit(total,detail,onStep){ const me=async()=>{ const m=await rkCall('my_rank',{p_device:rkDev(),p_season:rkSeason()}); return m&&m[0]?m[0].score:0; };
+  const body=n=>({p_device:rkDev(),p_name:ngMask((NAME&&NAME.hero)||'ななし'),p_title:(window.myTitle&&myTitle())||'',p_skin:mySkin(),p_score:n,p_detail:detail||null});
+  try{ await rkCall('submit_score',body(total)); return true; }
+  catch(e){ if(!/too big jump/.test(e.message)) throw e; }
+  const cur=await me(), step=Math.min(total,cur+5400); await rkCall('submit_score',body(step));
+  if(step<total){ clearTimeout(rkStepT); rkStepT=setTimeout(()=>rkSubmit(total,detail,onStep).catch(err=>console.error('rank step '+err.message)),21000); if(onStep) onStep(step,total); return false; }
+  return true; }
+function rkMock(fn,b){ let db={}; try{ db=JSON.parse(localStorage.getItem('pk_rkmock')||'{}'); }catch(e){}
+  if(!db.rows){ db.rows=[]; const nm=['ヌシ','ゆい推し','フカシ職人','ロケット太郎','白紙の人','重力マン','カニ歩き','七色閃光','ポリポリ','横幅大好き','腕長い','サソリ']; for(let i=0;i<60;i++) db.rows.push({season:rkSeason(),device:'mock'+i,name:nm[i%nm.length]+(i>=nm.length?i:''),title:i%3?'':'布教の鬼',skin:['kicker','g_3','g_12','boss5','g_30'][i%5],score:Math.round(1150-i*17-Math.random()*8),best_at:i}); for(let i=0;i<12;i++) db.rows.push({season:rkSeason()-1,device:'mock'+i,name:nm[i],title:'',skin:'kicker',score:1000-i*40,best_at:i}); }
+  const sv=()=>{ try{ localStorage.setItem('pk_rkmock',JSON.stringify(db)); }catch(e){} }, S0=rkSeason(), rank=s=>db.rows.filter(r=>r.season===s).sort((a,b)=>b.score-a.score||a.best_at-b.best_at);
+  if(fn==='submit_score'){ if(b.p_score<0||b.p_score>70000) throw new Error('bad'); let r=db.rows.find(x=>x.season===S0&&x.device===b.p_device); if(!r){ r={season:S0,device:b.p_device,score:-1,best_at:0}; db.rows.push(r); } Object.assign(r,{name:b.p_name,title:b.p_title,skin:b.p_skin}); if(b.p_score>r.score){ r.score=b.p_score; r.best_at=Date.now(); } sv(); return {season:S0}; }
+  if(fn==='top_scores') return rank(b.p_season).slice(0,50).map((r,i)=>({rank:i+1,name:r.name,title:r.title,skin:r.skin,score:r.score}));
+  if(fn==='my_rank'){ const L=rank(b.p_season), i=L.findIndex(r=>r.device===b.p_device); return i<0?[]:[{rank:i+1,score:L[i].score}]; }
+  if(fn==='season_count') return rank(b.p_season).length; }
+// ---- フカシスコア（ストーリーモード）----
+// 章の点数＝（1本決まるごと100点＋技で決めたら＋60＋上の隅＋40＋必殺セーブを攻略して決めたら＋100、5本全部で＋200、章クリアで＋300）×（1＋章番号×0.1）
+// 必殺シュートのゴールは0点。賄賂で進んだ章は点数なし。自分の点数＝今シーズンに出した「各章の最高点」の合計（18章ぶん）
+const RKS={kicks:[]};
+function rkKickScore(k){ if(!k.goal||k.ultra) return 0; return 100+(k.trick?60:0)+(k.corner?40:0)+(k.brk?100:0); }
+function rkChapter(ks,idx,clear){ const base=ks.reduce((a,k)=>a+rkKickScore(k),0)+(ks.length>=5&&ks.slice(0,5).every(k=>k.goal&&!k.ultra)?200:0)+(clear?300:0); return Math.round(base*(1+idx*0.1)); }
+try{ for(let i=localStorage.length-1;i>=0;i--){ const k=localStorage.key(i), m=/^pk_(stbest|rkbest)_(\d+)$/.exec(k); if(m&&+m[2]<rkSeason()-1) localStorage.removeItem(k); } }catch(e){}   // 2シーズン前より古い章ベストは消す
+function rkBests(){ try{ return JSON.parse(localStorage.getItem('pk_stbest_'+rkSeason())||'{}'); }catch(e){ return {}; } }
+function rkSum(b){ return Object.values(b).reduce((a,v)=>a+(+v||0),0); }
+{ const _p=ST.play; ST.play=function(){ RKS.kicks=[]; return _p.apply(this,arguments); }; }
+{ const _r=resolve; resolve=function(r){ if(ST.on&&S.shotMine) RKS.kicks.push({goal:r==='goal',trick:!!R.trick,ultra:!!R.ultra,corner:Math.abs(pos.x)>2.4&&pos.y>1.5,brk:r==='goal'&&!!R.p3weak}); return _r.apply(this,arguments); }; }
+let rkPending=null;
+{ const _f=ST.finish; ST.finish=function(){ try{ const g=this.ch.goal, have=g.type==='tricks'?this.tricks:this.goals, ok=have>=g.n, cs=rkChapter(RKS.kicks,this.idx,ok), b=rkBests(), prev=+b[this.idx]||0;
+      if(cs>prev){ b[this.idx]=cs; try{ localStorage.setItem('pk_stbest_'+rkSeason(),JSON.stringify(b)); }catch(e){} }
+      rkPending={idx:this.idx,cs,prev,total:rkSum(b),kicks:RKS.kicks.slice(),ok}; }catch(e){ console.error('rk '+e.message); }
+    return _f.apply(this,arguments); }; }
+// ---- 結果画面：スコア・自己ベスト・順位 ----
+{ const st=document.createElement('style'); st.textContent=`
+#end .rkres{margin-top:8px;display:grid;gap:4px;justify-items:center;font:800 13px/1.3 var(--ui);color:#F5F7EF}
+#end .rkres .sc{font:900 26px/1 var(--ui);color:#ffc83d;-webkit-text-stroke:1px #111} #end .rkres .sc small{font-size:12px;color:#F5F7EF;-webkit-text-stroke:0}
+#end .rkres .bd{font-weight:500;font-size:11px;opacity:.75} #end .rkres .rk{background:#DFFF24;color:#111;border:2px solid #111;border-radius:999px;padding:4px 12px}
+#menu .tgrid #rankBtn{grid-column:1/-1;flex-direction:row;align-items:center;min-height:60px;--ac:#DFFF24;background:linear-gradient(90deg,rgba(223,255,36,.18),rgba(54,169,255,.16)),#0D3B36}
+#menu .tgrid #rankBtn .ic{width:40px;height:40px}
+#rkpan,#pfpan{position:fixed;inset:0;z-index:12;display:grid;place-items:center;background:rgba(7,21,26,.82);padding:12px;box-sizing:border-box}
+#rkpan .cd,#pfpan .cd{width:min(400px,100%);max-height:calc(100dvh - 24px);display:grid;grid-template-rows:auto auto auto 1fr auto;background:#F5F7EF;color:#111;border:3px solid #111;border-radius:20px;box-shadow:0 8px 0 #111;overflow:hidden}
+#rkpan h3,#pfpan h3{margin:0;padding:14px 16px 4px;font:900 20px/1.2 var(--ui);text-align:center}
+#rkpan .sub{padding:0 16px 8px;text-align:center;font:500 12px/1.5 var(--ui);opacity:.75}
+#rkpan .tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 12px 8px} #rkpan .tabs button{font:800 12px/1 var(--ui);background:#fff;color:#111;border:2px solid #111;border-radius:999px;padding:8px 4px;cursor:pointer} #rkpan .tabs button.on{background:#111;color:#DFFF24}
+#rkpan .list{overflow-y:auto;padding:0 10px 10px;display:grid;gap:6px;align-content:start;overscroll-behavior:contain}
+#rkpan .row{color:#111;display:grid;grid-template-columns:34px 38px 1fr auto;align-items:center;gap:8px;background:#fff;border:2px solid #111;border-radius:12px;padding:6px 8px;cursor:pointer;text-align:left}
+#rkpan .row.me{background:#DFFF24} #rkpan .row .n{font:900 16px/1 var(--ui);text-align:center} #rkpan .row.t1 .n{color:#d4a017} #rkpan .row.t2 .n{color:#8a9aa6} #rkpan .row.t3 .n{color:#b06a3b}
+#rkpan .row img{width:38px;height:38px} #rkpan .row b{display:block;font:800 13px/1.2 var(--ui);overflow:hidden;text-overflow:ellipsis;white-space:nowrap} #rkpan .row small{display:block;font:500 10.5px/1.2 var(--ui);opacity:.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} #rkpan .row .s{font:900 16px/1 var(--ui)}
+#rkpan .msg{color:#111;padding:24px 12px;text-align:center;font:500 13px/1.7 var(--ui)} #rkpan .rw{font:500 12px/1.7 var(--ui);background:#fff;border:2px solid #111;border-radius:12px;padding:10px}
+#rkpan .ft,#pfpan .ft{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px 12px;border-top:2px solid rgba(0,0,0,.12)}
+#rkpan .ft button,#pfpan .ft button{font:800 14px/1 var(--ui);border:2px solid #111;border-radius:12px;padding:12px;cursor:pointer;background:#fff;color:#111} #rkpan .ft .go{background:#FF9F1C}
+#pfpan .pf{padding:8px 16px 12px;display:grid;gap:10px;overflow-y:auto} #pfpan .top{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:center} #pfpan .top img{width:84px;height:84px;background:#0D3B36;border:2px solid #111;border-radius:14px}
+#pfpan .top b{display:block;font:900 20px/1.2 var(--ui)} #pfpan .top .tt{display:inline-block;margin-top:4px;font:800 11px/1 var(--ui);background:#ffc83d;border:2px solid #111;border-radius:8px;padding:4px 8px}
+#pfpan .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px} #pfpan .grid div{background:#fff;border:2px solid #111;border-radius:12px;padding:8px;font:500 11px/1.3 var(--ui)} #pfpan .grid div b{display:block;font:900 18px/1.2 var(--ui)}`; document.head.appendChild(st); }
+let rkLast=null;
+async function rkAfterStory(){ const P=rkPending; if(!P) return; rkPending=null; const end=document.getElementById('end'), box=end.querySelector('.box'); let el=box.querySelector('.rkres'); if(!el){ el=document.createElement('div'); el.className='rkres'; box.querySelector('#best').after(el); }
+  const nb=P.cs>P.prev, bd=P.kicks.slice(0,5).map(k=>rkKickScore(k)).join('+')+(P.ok?'＋クリア300':'')+`　×${(1+P.idx*0.1).toFixed(1)}`;
+  el.innerHTML=`<div class="sc">${P.cs}<small> 第${P.idx+1}章の点数${nb?'（自己ベスト更新！）':''}</small></div><div class="bd">${bd}</div><div>今シーズンの合計 <b>${P.total}</b>${!nb&&P.prev?`（この章のベスト ${P.prev}）`:''}</div>`+(RK_ON()?'<div class="rk">ランキングに送信中…</div>':'');
+  if(!RK_ON()) return; if(!nb&&rkLast){ el.querySelector('.rk').textContent=`今シーズン ${rkLast.rank}位`; return; }
+  try{ const full=await rkSubmit(P.total,{ch:P.idx,cs:P.cs},(st,tot)=>{ const k=el.querySelector('.rk'); if(k) k.textContent=`まとめて送っている（${st}/${tot}）…アプリを開いたままで`; });
+    const me=await rkCall('my_rank',{p_device:rkDev(),p_season:rkSeason()}); const m=me&&me[0]; rkLast=m;
+    el.querySelector('.rk').textContent=m?`今シーズン ${m.rank}位（合計 ${m.score}）${full?'':'・残りを送信中'}`:'送信した'; if(m&&m.rank<=10){ confetti(); tone(880,0.3,'triangle',.14,1760); }
+  }catch(e){ el.querySelector('.rk').textContent=/too fast/.test(e.message)?'送信が早すぎた（20秒あけてもう一度）':'ランキングに送れなかった（電波を確認）'; console.error('rank '+e.message); } }
+new MutationObserver(()=>{ const end=document.getElementById('end'); if(end.hidden){ const el=end.querySelector('.rkres'); if(el) el.remove(); return; } if(ST.on&&rkPending) rkAfterStory(); }).observe(document.getElementById('end'),{attributes:true,attributeFilter:['hidden']});
+// ---- ごほうび（前のシーズンの上位10人）----
+const RK_REW=[{max:1,coin:3000,title:'r_1'},{max:3,coin:2000,title:'r_3'},{max:10,coin:1000,title:'r_10'}];
+GI.r_1={id:'r_1',type:'title',name:'フカシ王',rar:'LEGEND',desc:'ランキング1位だけの称号',title:'フカシ王',icon:'👑',noGacha:true};
+GI.r_3={id:'r_3',type:'title',name:'表彰台フカシ',rar:'SSR',desc:'ランキング3位以内の称号',title:'表彰台フカシ',icon:'🥉',noGacha:true};
+GI.r_10={id:'r_10',type:'title',name:'トップ10入り',rar:'SR',desc:'ランキング10位以内の称号',title:'トップ10入り',icon:'🔟',noGacha:true};
+async function rkClaim(){ if(!RK_ON()) return; let done={}; try{ done=JSON.parse(localStorage.getItem('pk_rkclaim')||'{}'); }catch(e){} for(let s=rkSeason()-1;s>=Math.max(0,rkSeason()-3);s--){ if(done[s]) continue; await rkClaimOne(s,done); } }   // 3シーズン前までさかのぼって受け取れる
+async function rkClaimOne(s,done){
+  try{ const me=await rkCall('my_rank',{p_device:rkDev(),p_season:s}); const m=me&&me[0]; done[s]=m?m.rank:-1; try{ localStorage.setItem('pk_rkclaim',JSON.stringify(done)); }catch(e){}
+    if(!m) return; const rw=RK_REW.find(x=>m.rank<=x.max); if(!rw) return; const g=GACHA.st(); g.own[rw.title]=1; GACHA.save(g); PG.coin(rw.coin,'ランキング'+m.rank+'位');
+    setTimeout(()=>{ toast(`<span class="ic">🏆</span><span>シーズン${s+1} ${m.rank}位！<small>🪙${rw.coin}＋称号「${GI[rw.title].title}」</small></span>`,'',5200,'#ffc83d'); confetti(); fireworks(); },1200);
+  }catch(e){ console.error('claim '+e.message); } }
+setTimeout(rkClaim,2500);
+// ---- ランキング画面 ----
+const rkEl=document.createElement('div'); rkEl.id='rkpan'; rkEl.hidden=true; document.body.appendChild(rkEl);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rkThumb(skin){ try{ const k='uniform:'+skin; if(!(k in THUMB)) THUMB[k]=thumbShirt(SKINS[skin]?skin:'kicker'); return THUMB[k]; }catch(e){ return ''; } }
+let rkTab='now';
+function rkLeft(){ const ms=rkEnd(rkSeason())-Date.now(), d=Math.floor(ms/86400000), h=Math.floor(ms%86400000/3600000); return d>0?`あと${d}日${h}時間`:`あと${h}時間`; }
+async function rkOpen(tab){ audio(); rkTab=tab||rkTab; const S0=rkSeason();
+  rkEl.innerHTML=`<div class="cd" role="dialog" aria-modal="true"><h3>🏆 フカシランキング</h3><div class="sub">ストーリーモードの「フカシスコア」（各章の最高点の合計）で勝負。シーズン${S0+1}・${rkLeft()}で締め切り</div>
+   <div class="tabs"><button type="button" data-t="now" class="${rkTab==='now'?'on':''}">今シーズン</button><button type="button" data-t="prev" class="${rkTab==='prev'?'on':''}">前シーズン</button><button type="button" data-t="rule" class="${rkTab==='rule'?'on':''}">ルール・賞品</button></div>
+   <div class="list"><div class="msg">読み込み中…</div></div><div class="ft"><button type="button" data-a="close">閉じる</button><button type="button" class="go" data-a="play">🎯 挑戦する</button></div></div>`;
+  rkEl.hidden=false; const L=rkEl.querySelector('.list');
+  rkEl.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>rkOpen(b.dataset.t)));
+  rkEl.querySelector('[data-a=close]').addEventListener('click',()=>{ rkEl.hidden=true; });
+  rkEl.querySelector('[data-a=play]').addEventListener('click',()=>{ rkEl.hidden=true; ST.list(); });
+  if(rkTab==='rule'){ L.innerHTML=`<div class="rw"><b>フカシスコア（ストーリーモード）</b><br>1本決まるごとに 100点<br>技で決めたら ＋60点／上の隅（左右の端の高い所）なら ＋40点<br>第3部のボスの必殺セーブを攻略して決めたら ＋100点<br>5本全部決めたら ＋200点／章をクリアしたら ＋300点<br>それを章の番号で倍にする（第1章×1.0 … 第18章×2.7）<br>必殺シュートのゴールは0点。賄賂で進んだ章は点数なし<br><br>
+    <b>自分の点数</b><br>今シーズンに出した「各章の最高点」の合計。同じ章は何回やり直してもいい（高い方が残る）<br><br>
+    <b>シーズン</b><br>2週間ごと（月曜0時に入れ替え・点数は0から）。同点なら先に出した人が上<br><br>
+    <b>上位のごほうび（次のシーズンに開いた時にもらえる）</b><br>👑 1位：🪙3000＋称号「フカシ王」<br>🥈 2〜3位：🪙2000＋称号「表彰台フカシ」<br>🔟 4〜10位：🪙1000＋称号「トップ10の男」<br><br>
+    <b>名前</b>はメニューの「👤 名前」で変えられる。ランキングには 名前・称号・服 が出る</div>`; return; }
+  if(!RK_ON()){ L.innerHTML='<div class="msg">ランキングは準備中！<br>もうすぐ始まるので、ストーリーで点数を稼いでおこう（今シーズンの点数はスマホに残ってる）</div>'; return; }
+  const s=rkTab==='prev'?S0-1:S0; if(s<0){ L.innerHTML='<div class="msg">前のシーズンはまだない</div>'; return; }
+  try{ const [top,me]=await Promise.all([rkCall('top_scores',{p_season:s}),rkCall('my_rank',{p_device:rkDev(),p_season:s})]); const m=me&&me[0];
+    if(!top.length){ L.innerHTML='<div class="msg">まだ誰もいない。<br>今なら1位になれる！</div>'; return; }
+    L.innerHTML=top.map(r=>`<button type="button" class="row${m&&m.rank===r.rank?' me':''}${r.rank<=3?' t'+r.rank:''}" data-r="${r.rank}"><span class="n">${r.rank<=3?['👑','🥈','🥉'][r.rank-1]:r.rank}</span><img alt="" src="${rkThumb(r.skin)}"><span><b>${esc(ngMask(r.name))}</b><small>${r.title?'🏷️ '+esc(r.title):'　'}</small></span><span class="s">${r.score}</span></button>`).join('')
+      +(m&&m.rank>50?`<div class="row me"><span class="n">${m.rank}</span><img alt="" src="${rkThumb(mySkin())}"><span><b>${esc(NAME.hero)}（あなた）</b><small>　</small></span><span class="s">${m.score}</span></div>`:'')
+      +(!m&&rkTab==='now'?'<div class="msg">あなたはまだ記録がない。ストーリーモードで挑戦しよう</div>':'');
+    L.querySelectorAll('.row[data-r]').forEach(b=>b.addEventListener('click',()=>{ const r=top.find(x=>x.rank===+b.dataset.r); pfOpen(r,m&&m.rank===r.rank); }));
+  }catch(e){ L.innerHTML='<div class="msg">ランキングを読み込めなかった。<br>電波のいい所でもう一回</div>'; console.error('rank '+e.message); } }
+// ---- プロフィール ----
+const pfEl=document.createElement('div'); pfEl.id='pfpan'; pfEl.hidden=true; document.body.appendChild(pfEl);
+function pfOpen(r,mine){ audio(); if((mine||!r)&&!rkLast&&RK_ON()) rkCall('my_rank',{p_device:rkDev(),p_season:rkSeason()}).then(me=>{ const m=me&&me[0]; if(m){ rkLast=m; if(!pfEl.hidden) pfOpen(r,mine); } }).catch(()=>{});   /* 起動直後でも今の順位を出す */ const own=mine||!r, st=PG.st||{}, name=own?NAME.hero:r.name, title=own?((window.myTitle&&myTitle())||''):r.title, skin=own?mySkin():r.skin;
+  let best=0; try{ best=+localStorage.getItem('pk_rkbest_'+rkSeason())||0; }catch(e){}
+  const n=v=>(+v||0).toLocaleString(), cells=own?[['ゴール',n(st.goals)],['技を覚えた数',`${(typeof learned!=='undefined'?learned.length:0)} / ${Object.keys(TRICKS).length}`],['ストーリー',`第${Math.min(STORY.length,ST.prog())}章まで`],['CPUに勝った',n(st.cpuWins)],['今シーズン合計',n(rkSum(rkBests()))],['今シーズン順位',rkLast?rkLast.rank+'位':'—'],['実績',`${PG.got?PG.got.length:0} / ${ACH.length}`],['コイン',n(PG.coins)]]
+    :[['順位',r.rank+'位'],['フカシスコア',n(r.score)]];
+  pfEl.innerHTML=`<div class="cd" role="dialog" aria-modal="true"><h3>${own?'👤 プロフィール':'👤 選手'}</h3><div></div><div></div><div class="pf"><div class="top"><img alt="" src="${rkThumb(skin)}"><div><b>${esc(ngMask(name))}</b>${title?`<span class="tt">🏷️ ${esc(title)}</span>`:''}<div style="font:500 11px/1.5 var(--ui);opacity:.7;margin-top:4px">服：${esc((SKINS[skin]||SKINS.kicker).name)}</div></div></div><div class="grid">${cells.map(([k,v])=>`<div>${k}<b>${v}</b></div>`).join('')}</div></div>
+    <div class="ft"><button type="button" data-a="close">閉じる</button>${own?'<button type="button" data-a="edit">✏️ 名前と見た目</button>':'<button type="button" data-a="rank">ランキングへ</button>'}</div></div>`;
+  pfEl.hidden=false; pfEl.querySelector('[data-a=close]').addEventListener('click',()=>{ pfEl.hidden=true; });
+  const e=pfEl.querySelector('[data-a=edit]'); if(e) e.addEventListener('click',()=>{ pfEl.hidden=true; rkEl.hidden=true; document.getElementById('menu').hidden=true; kOpen(); });
+  const k=pfEl.querySelector('[data-a=rank]'); if(k) k.addEventListener('click',()=>{ pfEl.hidden=true; }); }
+rkEl.addEventListener('click',e=>{ if(e.target===rkEl) rkEl.hidden=true; }); pfEl.addEventListener('click',e=>{ if(e.target===pfEl) pfEl.hidden=true; });
+// ---- メニュー：ガチャの下に「ランキング」、名前ボタンの隣に「プロフィール」 ----
+{ const ga=document.getElementById('gachaBtn'); if(ga){ const b=ga.cloneNode(true); b.id='rankBtn'; const ic=b.querySelector('.ic'), tt=b.querySelector('.tt'), sm=b.querySelector('small'); if(ic) ic.textContent='🏆'; if(tt) tt.textContent='フカシランキング'; if(sm) sm.textContent='ストーリーの点数で勝負・上位10人にごほうび'; ga.after(b); b.addEventListener('click',()=>rkOpen('now')); } }
+{ const ut=document.querySelector('#menu .tutil'); if(ut){ const b=document.createElement('button'); b.type='button'; b.className='ubtn'; b.textContent='🪪 プロフ'; b.addEventListener('click',()=>pfOpen(null,true)); const nb=[...ut.querySelectorAll('.ubtn')].find(x=>/名前/.test(x.textContent)); (nb||ut.lastChild).after(b); } }
+if(/dbg/.test(location.search)) Object.assign(window,{__rkOpen:rkOpen,__pfOpen:pfOpen,__RKS:RKS,__rkChapter:rkChapter,__rkSeason:rkSeason});
+
+const META={"missions": [{"id": "A", "text": "ゴールを3本決める", "kind": "goal", "n": 3, "trick": null, "coin": 30, "yui": "まずは三本ね"}, {"id": "B", "text": "ゴールを5本決める", "kind": "goal", "n": 5, "trick": null, "coin": 40, "yui": "今日は数を稼ぐよ"}, {"id": "C", "text": "技でゴールを2本決める", "kind": "trick", "n": 2, "trick": null, "coin": 50, "yui": "技を見せて"}, {"id": "D", "text": "宙返りでゴールを決める", "kind": "trick_type", "n": 1, "trick": "flip", "coin": 40, "yui": "普通に蹴らないで"}, {"id": "E", "text": "側転でゴールを決める", "kind": "trick_type", "n": 1, "trick": "cartwheel", "coin": 40, "yui": "横に飛んでみて"}, {"id": "F", "text": "トルネードでゴール", "kind": "trick_type", "n": 1, "trick": "tornado", "coin": 50, "yui": "回れば勝ちよ"}, {"id": "G", "text": "オーバーヘッドでゴール", "kind": "trick_type", "n": 1, "trick": "bicycle", "coin": 60, "yui": "空中戦で決めて"}, {"id": "H", "text": "ドロップでゴールを決める", "kind": "trick_type", "n": 1, "trick": "drop", "coin": 60, "yui": "落としてから決めて"}, {"id": "I", "text": "バク宙でゴールを決める", "kind": "trick_type", "n": 1, "trick": "backflip", "coin": 60, "yui": "背中で決めて"}, {"id": "J", "text": "ムーンサルトでゴール", "kind": "trick_type", "n": 1, "trick": "moonsault", "coin": 70, "yui": "月まで飛ばして"}, {"id": "K", "text": "スコーピオンでゴール", "kind": "trick_type", "n": 1, "trick": "scorpion", "coin": 70, "yui": "足が増えたわね"}, {"id": "L", "text": "忍者でゴールを決める", "kind": "trick_type", "n": 1, "trick": "ninja", "coin": 80, "yui": "分身は一人で十分"}, {"id": "M", "text": "ロケットでゴールを決める", "kind": "trick_type", "n": 1, "trick": "rocket", "coin": 80, "yui": "宇宙まで蹴る気？"}, {"id": "N", "text": "上の隅に2本決める", "kind": "corner", "n": 2, "trick": null, "coin": 50, "yui": "隅は私が見てる"}, {"id": "O", "text": "ストーリーを1章クリア", "kind": "story", "n": 1, "trick": null, "coin": 60, "yui": "次の章へ進んで"}, {"id": "P", "text": "必殺セーブを1回攻略", "kind": "break", "n": 1, "trick": null, "coin": 80, "yui": "あれを破ってみて"}, {"id": "Q", "text": "キーパーだけで2本止める", "kind": "save", "n": 2, "trick": null, "coin": 40, "yui": "守備も仕事だから"}, {"id": "R", "text": "ガチャを1回回す", "kind": "gacha", "n": 1, "trick": null, "coin": 30, "yui": "一回だけ回して"}, {"id": "S", "text": "今日の記録を共有する", "kind": "share", "n": 1, "trick": null, "coin": 50, "yui": "記録を外へ出して"}, {"id": "T", "text": "サバイバルで5本決める", "kind": "survival", "n": 5, "trick": null, "coin": 70, "yui": "何本まで行ける？"}], "login": [{"day": 1, "reward": {"coin": 50, "ultra": 0, "title": null}, "yui": "まずは一日"}, {"day": 2, "reward": {"coin": 80, "ultra": 0, "title": null}, "yui": "二日目も来たね"}, {"day": 3, "reward": {"coin": 100, "ultra": 1, "title": null}, "yui": "半分は越えた"}, {"day": 4, "reward": {"coin": 120, "ultra": 1, "title": null}, "yui": "あと三日よ"}, {"day": 5, "reward": {"coin": 150, "ultra": 1, "title": "依頼遂行者"}, "yui": "五日目も合格"}, {"day": 6, "reward": {"coin": 200, "ultra": 2, "title": null}, "yui": "明日で一周ね"}, {"day": 7, "reward": {"coin": 300, "ultra": 3, "title": "七日完遂者"}, "yui": "依頼完遂。見事ね"}], "levels": [{"lv": 5, "title": "初ゴール見習い", "talk": [["ゆい", "少し形になったね"], ["主人公", "もっと盛れる"], ["ゆい", "そこだけは期待してる"]]}, {"lv": 10, "title": "技持ちキッカー", "talk": [["ゆい", "技が増えたね"], ["主人公", "まだ隠してる"], ["ゆい", "隠す意味ある？"]]}, {"lv": 15, "title": "校正破り", "talk": [["ゆい", "校正跡を見つけた"], ["主人公", "消された記録か"], ["ゆい", "たぶんね"]]}, {"lv": 20, "title": "偶然の達人", "talk": [["ゆい", "偶然が続いてる"], ["主人公", "それも実力だ"], ["ゆい", "言い切るんだ"]]}, {"lv": 25, "title": "運命のキッカー", "talk": [["ゆい", "半分まで来たよ"], ["主人公", "まだ半分か"], ["ゆい", "道は長いね"]]}, {"lv": 30, "title": "記録の越境者", "talk": [["ゆい", "記録の外へ出た"], ["主人公", "戻れなくなる？"], ["ゆい", "戻る必要ない"]]}, {"lv": 35, "title": "フカシ研究員", "talk": [["ゆい", "研究員って何する？"], ["主人公", "フカシを研究する"], ["ゆい", "研究対象は自分ね"]]}, {"lv": 40, "title": "改稿拒否者", "talk": [["ゆい", "改稿が止まった"], ["主人公", "俺が止めた"], ["ゆい", "そういうことにする"]]}, {"lv": 45, "title": "結末の保持者", "talk": [["ゆい", "結末が残ってる"], ["主人公", "なら蹴れる"], ["ゆい", "それで十分"]]}, {"lv": 50, "title": "フカシの主人公", "talk": [["ゆい", "最後まで来たね"], ["主人公", "まだ続ける"], ["ゆい", "じゃあ次を作ろう"]]}], "unlocks": [{"lv": 10, "type": "goal", "name": "赤ペン突破", "desc": "ゴール時に赤線が弾ける", "text": "改稿、失敗！", "emoji": "🖊️"}, {"lv": 20, "type": "trail", "name": "残像ライン", "desc": "シュートの軌跡が二重に残る", "text": "", "emoji": "〰️"}, {"lv": 30, "type": "title", "name": "校正拒否者", "desc": "特別称号として表示", "text": "", "emoji": "📛"}, {"lv": 40, "type": "trail", "name": "運命の軌跡", "desc": "決定球だけ特別な軌跡になる", "text": "", "emoji": "✨"}, {"lv": 50, "type": "goal", "name": "結末奪還", "desc": "ゴール時にページが閉じる", "text": "この結末は俺のもの！", "emoji": "📖"}], "survival": {"name": "校正ループ・サバイバル", "story": "ゼンブ・カイセイは失敗を消すため試合記録を無限に校正していた。主人公は同じ試合を繰り返し、記録に残らない連続得点を積み上げてループの外へ抜け出す。", "intro": [["ゼンブ・カイセイ", "同じ試合を校正しよう"], ["ゆい", "また同じ相手なの？"], ["主人公", "なら記録を増やす"], ["ゆい", "外すまで終われないよ"]], "marks": [{"n": 5, "yui": "五本。まだ序章ね", "title": "五連の突破者"}, {"n": 10, "yui": "十本。記録が揺れてる", "title": "十連の異常者"}, {"n": 20, "yui": "二十本。校正が追いつかない", "title": "校正外の怪物"}, {"n": 30, "yui": "三十本。もう試合じゃない", "title": "三十連の逸脱者"}, {"n": 50, "yui": "五十本。ループが破れた", "title": "ループ脱出者"}], "over": [["ゆい", "記録が途切れたね"], ["主人公", "次はもっと残す"]]}, "events": [{"season": 0, "title": "白紙の審判", "keeper": "ハクシ・メモリア", "desc": "校正前の空白ページから現れた審判。失敗を消すのではなく、最初から無かったことにする。", "look": {"shirt": "#F2F2F2", "trim": "#9B9B9B", "shorts": "#D8D8D8", "head": "白い球体に細い黒線", "face": "顔の中央に小さな空白", "hand": "白紙の札を持つ", "back": "巨大なページ型の羽", "float": "空白の紙片が周囲を回る", "emoji": {"head": "⚪", "hand": "📄", "back": "📖", "float": "▫️"}, "一言": "空白なら失敗もない"}, "bsp": {"base": "blank", "name": "白紙化・ノーゴール宣言！！", "shout": "その一球、白紙です", "counter": "白紙の板はゴールの端まで届かない。左右ギリギリを狙う"}, "goal": {"type": "goals", "n": 2}, "pre": [["ゆい", "その白い板、何？"], ["ハクシ・メモリア", "記録を消す板です"], ["主人公", "なら記録を残す"], ["ハクシ・メモリア", "失敗も残りますよ"], ["ゆい", "嫌な審判だね"], ["主人公", "だから蹴る"]], "win": [["ゆい", "白紙が破れたね"], ["ハクシ・メモリア", "記録が戻ってくる"], ["主人公", "失敗も必要だ"], ["ゆい", "珍しくまともね"], ["ハクシ・メモリア", "空白にはできない"], ["主人公", "それでいい"]], "lose": [["ゆい", "白紙にされたね"], ["ハクシ・メモリア", "何も起きませんでした"], ["主人公", "起きたよ"], ["ゆい", "じゃあ次は端ね"], ["ハクシ・メモリア", "また消します"], ["主人公", "何度でも残す"]], "reward": {"title": "白紙突破者", "goalName": "白紙崩壊ゴール", "goalText": "空白、埋めました！", "goalEmoji": "📄", "coin": 500}}, {"season": 1, "title": "反転する校正者", "keeper": "サカサ・テンコウ", "desc": "ゼンブ・カイセイの未使用原稿から生まれた反転校正者。世界を上下逆にして、正しい結末そのものを疑わせる。", "look": {"shirt": "#27344A", "trim": "#E3B341", "shorts": "#182233", "head": "逆さの王冠型ヘッド", "face": "上下が逆の笑顔", "hand": "逆向きの笛を持つ", "back": "反転した本の背表紙", "float": "逆さの矢印が回る", "emoji": {"head": "👑", "hand": "📯", "back": "📚", "float": "↕️"}, "一言": "正しさは向きで変わる"}, "bsp": {"base": "grav", "name": "天地反転・オールライト！！", "shout": "重力の向きを直します", "counter": "逆さでも真ん中は真ん中。中央より少し上を狙う"}, "goal": {"type": "tricks", "n": 3}, "pre": [["ゆい", "画面が逆になった"], ["サカサ・テンコウ", "こちらが正しい向きです"], ["主人公", "じゃあ俺も逆で蹴る"], ["ゆい", "真ん中の少し上よ"], ["サカサ・テンコウ", "正解を改稿します"], ["主人公", "正解は自分で決める"]], "win": [["ゆい", "向き、戻ったね"], ["サカサ・テンコウ", "正解が書き換わった"], ["主人公", "俺の結末になった"], ["ゆい", "ちゃんと残ってる"], ["サカサ・テンコウ", "まだ校正は続く"], ["主人公", "ならまだ蹴る"]], "lose": [["ゆい", "上下が迷子だね"], ["サカサ・テンコウ", "不正解を修正します"], ["主人公", "修正されるのは嫌だ"], ["ゆい", "真ん中の少し上で突破"], ["サカサ・テンコウ", "次も反転します"], ["主人公", "何度でもやる"]], "reward": {"title": "反転突破者", "goalName": "天地反転フィニッシュ", "goalText": "向きまでフカした！", "goalEmoji": "↕️", "coin": 700}}]};
+
+// ===== 続けて遊ぶ理由（主「1発は面白いけど続けようと思わない」→「2,3,4,6かな。シナリオとかストーリー性もしっかり考えて」2026-09-26）=====
+// ChatGPT案（META・meta_data.js）：①ゆいから届く「今日の依頼」3つ＋7日ログイン ②レベル1〜50（5ごとに称号と会話、10ごとに解放）③サバイバル（校正ループ）④2週間ごとの期間限定イベント
+// 行動の記録は MX.on(種類,数,詳細) に集めて、依頼の進み・経験値・サバイバル・イベントの判定に使う
+// 台本の「ゆい」「主人公」をプレーヤーが決めた名前へ（names.js と同じ）
+const META_SRC=JSON.stringify(META);
+function metaNames(){ const J=JSON.parse(nameSwap(META_SRC)); for(const k of Object.keys(J)) META[k]=J[k]; }
+metaNames();
+const JST=(t=Date.now())=>new Date(t+9*3600000).toISOString().slice(0,10);
+const MX={ls:(k,d)=>{ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } }, ss:(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }, subs:[]};
+MX.on=function(kind,n=1,d={}){ for(const f of MX.subs){ try{ f(kind,n,d); }catch(e){ console.error('mx '+e.message); } } };
+// ---- 行動をひろう ----
+{ const _r=resolve; resolve=function(r){ const out=_r.apply(this,arguments);
+    if(S.shotMine&&r==='goal'&&!R.ultra){ MX.on('goal',1); if(R.trick){ MX.on('trick',1); MX.on('trick_type',1,{trick:R.trick}); } if(Math.abs(pos.x)>2.4&&pos.y>1.5) MX.on('corner',1); if(R.p3weak||R.mxweak) MX.on('break',1); }
+    if(!S.shotMine&&M.gkOnly&&r!=='goal') MX.on('save',1);
+    return out; }; }
+{ const _f=ST.finish; ST.finish=function(){ const g=this.ch.goal, have=g.type==='tricks'?this.tricks:this.goals; if(have>=g.n) MX.on('story',1,{idx:this.idx}); return _f.apply(this,arguments); }; }
+{ const _p=GACHA.pull.bind(GACHA); GACHA.pull=function(n){ const r=_p(n); if(r) MX.on('gacha',n); return r; }; }
+{ const _s=shReward; shReward=function(){ MX.on('share',1); return _s.apply(this,arguments); }; }
+// ---- 経験値とレベル ----
+const XP_GAIN={goal:10,trick:10,corner:5,break:20,story:60,save:8,mission:40,login:20,survival:6};
+const LV={max:50};
+LV.need=l=>80+20*l;   // レベルlからl+1へ
+LV.st=()=>{ const s=MX.ls('pk_lv',{}); const lv=Math.min(LV.max,Math.max(1,Math.floor(+s.lv)||1)), xp=Math.max(0,Math.floor(+s.xp)||0); return {lv,xp}; };   // 壊れた保存でも数字に戻す
+LV.titleAt=l=>META.levels.find(x=>x.lv===l);
+META.levels.forEach(x=>{ GI['lv_'+x.lv]={id:'lv_'+x.lv,type:'title',name:x.title,rar:x.lv>=40?'LEGEND':x.lv>=25?'SSR':x.lv>=15?'SR':'R',desc:`レベル${x.lv}の称号`,title:x.title,icon:'⭐',noGacha:true}; });
+META.unlocks.forEach(u=>{ const id='lu_'+u.lv; const it={id,type:u.type,name:u.name,rar:u.lv>=40?'LEGEND':u.lv>=30?'SSR':'SR',desc:u.desc+`（レベル${u.lv}で解放）`,icon:u.emoji||'✨',noGacha:true};
+  if(u.type==='title') it.title=u.name; if(u.type==='goal') it.goal={text:u.text||u.name,col:'#DFFF24',rain:'star',fw:'#DFFF24'}; if(u.type==='trail') it.trail={c1:'#DFFF24',c2:'#FF3B30',shape:'spark'}; GI[id]=it; });
+function lvGain(n,why){ if(!n) return; const s=LV.st(); if(s.lv>=LV.max) return; s.xp+=n; const ups=[];
+  while(s.lv<LV.max&&s.xp>=LV.need(s.lv)){ s.xp-=LV.need(s.lv); s.lv++; ups.push(s.lv); }
+  MX.ss('pk_lv',s); lvBadge(); if(ups.length) setTimeout(()=>lvUp(ups),900); }
+function lvUp(ups){ const g=GACHA.st(); let coin=0; const got=[];
+  for(const l of ups){ coin+=50+l*10; const t=LV.titleAt(l); if(t){ g.own['lv_'+l]=1; got.push(`称号「${t.title}」`); } const u=META.unlocks.find(x=>x.lv===l); if(u){ g.own['lu_'+l]=1; got.push(`${u.type==='goal'?'ゴール演出':u.type==='trail'?'軌跡':'称号'}「${u.name}」`); } }
+  GACHA.save(g); PG.coin(coin,'レベルアップ'); const L=ups[ups.length-1];
+  toast(`<span class="ic">⬆️</span><span>レベル${L}！<small>🪙${coin}${got.length?'＋'+got.join('＋'):''}</small></span>`,'',4200,'#DFFF24'); confetti(); tone(660,0.25,'triangle',.14,1320);
+  const t=ups.map(LV.titleAt).filter(Boolean).pop(); if(t&&t.talk&&!S.phase.match(/run|charge|flight/)) setTimeout(()=>talk(t.talk,()=>{},`レベル${t.lv}「${t.title}」`),1200); }
+MX.subs.push((k,n)=>{ if(XP_GAIN[k]) lvGain(XP_GAIN[k]*n); });
+// ---- 今日の依頼（デイリーミッション）----
+function msToday(){ const d=JST(); let s=MX.ls('pk_ms',null); if(s&&!(Array.isArray(s.ids)&&s.ids.length===3&&s.ids.every(msDef)&&s.prog&&s.done)) s=null;   // 依頼の名簿が変わった／壊れた保存 → 今日の分を作り直す
+  if(!s||s.date!==d){ // 日付から3つ選ぶ（同じ日は全員同じ）
+    let h=0; for(const c of d) h=(Math.imul(h,31)+c.charCodeAt(0))>>>0; const pool=META.missions.slice(), pickN=[]; const HARD=k=>['break','survival','story','corner'].includes(k); let nT=0,nH=0;   // ★Math.imul（h*1103515245 は 2^53 を超えて偏っていた）
+    while(pickN.length<3&&pool.length){ h=(Math.imul(h,1103515245)+12345)>>>0; const m=pool.splice(h%pool.length,1)[0]; if(m.kind==='trick_type'&&nT>=1) continue; if(HARD(m.kind)&&nH>=1) continue; if(m.kind==='trick_type') nT++; if(HARD(m.kind)) nH++; pickN.push(m.id); }
+    s={date:d,ids:pickN,prog:{},done:{},bonus:false}; MX.ss('pk_ms',s); } return s; }
+function msDef(id){ return META.missions.find(m=>m.id===id); }
+function msMatch(m,k,d){ if(m.kind===k) return true; if(m.kind==='trick_type'&&k==='trick_type'&&d.trick===m.trick) return true; return false; }
+MX.subs.push((k,n,d)=>{ const s=msToday(); let ch=false;
+  for(const id of s.ids){ const m=msDef(id); if(!m||s.done[id]) continue; if(m.kind==='trick_type'?(k==='trick_type'&&d.trick===m.trick):m.kind===k){ s.prog[id]=(s.prog[id]||0)+n; ch=true;
+      if(s.prog[id]>=m.n){ s.done[id]=1; PG.coin(m.coin,'依頼達成'); setTimeout(()=>{ toast(`<span class="ic">📋</span><span>依頼達成！「${m.text}」<small>🪙${m.coin}　${NAME.yui}「${m.yui}」</small></span>`,'',4200,'#39d0ff'); tone(990,0.2,'triangle',.12,1480); lvGain(XP_GAIN.mission,'mission'); },600); } } }
+  if(ch){ if(!s.bonus&&s.ids.every(i=>s.done[i])){ s.bonus=true; const g=GACHA.st(); g.tix=g.tix||{}; g.tix.ultra=(g.tix.ultra||0)+1; GACHA.save(g); setTimeout(()=>{ toast(`<span class="ic">🎁</span><span>今日の依頼ぜんぶ達成！<small>🎫必殺シュート券1枚</small></span>`,'',4200,'#ffc83d'); confetti(); },2200); }
+    MX.ss('pk_ms',s); lvBadge(); } });
+// ---- 7日ログイン ----
+// メニューが出ていて、名前入力や他の画面が開いていないときだけ出す
+function lgWhenFree(f,ms){ setTimeout(function w(){ const m=document.getElementById('menu'), np=document.getElementById('nmPanel'), busy=m.hidden||(np&&!np.hidden)||[...document.querySelectorAll('#rkpan,#pfpan,#gcsel,#sksel,#achsel,#shpan,#mxpan,#stsel,#prsel,#lobby')].some(e=>e&&!e.hidden); if(busy) return setTimeout(w,1500); f(); },ms); }
+function loginCheck(){ const d=JST(), y=JST(Date.now()-86400000); const s=MX.ls('pk_login',{}); s.last=typeof s.last==='string'?s.last:''; s.streak=Math.max(0,Math.floor(+s.streak)||0);
+  if(s.last===d) return; s.streak=s.last===y?s.streak+1:1; s.last=d; MX.ss('pk_login',s); const day=((s.streak-1)%7)+1, L=META.login.find(x=>x.day===day)||META.login[0];
+  const g=GACHA.st(); const rw=L.reward||{}; const got=[]; if(rw.coin){ PG.coin(rw.coin,'ログイン'); got.push('🪙'+rw.coin); } if(rw.ultra){ g.tix=g.tix||{}; g.tix.ultra=(g.tix.ultra||0)+rw.ultra; got.push('🎫必殺シュート券'+rw.ultra+'枚'); }
+  if(rw.title){ const id='lg_'+day; GI[id]=GI[id]||{id,type:'title',name:rw.title,rar:'SR',desc:'7日ログインの称号',title:rw.title,icon:'📅',noGacha:true}; g.own[id]=1; got.push(`称号「${rw.title}」`); } GACHA.save(g);
+  lgWhenFree(()=>lgOpen(day,s.streak,got,L.yui),1400); lvGain(XP_GAIN.login,'login'); }
+META.login.forEach(L=>{ if(L.reward&&L.reward.title){ const id='lg_'+L.day; GI[id]={id,type:'title',name:L.reward.title,rar:'SR',desc:'7日ログインの称号',title:L.reward.title,icon:'📅',noGacha:true}; } });
+// ---- 画面：メニューの帯（レベル・依頼）／依頼とログインの画面 ----
+{ const st=document.createElement('style'); st.textContent=`
+#menu .tmeta{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-top:10px;background:rgba(7,21,26,.72);border:2px solid rgba(245,247,239,.35);border-radius:14px;padding:8px 10px;cursor:pointer;color:#F5F7EF;font:800 12px/1.2 var(--ui);text-align:left}
+#menu .tmeta .lv{font:900 16px/1 var(--ui);color:#DFFF24} #menu .tmeta .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden} #menu .tmeta .bar i{display:block;height:100%;background:linear-gradient(90deg,#DFFF24,#36A9FF)}
+#menu .tmeta .ms{background:#39d0ff;color:#111;border:2px solid #111;border-radius:999px;padding:4px 9px;white-space:nowrap} #menu .tmeta .ms.ok{background:#DFFF24}
+#menu .tgrid #survBtn{grid-column:1/-1;flex-direction:row;align-items:center;min-height:60px;--ac:#FF3B30;background:linear-gradient(90deg,rgba(255,59,48,.22),rgba(90,42,130,.25)),#0D3B36}
+#menu .tgrid #survBtn .ic{width:40px;height:40px}
+#menu .tevent{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;width:100%;margin-top:10px;text-align:left;font:800 15px/1.2 var(--ui);color:#111;background:linear-gradient(90deg,#ffc83d,#ff9f1c);border:3px solid #111;border-radius:16px;padding:10px 12px;box-shadow:0 5px 0 #111;cursor:pointer;position:relative;overflow:hidden}
+#menu .tevent .ic{font-size:30px} #menu .tevent small{display:block;font-weight:500;font-size:11px;opacity:.8;margin-top:2px} #menu .tevent .tag{position:absolute;right:8px;top:6px;font:900 10px/1 var(--ui);background:#FF3B30;color:#fff;border:2px solid #111;border-radius:6px;padding:3px 6px}
+#mxpan{position:fixed;inset:0;z-index:12;display:grid;place-items:center;background:rgba(7,21,26,.82);padding:12px;box-sizing:border-box}
+#mxpan .cd{width:min(400px,100%);max-height:calc(100dvh - 24px);overflow-y:auto;background:#F5F7EF;color:#111;border:3px solid #111;border-radius:20px;box-shadow:0 8px 0 #111;padding:14px 14px 12px;box-sizing:border-box}
+#mxpan h3{margin:0 0 4px;text-align:center;font:900 20px/1.2 var(--ui)} #mxpan .sub{text-align:center;font:500 12px/1.5 var(--ui);opacity:.75;margin-bottom:10px}
+#mxpan .ms{display:grid;grid-template-columns:1fr auto;gap:4px 8px;align-items:center;background:#fff;border:2px solid #111;border-radius:12px;padding:9px 10px;margin-bottom:8px;font:800 13px/1.3 var(--ui)} #mxpan .ms small{grid-column:1/-1;font:500 11px/1.4 var(--ui);opacity:.75}
+#mxpan .ms .p{font:900 13px/1 var(--ui)} #mxpan .ms .bar{grid-column:1/-1;height:7px;border-radius:99px;background:#e3e6dc;overflow:hidden} #mxpan .ms .bar i{display:block;height:100%;background:#39d0ff} #mxpan .ms.ok{background:#f3ffc2} #mxpan .ms.ok .bar i{background:#9bd400}
+#mxpan .days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:6px 0 10px} #mxpan .days div{border:2px solid #111;border-radius:10px;background:#fff;text-align:center;padding:6px 0;font:800 10px/1.3 var(--ui)} #mxpan .days div b{display:block;font-size:14px} #mxpan .days .got{background:#DFFF24} #mxpan .days .now{outline:3px solid #FF3B30}
+#mxpan .yui{background:#0D3B36;color:#F5F7EF;border-radius:12px;padding:10px 12px;font:500 13px/1.5 var(--ui);margin-bottom:10px} #mxpan .yui b{color:#DFFF24}
+#mxpan .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px} #mxpan .btns button{font:800 14px/1 var(--ui);border:2px solid #111;border-radius:12px;padding:12px;cursor:pointer;background:#fff;color:#111} #mxpan .btns .go{background:#FF9F1C}`; document.head.appendChild(st); }
+const mxEl=document.createElement('div'); mxEl.id='mxpan'; mxEl.hidden=true; document.body.appendChild(mxEl); mxEl.addEventListener('click',e=>{ if(e.target===mxEl) mxEl.hidden=true; });
+function lgSt(){ const l=MX.ls('pk_login',{}); return {last:typeof l.last==='string'?l.last:'',streak:Math.max(1,Math.floor(+l.streak)||1)}; }
+function msOpen(){ audio(); const s=msToday(), lg=lgSt(), day=((lg.streak-1)%7)+1, lv=LV.st();
+  mxEl.innerHTML=`<div class="cd"><h3>📋 今日の依頼</h3><div class="sub">${NAME.yui}から毎日3つ届く。ぜんぶ達成で🎫必殺シュート券<br>技の描き方は試合画面の下の「技のヒント」に出る</div>
+   ${s.ids.map(id=>{ const m=msDef(id), p=Math.min(m.n,s.prog[id]||0), ok=!!s.done[id]; return `<div class="ms${ok?' ok':''}"><span>${ok?'✅ ':''}${m.text}</span><span class="p">${p}/${m.n}　🪙${m.coin}</span><div class="bar"><i style="width:${p/m.n*100}%"></i></div><small>${NAME.yui}「${m.yui}」</small></div>`; }).join('')}
+   <h3 style="font-size:16px;margin-top:6px">📅 連続ログイン ${lg.streak||1}日目</h3><div class="days">${META.login.map(L=>`<div class="${L.day<day?'got':L.day===day?'got now':''}">${L.day}日<b>${L.reward.title?'🏷️':L.reward.ultra?'🎫':'🪙'}</b>${L.reward.coin?L.reward.coin:''}</div>`).join('')}</div>
+   <div class="yui">⭐ <b>レベル${lv.lv}</b>　次まで ${Math.max(0,LV.need(lv.lv)-lv.xp)}XP<br>ゴール・技・章クリア・依頼達成で経験値が入る。5レベルごとに称号、10レベルごとに新しい演出が解放（もらった演出はスキン画面で着ける）</div>
+   <div class="btns"><button type="button" data-a="close">閉じる</button><button type="button" class="go" data-a="story">ストーリーへ</button></div></div>`;
+  mxEl.hidden=false; mxEl.querySelector('[data-a=close]').addEventListener('click',()=>mxEl.hidden=true); mxEl.querySelector('[data-a=story]').addEventListener('click',()=>{ mxEl.hidden=true; ST.list(); }); }
+function lgOpen(day,streak,got,yui,again){ audio(); mxEl.innerHTML=`<div class="cd"><h3>📅 ログイン ${streak}日目</h3><div class="sub">7日で1周。途切れると1日目から</div>
+   <div class="days">${META.login.map(L=>`<div class="${L.day<day?'got':L.day===day?'got now':''}">${L.day}日<b>${L.reward.title?'🏷️':L.reward.ultra?'🎫':'🪙'}</b>${L.reward.coin?L.reward.coin:''}</div>`).join('')}</div>
+   <div class="yui"><b>${NAME.yui}</b>「${yui}」<br>${again?'今日の分はもう受け取った':'今日のごほうび：'+(got.join('・')||'—')}</div><div class="btns"><button type="button" data-a="close">OK</button><button type="button" class="go" data-a="ms">📋 今日の依頼</button></div></div>`;
+  mxEl.hidden=false; mxEl.querySelector('[data-a=close]').addEventListener('click',()=>mxEl.hidden=true); mxEl.querySelector('[data-a=ms]').addEventListener('click',()=>msOpen()); if(!again){ confetti(); tone(880,0.3,'triangle',.12,1320); } }
+function lvBadge(){ const m=document.getElementById('menu'); if(!m) return; let el=m.querySelector('.tmeta'); if(!el){ el=document.createElement('button'); el.type='button'; el.className='tmeta'; el.addEventListener('click',msOpen); const st=m.querySelector('#storyBtn')||m.querySelector('.tgrid'); if(st) st.after(el); else return; }
+  const lv=LV.st(), s=msToday(), done=s.ids.filter(i=>s.done[i]).length; el.innerHTML=`<span class="lv">Lv.${lv.lv}</span><span class="bar"><i style="width:${lv.lv>=LV.max?100:lv.xp/LV.need(lv.lv)*100}%"></i></span><span class="ms${done===3?' ok':''}">📋 依頼 ${done}/3</span>`; }
+{ const _r=TITLE.refresh; TITLE.refresh=function(){ _r.call(this); lvBadge(); evCard(); }; }
+// ===== サバイバル（校正ループ）=====
+const SV={on:false,lives:3,n:0,boss:0,best:0};
+function svBossOrder(){ const n=STORY.length, a=[...Array(n).keys()]; for(let i=a.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function svStart(again){ audio(); document.getElementById('menu').hidden=true; const go=()=>{ SV.lives=3; SV.n=0; SV.order=svBossOrder(); SV.k=0; SV.boss=SV.order[0]; SV.shown={}; SV.arm=true; startMode('solo'); svHud(); };
+  if(again===true||SV.introDone) go(); else { SV.introDone=true; talk(META.survival.intro,go,META.survival.name); } }   // 2回目からは導入会話なし
+{ const _a=applyRoles; applyRoles=function(){ const r=_a.apply(this,arguments); if(M.mode==='solo'&&SV.on) wear('keeper','boss'+SV.boss); else if(M.mode==='solo'&&EV.on) wear('keeper',EV.skin); return r; }; }
+// どのモードを始めても、svStart/evStart から来たとき以外はサバイバル/イベントを必ず切る（ストーリーや自主練にボスの衣装や3ライフが持ち越されないように）
+{ const _s=startMode; startMode=function(mode){ const sv=!!SV.arm, ev=!!EV.arm; SV.arm=EV.arm=false; SV.on=mode==='solo'&&sv; EV.on=mode==='solo'&&ev; mxRetryClear(); const r=_s(mode); svHud(); return r; }; }
+function mxRetryClear(){ const r=document.getElementById('retry'); if(r){ delete r.dataset.surv; delete r.dataset.ev; } }
+{ const _q=quitToMenu; quitToMenu=function(){ SV.on=false; EV.on=false; mxRetryClear(); svHud(); return _q.apply(this,arguments); }; }
+{ const tm=document.getElementById('toMenu'); tm.addEventListener('click',()=>{ SV.on=false; EV.on=false; mxRetryClear(); svHud(); }); }
+// キーパーの読みと必殺セーブ：本数が増えるほど強い
+function svRead(){ return Math.min(0.62,0.22+SV.n*0.02); } function svSp(){ return Math.min(0.55,0.12+SV.n*0.025); }
+{ const _l=launch; launch=function(){ const r=_l.apply(this,arguments); const on=M.mode==='solo'&&(SV.on||EV.on)&&!humanKeeps(); if(!on) return r;
+    const {tx,ty}=S.shot, read=SV.on?svRead():EV.def.read, spp=SV.on?svSp():EV.def.spRate;
+    if(S.kick>0&&Math.random()<read){ const gx=tx+(Math.random()-.5)*0.9, gy=THREE.MathUtils.clamp(ty+(Math.random()-.5)*0.6,0.35,2.2), th=THREE.MathUtils.clamp(Math.atan2(gx,Math.max(0.2,gy-0.3))*0.95,-1.45,1.45); GK.to={cx:gx-Math.sin(th)*1.0,cy:Math.max(0.3,gy-Math.cos(th)*1.0),th}; R.wrong=false; }
+    R.gkSp=null; R.mxweak=false;
+    if(!R.ultra&&S.kick>0&&Math.random()<spp){ const kind=SV.on?'b'+SV.boss:EV.kind, base=BSP_DEF[kind]&&BSP_DEF[kind].base; R.gkSp=kind; GK.react=99; R.wrong=false; const w=P3W[base]||(()=>!!R.trick); R.gkSpOK=!w(S.shot); R.mxweak=!R.gkSpOK; R.p3weak=R.mxweak; }   // 第1・2部ボスの必殺セーブは「技で蹴る」と破れる
+    return r; }; }
+// 結果：決めたら次のボスへ、外したら残り−1
+function mxNoBanner(){ S.bannerT=0; hideBanner(); requestAnimationFrame(()=>requestAnimationFrame(hideBanner)); setTimeout(hideBanner,400); }   // 直前の SAVE!/GOAL!! を結果画面の後ろに残さない
+function mxCounter(kind){ const d=BSP_DEF[kind]; if(!d) return ''; return d.counter||'技（フリックの前に指で形を描く）で蹴ると破れる'; }
+{ const _r=resolve; resolve=function(r){ const out=_r.apply(this,arguments); if(M.mode==='solo'&&(SV.on||EV.on)&&S.shotMine&&r!=='goal'&&R.gkSp&&!R.ultra) setTimeout(()=>toast(`<span class="ic">💡</span><span>攻略法<small>${mxCounter(R.gkSp)}</small></span>`,'',4200,'#ffc83d'),900);
+    if(M.mode==='solo'&&SV.on&&S.shotMine){ if(r==='goal'&&R.ultra){ /* 必殺券は本数に入れない */ } else if(r==='goal'){ SV.n++; MX.on('survival',1); const mk=META.survival.marks.find(x=>x.n===SV.n); if(mk){ const id='sv_'+mk.n; GI[id]=GI[id]||{id,type:'title',name:mk.title,rar:mk.n>=30?'LEGEND':mk.n>=20?'SSR':mk.n>=10?'SR':'R',desc:`サバイバル${mk.n}本の称号`,title:mk.title,icon:'♾️',noGacha:true}; const g=GACHA.st(); if(!g.own[id]){ g.own[id]=1; GACHA.save(g); } setTimeout(()=>toast(`<span class="ic">♾️</span><span>${mk.n}本突破！称号「${mk.title}」<small>${NAME.yui}「${mk.yui}」</small></span>`,'',4600,'#FF3B30'),900); }
+        SV.k=(SV.k+1)%SV.order.length; SV.boss=SV.order[SV.k]; } else SV.lives--; svHud(); } return out; }; }
+META.survival.marks.forEach(mk=>{ const id='sv_'+mk.n; GI[id]={id,type:'title',name:mk.title,rar:mk.n>=30?'LEGEND':mk.n>=20?'SSR':mk.n>=10?'SR':'R',desc:`サバイバル${mk.n}本の称号`,title:mk.title,icon:'♾️',noGacha:true}; });
+const svEl=document.createElement('div'); svEl.id='svhud'; svEl.hidden=true; document.body.appendChild(svEl);
+{ const st=document.createElement('style'); st.textContent=`#svhud{position:fixed;left:10px;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:3;pointer-events:none;padding:7px 11px;border-radius:12px;background:rgba(12,22,32,.72);border:1.5px solid rgba(255,59,48,.6);font:800 12px/1.3 var(--ui);color:#F5F7EF} #svhud b{font-size:18px;color:#DFFF24} #svhud small{display:block;font-weight:500;opacity:.8}`; document.head.appendChild(st); }
+function svHud(){ const on=M.mode==='solo'&&(SV.on||EV.on); svEl.hidden=!on; if(!on) return;
+  if(SV.on){ svEl.innerHTML=`♾️ ${META.survival.name}<br><b>${SV.n}</b> 本　${'❤️'.repeat(Math.max(0,SV.lives))}${'🖤'.repeat(Math.max(0,3-SV.lives))}<small>相手：${(SKINS['boss'+SV.boss]||{}).name||''}</small>`; }
+  else svEl.innerHTML=`🎪 ${EV.def.title}<br><b>${EV.have()}</b> / ${EV.def.goal.n} ${EV.def.goal.type==='tricks'?'技ゴール':'ゴール'}<small>相手：${EV.def.keeper}</small>`; }
+// 終わり方：サバイバルは3回外したら／イベントは5本
+{ const _a=afterResult; afterResult=function(){ if(M.mode==='solo'&&SV.on){ recStop(); S.kick++; if(SV.lives<=0) finish(); else resetKick(); return; }
+    if(M.mode==='solo'&&EV.on&&EV.def&&EV.have()>=EV.def.goal.n){ recStop(); S.kick++; finish(); return; }   // 目標に届いたら残りは蹴らせない
+    return _a.apply(this,arguments); }; }
+{ const _f=finish; finish=function(left){ const r=_f(left); if(M.mode==='solo'&&SV.on){ mxNoBanner(); const sub=document.querySelector('#end .sub'), big=document.querySelector('#end .big'); SV.best=Math.max(+MX.ls('pk_svbest',0)||0,SV.n); MX.ss('pk_svbest',SV.best);
+      sub.textContent=META.survival.name+'の結果'; big.innerHTML=`<b>${SV.n}</b><span> 本</span>`; document.getElementById('best').textContent=`ベスト ${SV.best} 本`; PG.coin(SV.n*15,'サバイバル'); SV.on=false; svHud();
+      setTimeout(()=>{ if(!document.getElementById('end').hidden) talk(META.survival.over,()=>{},META.survival.name); },700); const r2=document.getElementById('retry'); r2.dataset.surv='1'; }
+    if(M.mode==='solo'&&EV.on) evFinish(); return r; }; }
+document.getElementById('retry').addEventListener('click',e=>{ const r=document.getElementById('retry'); if(r.dataset.surv){ delete r.dataset.surv; e.stopImmediatePropagation(); document.getElementById('end').hidden=true; svStart(true); } else if(r.dataset.ev){ delete r.dataset.ev; e.stopImmediatePropagation(); document.getElementById('end').hidden=true; evStart(true); } },true);
+// ===== 期間限定イベント（2週間ごと・ランキングのシーズンと同じ）=====
+const EV={on:false,def:null,kind:null,skin:null,goals:0,tricks:0};
+EV.cur=()=>{ const s=rkSeason(); const L=META.events; return L.find(e=>e.season===s)||L[((s%L.length)+L.length)%L.length]; };
+EV.have=()=>EV.def.goal.type==='tricks'?EV.tricks:EV.goals;
+META.events.forEach((e,i)=>{ const L=e.look, em=L.emoji||{}; const skin='ev'+i;
+  SKINS[skin]={name:e.keeper,desc:L['一言']||'',event:i,shirt:hexN(L.shirt),trim:hexN(L.trim),shorts:hexN(L.shorts),sock:hexN(L.trim),band:hexN(L.trim),bands:1,boot:0x111111,boot2:hexN(L.trim),num:(e.keeper||'？')[0],pattern:0,sleeve:'long',gloves:true,metal:0,dark:false,hair:0x1a1410,hairStyle:'Hair_Buzzed',female:false,width:1,arm:1,leg:1,
+    props:{emo:{head:em.head?[em.head,0.3,0]:null,hand:em.hand?[em.hand,0.26]:null,back:em.back?[em.back,0.45,'bob']:null,float:em.float?[em.float,'flutter']:null},aura:L.aura||null}};
+  RARITY[skin]='LEGEND'; ICON[skin]=em.head||'🎪';
+  evBsp(e,i);
+  const r=e.reward||{}; GI['evt_'+i]={id:'evt_'+i,type:'title',name:r.title,rar:'LEGEND',desc:`イベント「${e.title}」の限定称号`,title:r.title,icon:'🎪',noGacha:true};
+  GI['evg_'+i]={id:'evg_'+i,type:'goal',name:r.goalName,rar:'LEGEND',desc:`イベント「${e.title}」の限定ゴール演出`,goal:{text:r.goalText,col:'#FFD60A',rain:'star',fw:'#FF3B30'},icon:r.goalEmoji||'🎪',noGacha:true}; });
+function evBsp(e,i){ BSP_DEF['bev'+i]=Object.assign({},e.bsp,{trophy:e.bsp.name.replace(/！+$/,'')}); GKSP['bev'+i]=e.bsp.name.replace(/！+$/,''); }
+// 名前を変えたとき：names.js が BSP_DEF を作り直すので、イベントの必殺セーブを入れ直す
+{ const _n=nameApply; nameApply=function(){ const r=_n.apply(this,arguments); metaNames(); META.events.forEach((e,i)=>{ evBsp(e,i); if(SKINS['ev'+i]) SKINS['ev'+i].name=e.keeper; }); if(EV.on) EV.def=Object.assign({read:0.4,spRate:0.45},META.events[EV.idx]); lvBadge(); evCard(); return r; }; }
+function evStart(again){ audio(); const e=EV.cur(), i=META.events.indexOf(e); document.getElementById('menu').hidden=true;
+  const go=()=>{ EV.def=Object.assign({read:0.4,spRate:0.45},e); EV.kind='bev'+i; EV.skin='ev'+i; EV.idx=i; EV.goals=0; EV.tricks=0; EV.arm=true; startMode('solo'); svHud(); };
+  if(again===true||EV.introDone===i) go(); else { EV.introDone=i; talk(e.pre,go,`🎪 ${e.title}`); } }
+{ const _r=resolve; resolve=function(r){ const out=_r.apply(this,arguments); if(M.mode==='solo'&&EV.on&&S.shotMine&&r==='goal'&&!R.ultra){ EV.goals++; if(R.trick) EV.tricks++; svHud(); } return out; }; }
+function evFinish(){ mxNoBanner(); const e=EV.def, ok=EV.have()>=e.goal.n, i=EV.idx; EV.on=false; svHud(); const sub=document.querySelector('#end .sub'), big=document.querySelector('#end .big');
+  sub.textContent=`🎪 ${e.title}　${ok?'クリア！':'失敗…'}`; big.innerHTML=`<b>${EV.have()}</b><span> / ${e.goal.n}</span>`;
+  const done=Object.assign({},MX.ls('pk_evdone',{})), key='s'+rkSeason(); let msg='';
+  if(ok&&!done[key]){ done[key]=1; MX.ss('pk_evdone',done); const g=GACHA.st(); const had=g.own['evt_'+i]; g.own['evt_'+i]=1; g.own['evg_'+i]=1; GACHA.save(g); const c=(e.reward&&e.reward.coin)||500; PG.coin(c,'イベント'); msg=had?`今シーズンの報酬：🪙${c}（称号と演出は前に取った）`:`限定報酬：🪙${c}＋称号「${e.reward.title}」＋ゴール演出「${e.reward.goalName}」`; lvGain(100,'event'); }
+  else if(ok) msg='限定報酬はもう持ってる（何回でも挑戦OK）'; else msg=`攻略法：${e.bsp.counter}`;
+  document.getElementById('best').textContent=msg; document.getElementById('retry').dataset.ev='1';
+  setTimeout(()=>{ if(!document.getElementById('end').hidden) talk(ok?e.win:e.lose,()=>{},`🎪 ${e.title}`); },600); }
+function evLeft(){ const ms=rkEnd(rkSeason())-Date.now(), d=Math.floor(ms/86400000), h=Math.floor(ms%86400000/3600000); return d>0?`あと${d}日${h}時間`:`あと${h}時間`; }
+function evCard(){ const m=document.getElementById('menu'); if(!m) return; let el=m.querySelector('.tevent'); const e=EV.cur(); if(!e) return;
+  if(!el){ el=document.createElement('button'); el.type='button'; el.className='tevent'; el.addEventListener('click',evStart); const st=m.querySelector('.tmeta')||m.querySelector('#storyBtn'); if(st) st.after(el); else return; }
+  const done=(MX.ls('pk_evdone',{})||{})['s'+rkSeason()]; el.innerHTML=`<span class="ic">${(e.look.emoji&&e.look.emoji.head)||'🎪'}</span><span>期間限定：${e.title}<small>VS ${e.keeper}・${evLeft()}・${done?'✅ 報酬ゲット済み':'限定の称号とゴール演出'}</small></span><span class="tag">EVENT</span>`; }
+// ===== メニュー：サバイバルのボタン（ランキングの下）=====
+{ const rb=document.getElementById('rankBtn')||document.getElementById('gachaBtn'); if(rb){ const b=rb.cloneNode(true); b.id='survBtn'; const ic=b.querySelector('.ic'), tt=b.querySelector('.tt'), sm=b.querySelector('small'); if(ic) ic.textContent='♾️'; if(tt) tt.textContent=META.survival.name; if(sm) sm.textContent=`3回外すまで蹴り続ける・ベスト ${+MX.ls('pk_svbest',0)||0}本`; rb.after(b); b.addEventListener('click',svStart); } }
+setTimeout(()=>{ lvBadge(); evCard(); loginCheck(); },1800);
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){ msToday(); lvBadge(); evCard(); loginCheck(); } });   // ホーム画面のアプリは日をまたいでも読み込み直さない
+setInterval(()=>{ if(!document.getElementById('menu').hidden) evCard(); },60000);   // 残り時間を動かす
+if(/dbg/.test(location.search)) Object.assign(window,{__MX:MX,__LV:LV,__lvGain:lvGain,__msOpen:msOpen,__SV:SV,__EV:EV,__svStart:svStart,__evStart:evStart,__META:()=>META,__mx:{own:()=>GACHA.st().own,res:r=>resolve(r),after:()=>afterResult(),fin:()=>finish(),shot:t=>{S.shotMine=true;R.ultra=false;R.trick=t||null;},ultra:()=>{R.ultra=true;},mode:()=>M.mode},__g:{S:()=>({phase:S.phase,shotMine:S.shotMine,kick:S.kick}),M:()=>({mode:M.mode,turn:M.turn,gkOnly:M.gkOnly}),start:(m,gk)=>{ startMode(gk?'gk':m); }}});
+
+// ===== ホーム画面の整理（主「ごちゃごちゃしてきたからチャッピーと相談して見やすくして」2026-09-26）=====
+// ChatGPT案「毎日やることは上、遊ぶ機能は下 —— ストーリーを主役にした1画面ダッシュボード」
+// 上から：ヘッダー（ロゴ・コイン）→ 今日の帯（Lv・依頼・ログイン）→ ストーリー（最大・キーパーが透けて見える窓）→ イベント → 遊ぶ7つ（4＋3）→ 小ボタン4つ → テロップ。縦スクロールなし
+{ const st=document.createElement('style'); st.textContent=`
+#menu .tbox.h2{height:100%;min-height:0;overflow:hidden auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px calc(env(safe-area-inset-bottom,0px) + 40px);gap:10px}
+#menu .h2>.tsp{display:none}
+#menu .h2 .thead{order:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none}
+#menu .h2 .thead .lg{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+#menu .h2 h1.tlogo{margin:2px 0 0 4px;align-self:flex-start;font-size:44px;-webkit-text-stroke:2px #111;text-shadow:2px 2px 0 #111,-2px 2px 0 #111,2px -2px 0 #111,-2px -2px 0 #111,0 4px 0 #111,0 6px 0 #4a1238,0 10px 12px rgba(0,0,0,.6);transform:rotate(-3deg) scaleX(1.04)}
+@keyframes tlogoIn{0%{transform:rotate(-5deg) scale(1.25);opacity:0}100%{transform:rotate(-3deg) scaleX(1.04);opacity:1}}
+#menu .h2 .ttag{align-self:flex-start;font-size:9px;letter-spacing:.14em;padding:4px 8px;margin:6px 0 0}
+#menu .h2 .thead .tcoin{flex:none;font:900 15px/1 var(--ui);color:#111;background:linear-gradient(180deg,#ffe27a,#ffc83d);border:3px solid #111;border-radius:999px;padding:8px 12px;box-shadow:0 3px 0 #111;white-space:nowrap}
+#menu .h2 .tmeta{order:1;flex:none;margin:0;grid-template-columns:auto 1fr auto auto;min-height:46px;box-sizing:border-box;background:rgba(7,21,26,.82);border:3px solid #111;box-shadow:0 3px 0 #111}
+#menu .h2 .tmeta .lg7{position:relative;font-size:11px;background:#FF9F1C;color:#111;border:2px solid #111;border-radius:999px;padding:4px 9px;white-space:nowrap}
+#menu .h2 .dot{position:absolute;top:-5px;right:-4px;width:11px;height:11px;border-radius:50%;background:#FF3B30;border:2px solid #111}
+#menu .h2 .tmeta .ms{position:relative}
+#menu .h2 #storyBtn{order:2;flex:1 1 190px;min-height:120px;max-height:380px;flex-direction:column;align-items:stretch;justify-content:flex-end;gap:8px;padding:12px 14px 12px;
+  --c1:linear-gradient(180deg,rgba(7,21,26,0) 0%,rgba(7,21,26,.05) 38%,rgba(13,59,54,.9) 62%,#0D3B36 100%);color:#F5F7EF;border-width:4px;
+  box-shadow:inset 0 0 0 2px rgba(223,255,36,.35),0 6px 0 #111,0 10px 16px rgba(0,0,0,.5)}
+#menu .h2 #storyBtn .catch{position:absolute;left:12px;top:10px;font:800 12px/1.2 var(--ui);color:#F5F7EF;text-shadow:0 2px 0 #111,0 0 8px rgba(0,0,0,.9);margin:0}
+#menu .h2 #storyBtn .catch em{font-style:normal;color:#FF3B30}
+#menu .h2 #storyBtn .row{display:flex;align-items:center;gap:10px}
+#menu .h2 #storyBtn .ic{width:48px;height:48px;font-size:28px;background:#111;border:2px solid #DFFF24}
+#menu .h2 #storyBtn .tt{font-size:25px;color:#DFFF24;-webkit-text-stroke:1px #111;text-shadow:0 2px 0 #111}
+#menu .h2 #storyBtn small{color:#F5F7EF;font-size:12px}
+#menu .h2 #storyBtn .go{display:none}
+#menu .h2 #storyBtn .play{display:block;text-align:center;font:900 20px/1 var(--ui);letter-spacing:.08em;color:#111;background:linear-gradient(180deg,#f2ff7a,#DFFF24 55%,#b9dc00);border:3px solid #111;border-radius:12px;padding:10px 0;box-shadow:inset 0 2px 0 rgba(255,255,255,.6),0 4px 0 #111;animation:h2play 1.4s ease-in-out infinite}
+@keyframes h2play{0%,100%{transform:skewX(4deg) scale(1)}50%{transform:skewX(4deg) scale(1.035)}}
+#menu .h2 .tevent{order:3;flex:none;margin:0;padding:8px 12px;min-height:60px;box-sizing:border-box;font-size:14px;border-width:3px;box-shadow:0 4px 0 #111}
+#menu .h2 .tevent .ic{font-size:26px;position:relative}
+#menu .h2 .tevent small{font-size:10.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3}
+#menu .h2 .tevent>span:nth-child(2){min-width:0;padding-right:52px}
+#menu .h2 .tevent .left{color:#b3001b;font-weight:900}
+#menu .h2 .tgrid{order:4;flex:none;margin:0;grid-template-columns:repeat(12,1fr);gap:8px}
+#menu .h2 .tgrid .gbtn{grid-column:span 3;min-height:62px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 2px;border-radius:12px;box-shadow:0 4px 0 #111}
+#menu .h2 .tgrid .gbtn::before{left:0;right:0;top:0;bottom:auto;width:auto;height:4px;border-radius:9px 9px 0 0}
+#menu .h2 .tgrid .gbtn .ic{width:30px;height:30px;font-size:18px;border-radius:9px}
+#menu .h2 .tgrid .gbtn .tx{align-items:center}
+#menu .h2 .tgrid .gbtn .tt{font-size:13px;white-space:nowrap}
+#menu .h2 .tgrid .gbtn small{display:none}
+#menu .h2 .tgrid #gachaBtn,#menu .h2 .tgrid #rankBtn,#menu .h2 .tgrid #survBtn{grid-column:span 4;flex-direction:row;min-height:50px;gap:6px}
+#menu .h2 .tgrid #gachaBtn .ic,#menu .h2 .tgrid #rankBtn .ic,#menu .h2 .tgrid #survBtn .ic{width:28px;height:28px;font-size:17px}
+#menu .h2 .tgrid #rankBtn{--ac:#DFFF24;background:linear-gradient(90deg,rgba(223,255,36,.18),rgba(54,169,255,.18)),#0D3B36}
+#menu .h2 .tutil{order:5;flex:none;margin:0;gap:6px}
+#menu .h2 .tutil .ubtn,#menu .h2 .tutil .shbtn{flex:1 1 0;min-width:0;margin:0;width:auto;font:800 11.5px/1 var(--ui);padding:10px 1px;border-radius:12px;white-space:nowrap;box-shadow:none}
+#menu .h2 .tutil .shbtn{color:#111;background:#DFFF24;border:2px solid #111}
+@media (max-height:720px){ #menu .h2 h1.tlogo{font-size:36px} #menu .h2 .ttag{display:none} #menu .h2 #storyBtn{min-height:104px} #menu .h2 #storyBtn .catch{display:none} #menu .h2 #storyBtn .play{padding:8px 0;font-size:17px} #menu .h2 .tgrid .gbtn{min-height:54px} #menu .h2 .tgrid #gachaBtn,#menu .h2 .tgrid #rankBtn,#menu .h2 .tgrid #survBtn{min-height:44px} #menu .tbox.h2{gap:8px} }
+#menu .h2 .tgrid #survBtn .bst{font:900 11px/1 var(--ui);color:#111;background:#DFFF24;border:2px solid #111;border-radius:999px;padding:3px 6px;margin-left:4px}
+@media (max-height:620px){ #menu .h2 #storyBtn small{display:none} #menu .h2 .tevent small{display:none} #menu .h2 .tevent{min-height:46px} }`; document.head.appendChild(st); }
+function home2(){ const m=document.getElementById('menu'), box=m&&m.querySelector('.tbox'); if(!box) return; box.classList.add('h2');
+  const q=s=>box.querySelector(s);
+  // ヘッダー：ロゴ（タグ付き）＋コイン
+  if(!q('.thead')){ const hd=document.createElement('div'); hd.className='thead'; const lg=document.createElement('div'); lg.className='lg';
+    const logo=q('h1.tlogo'), tag=q('.ttag'), coin=q('.tcoin'); if(logo) lg.appendChild(logo); if(tag) lg.appendChild(tag); hd.appendChild(lg); if(coin) hd.appendChild(coin); box.prepend(hd); }
+  // ストーリー：キャッチを窓の左上へ、下にPLAY
+  const sb=q('#storyBtn'); if(sb&&!sb.querySelector('.play')){ const cp=q('.tcopy'); if(cp){ cp.classList.add('catch'); sb.appendChild(cp); }
+    const row=document.createElement('span'); row.className='row'; const ic=sb.querySelector('.ic'), tx=sb.querySelector('.tx'); if(ic) row.appendChild(ic); if(tx) row.appendChild(tx); sb.appendChild(row);
+    const pl=document.createElement('span'); pl.className='play'; pl.textContent='PLAY ▶'; sb.appendChild(pl); }
+  // 遊ぶ7つ：名前を短く
+  const nm={practiceBtn:'自主練',onlineBtn:'対戦',skinBtn:'スキン',achBtn:'実績',gachaBtn:'ガチャ',rankBtn:'ランキング',survBtn:'サバイバル'};
+  for(const id in nm){ const b=q('#'+id), t=b&&b.querySelector('.tt'); if(t){ t.textContent=nm[id]; if(id==='survBtn'){ const bst=+MX.ls('pk_svbest',0)||0; if(bst) t.insertAdjacentHTML('beforeend',`<b class="bst">${bst}本</b>`); } } }
+  // 小ボタン：名前・プロフ・実況・共有（共有は一番右で黄緑）
+  const ut=q('.tutil'), sh=q('.shbtn'); if(ut&&sh&&sh.parentNode!==ut){ sh.textContent='📣 共有'; ut.appendChild(sh); }
+  const nb=q('#nameBtn'); if(nb) nb.textContent='👤 名前';
+}
+// 実況ボタンは短く
+{ const _t=ttsLabel; ttsLabel=function(){ _t.apply(this,arguments); const b=document.getElementById('ttsBtn'); if(b) b.textContent='🎙実況'+(TTS.on?'ON':'OFF'); }; ttsLabel(); }
+// 今日の帯：ログイン（◯日目）を足す／通知の赤丸
+{ const _b=lvBadge; lvBadge=function(){ _b.apply(this,arguments); const el=document.querySelector('#menu .tmeta'); if(!el) return;
+    const s=msToday(), left=s.ids.filter(i=>!s.done[i]).length, lg=lgSt(), day=((lg.streak-1)%7)+1;
+    const ms=el.querySelector('.ms'); if(ms&&left>0&&!ms.querySelector('.dot')) ms.insertAdjacentHTML('beforeend','<i class="dot"></i>');
+    if(!el.querySelector('.lg7')){ const c=document.createElement('span'); c.className='lg7'; c.textContent=`📅${day}日目`; c.title='連続ログイン'; c.addEventListener('click',e=>{ e.stopPropagation(); const L=META.login.find(x=>x.day===day)||META.login[0]; lgOpen(day,lg.streak,[],L.yui,true); }); el.appendChild(c); } }; }
+// イベント：残り7日以下で赤丸＋残り時間を赤
+{ const _e=evCard; evCard=function(){ _e.apply(this,arguments); const el=document.querySelector('#menu .tevent'); if(!el) return; const ms=rkEnd(rkSeason())-Date.now(), sm=el.querySelector('small');
+    if(sm){ const t=evLeft(); sm.innerHTML=sm.innerHTML.replace(t,`<span class="left">${t}</span>`); }
+    const done=MX.ls('pk_evdone',{})[META.events.indexOf(EV.cur())]; const ic=el.querySelector('.ic'); if(ic&&ms<7*86400000&&!done&&!ic.querySelector('.dot')) ic.insertAdjacentHTML('beforeend','<i class="dot"></i>'); }; }
+// たまに出るメガ文字は、ストーリーの「窓」（キーパーが見える所）に出す
+{ const _u=TITLE.update; TITLE.update=function(dt){ const was=this.megaT; _u.call(this,dt); if(this.megaT>was+1&&!this.mg.hidden){ const sb=document.getElementById('storyBtn'); if(sb){ const r=sb.getBoundingClientRect(), h=Math.max(0,r.height*0.45), fs=Math.max(30,Math.min(60,h*0.75)); this.mg.style.fontSize=fs+'px'; this.mg.style.top=(r.top+Math.max(14,(h-fs)/2+10))+'px'; } } }; }
+home2();
+setTimeout(()=>{ home2(); lvBadge(); evCard(); },1900);
+{ const _r=TITLE.refresh; TITLE.refresh=function(){ _r.call(this); const t=document.querySelector('#survBtn .tt'); if(t){ const bst=+MX.ls('pk_svbest',0)||0; const old=t.querySelector('.bst'); if(old) old.remove(); if(bst) t.insertAdjacentHTML('beforeend',`<b class="bst">${bst}本</b>`); } }; }
+
+// ===== コインの使い道（主「🪙→🎫交換 ⇨そうしよう」2026-09-26）＋ NGワード（主「処理いれよう」）＋ ネタバレ対策（主「対策しよう」）=====
+// ---- 🪙→🎫：ガチャ画面に「交換所」。必殺シュート券1枚＝🪙1000、1日1枚まで（券が増えすぎるとストーリーが崩れるので上限つき）----
+const SHOP={price:1000,perDay:1};
+function shopSt(){ const s=MX.ls('pk_shop',{}); const d=JST(); if(s.day!==d){ s.day=d; s.n=0; } s.n=Math.max(0,Math.floor(+s.n)||0); return s; }
+function shopBuy(){ audio(); const s=shopSt(); if(s.n>=SHOP.perDay){ toast('<span class="ic">🎫</span><span>今日の分は交換した<small>また明日</small></span>','',2600,'#ffc83d'); return; }
+  if(PG.coins<SHOP.price){ toast(`<span class="ic">🪙</span><span>コインが足りない<small>あと🪙${(SHOP.price-PG.coins).toLocaleString()}</small></span>`,'',2600,'#FF3B30'); return; }
+  PG.coins-=SHOP.price; PG.save(); s.n++; MX.ss('pk_shop',s); const g=GACHA.st(); g.tix=g.tix||{}; g.tix.ultra=(g.tix.ultra||0)+1; GACHA.save(g);
+  toast(`<span class="ic">🎫</span><span>必殺シュート券 ＋1<small>🪙${SHOP.price} → 🎫 いま${g.tix.ultra}枚</small></span>`,'',3200,'#DFFF24'); tone(990,0.2,'triangle',.12,1480); shopUpd(); if(typeof gcUpd==='function') gcUpd(); if(TITLE&&TITLE.refresh) TITLE.refresh(); }
+{ const st=document.createElement('style'); st.textContent=`
+#gcsel .shop{display:grid;margin:4px 0;text-align:left;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;background:rgba(245,247,239,.08);border:2px solid rgba(245,247,239,.3);border-radius:14px;padding:10px 12px;color:#F5F7EF;font:800 13px/1.3 var(--ui)}
+#gcsel .shop small{grid-column:1;font:500 11px/1.4 var(--ui);opacity:.8} #gcsel .shop .hd2{grid-column:1/-1;font:800 12px/1 var(--ui);color:#DFFF24;letter-spacing:.1em}
+#gcsel .shop button{grid-column:2;grid-row:2/4;font:800 13px/1.1 var(--ui);color:#111;background:linear-gradient(180deg,#ffe27a,#ffc83d);border:2px solid #111;border-radius:12px;padding:10px 12px;cursor:pointer;box-shadow:0 3px 0 #111;white-space:nowrap}
+#gcsel .shop button:disabled{opacity:.45;box-shadow:none}`; document.head.appendChild(st); }
+function shopUpd(){ const el=document.querySelector('#gcsel .shop'); if(!el) return; const s=shopSt(), g=GACHA.st(), left=SHOP.perDay-s.n, b=el.querySelector('button');
+  el.querySelector('.st').textContent=`🎫 必殺シュート券と交換　いま${(g.tix&&g.tix.ultra)||0}枚`; el.querySelector('small').textContent=left>0?`🪙${SHOP.price} で1枚。1日${SHOP.perDay}枚まで（今日はあと${left}枚）`:'今日の分は交換した。また明日'; b.disabled=left<=0||PG.coins<SHOP.price; }
+{ const bt=document.querySelector('#gcsel .bt'); if(bt){ const el=document.createElement('div'); el.className='shop'; el.innerHTML=`<div class="hd2">🪙 コインの使い道</div><div class="st"></div><small></small><button type="button">🪙${SHOP.price}<br>→ 🎫1枚</button>`; const bk=bt.querySelector('.bk'); if(bk) bk.before(el); else bt.after(el); el.querySelector('button').addEventListener('click',shopBuy); } }
+{ const _o=gcOpen; gcOpen=function(){ const r=_o.apply(this,arguments); shopUpd(); return r; }; }
+{ const _u=gcUpd; gcUpd=function(){ const r=_u.apply(this,arguments); shopUpd(); return r; }; }
+
+// ---- NGワード：名前（自由入力）に入っていたら使わせない。ランキングの表示側でも伏せる。サーバー側は ranking3.sql（同じ語）----
+const NG_WORDS=['しね','死ね','ころす','殺す','殺害','きえろ','消えろ','きもい','ぶす','でぶ','はげ','かす','くず','ごみ','ちんこ','ちんちん','ちんぽ','まんこ','おっぱい','せっくす','えろ','淫','精子','陰茎','膣','れいぷ','強姦','売春','援交','痴漢','盗撮','fuck','shit','dick','pussy','cock','porn','rape','sex','nazi','なち','てろ','自殺','麻薬','覚醒剤','大麻','池沼','がいじ','きちがい','障害者','部落','在日','ちょん','土人','nigger','nigga','faggot','ヘイト','殺人'];
+function ngNorm(s){ return String(s||'').toLowerCase().replace(/[Ａ-Ｚａ-ｚ０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60)).replace(/[\s　_\-・.。、!！?？~〜ー]/g,''); }
+function ngHit(s){ const n=ngNorm(s); if(!n) return null; if(/\d{8,}/.test(n)) return '電話番号のような数字'; for(const w of NG_WORDS){ if(n.includes(ngNorm(w))) return w; } return null; }
+function ngMask(s){ return ngHit(s)?'ななし':s; }
+{ const b=document.getElementById('nmSave'); if(b) b.addEventListener('click',()=>{ for(const id of ['nmHero','nmYui']){ const el=document.getElementById(id); const w=ngHit(el.value); if(w){ el.value=''; toast('<span class="ic">🚫</span><span>その名前は使えない<small>みんなに見える名前なので、言葉を選んでね</small></span>','',3200,'#FF3B30'); } } },true); }   // capture＝保存より先に消す
+
+// ---- ネタバレ対策：第3部（13章）に着く前は、サバイバルとイベントの黒幕の名前を伏せて「？？？」の声にする ----
+function spoilerFree(lines){ if(ST.prog()>=PART2) return lines; return lines.map(([who,t])=>[/ゼンブ|カイセイ/.test(who)?'？？？':who,String(t).replace(/ゼンブ・カイセイ/g,'誰か')]); }
+{ const _t=talk; talk=function(lines,done,title){ if(Array.isArray(lines)&&(SV.arm||SV.on||EV.arm||EV.on||title===META.survival.name||/🎪/.test(title||''))) lines=spoilerFree(lines); return _t.call(this,lines,done,title); }; }
+if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngMask,__shopBuy:shopBuy});
 
 sizeAll(); resetKick(); S.phase='menu'; hint.style.opacity=0; requestAnimationFrame(frame);
 })();

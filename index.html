@@ -1,5 +1,6 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>フカシPK</title>
+<script>window.__earlyErr=[];addEventListener("error",function(e){if(window.__earlyErr&&e.message)__earlyErr.push([e.message,(e.error&&e.error.stack)||e.filename+":"+e.lineno])});</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="icon2-180.png?v=59">
 <link rel="icon" type="image/png" href="icon2-192.png">
@@ -3676,6 +3677,58 @@ function ngMask(s){ return ngHit(s)?'ななし':s; }
 function spoilerFree(lines){ if(ST.prog()>=PART2) return lines; return lines.map(([who,t])=>[/ゼンブ|カイセイ/.test(who)?'？？？':who,String(t).replace(/ゼンブ・カイセイ/g,'誰か')]); }
 { const _t=talk; talk=function(lines,done,title){ if(Array.isArray(lines)&&(SV.arm||SV.on||EV.arm||EV.on||title===META.survival.name||/🎪/.test(title||''))) lines=spoilerFree(lines); return _t.call(this,lines,done,title); }; }
 if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngMask,__shopBuy:shopBuy});
+
+// ===== 不具合の記録と送信（主「バグったりエラー出た時にログなど回収できるようにしたほうが良くない？今後の改善のためにも」2026-09-26）=====
+// ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
+// ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
+// ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
+const APP_VER='v60';
+const ERR={list:[],trail:[],shown:0,sent:0};
+try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
+setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
+function errAuto(){ try{ const v=localStorage.getItem('pk_err_auto'); return v===null?null:v==='1'; }catch(e){ return null; } }
+function errCtx(){ let st={}; try{ st={mode:M.mode,gk:!!M.gkOnly,phase:S.phase,kick:S.kick,story:ST.on?ST.idx+1:null,sv:!!SV.on,ev:!!EV.on,q:(document.getElementById('fps')||{}).textContent||''}; }catch(e){}
+  return Object.assign(st,{ver:APP_VER,ua:navigator.userAgent.slice(0,160),w:innerWidth,h:innerHeight,dpr:devicePixelRatio,pwa:!!(matchMedia&&matchMedia('(display-mode: standalone)').matches),inapp:/Line\/|Instagram|FBAN|FBAV/.test(navigator.userAgent)}); }
+function errPush(kind,msg,stack){ msg=String(msg||'').slice(0,300); stack=String(stack||'').replace(/file:\/\/[^\s)]*|https?:\/\/[^\s)]*\//g,'').slice(0,900);
+  if(/ResizeObserver loop|Script error\.?$|AudioContext was not allowed/.test(msg)) return;   // ブラウザ由来で直しようがない物は捨てる
+  const last=ERR.list[ERR.list.length-1]; if(last&&last.msg===msg&&Date.now()-last.t<5000){ last.n=(last.n||1)+1; errSave(); return; }   // 同じエラーの連打はまとめる
+  const e={t:Date.now(),kind,msg,stack,ctx:errCtx(),trail:ERR.trail.slice(-20),n:1}; ERR.list.push(e); if(ERR.list.length>30) ERR.list.splice(0,ERR.list.length-30); errSave();
+  if(errAuto()===true) errSend([e],true); else errNudge(); }
+function errSave(){ try{ localStorage.setItem('pk_err',JSON.stringify(ERR.list)); }catch(e){} }
+window.addEventListener('error',ev=>{ if(ev.target&&ev.target!==window&&ev.target.tagName){ errPush('load',(ev.target.tagName||'')+' '+(ev.target.src||ev.target.href||'').replace(/^.*\//,''),''); return; } errPush('error',ev.message,ev.error&&ev.error.stack||`${ev.filename||''}:${ev.lineno}:${ev.colno}`); },true);
+window.addEventListener('unhandledrejection',ev=>{ const r=ev.reason; errPush('promise',r&&r.message||String(r),r&&r.stack); });
+{ const _ce=console.error.bind(console); console.error=function(...a){ try{ errPush('console',a.map(x=>x&&x.message||String(x)).join(' '),(a.find(x=>x&&x.stack)||{}).stack); }catch(e){} return _ce(...a); }; }
+// 操作の足跡（押したボタン・画面の切り替え）：何をした直後に壊れたかを知るため。文字入力の中身は記録しない
+document.addEventListener('pointerdown',e=>{ const b=e.target.closest&&e.target.closest('button,[role=button],.gbtn,.ubtn,.tmeta,.tevent'); const lab=b?(b.id?'#'+b.id:'')+(b.dataset&&b.dataset.a?'['+b.dataset.a+']':'')+' '+(b.textContent||'').trim().slice(0,14):'画面'; ERR.trail.push([Date.now()%1e7,lab,(window.S&&S.phase)||'']); if(ERR.trail.length>40) ERR.trail.splice(0,20); },true);
+// ---- 送る（Supabase の log_error）。モック中は端末の中だけ ----
+async function errSend(items,silent){ if(!items.length) return false; if(ERR.sent>=10) return false;
+  const body={p_device:rkDev(),p_ver:APP_VER,p_items:items.slice(-10).map(e=>({t:e.t,kind:e.kind,msg:e.msg,stack:e.stack,ctx:e.ctx,trail:e.trail,n:e.n}))};
+  try{ if(!RK_MOCK) await rkCall('log_error',body); else console.log('[errlog mock]',JSON.stringify(body).length); ERR.sent++; items.forEach(e=>e.sent=1); errSave(); if(!silent) toast('<span class="ic">🐞</span><span>送った！ありがとう<small>直すときの手がかりにする</small></span>','',3000,'#DFFF24'); return true; }
+  catch(e){ if(!silent) toast('<span class="ic">🐞</span><span>送れなかった<small>電波のいい所でもう一回</small></span>','',3000,'#FF3B30'); return false; } }
+// ---- 画面：エラーが起きたら小さく「不具合を送る？」／一時停止メニューに「🐞 不具合を送る」----
+{ const st=document.createElement('style'); st.textContent=`
+#errnudge{position:fixed;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);z-index:30;font:800 12px/1 var(--ui);color:#111;background:#ffc83d;border:2px solid #111;border-radius:999px;padding:9px 12px;box-shadow:0 3px 0 #111;cursor:pointer}
+#errpan{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:rgba(7,21,26,.86);padding:12px;box-sizing:border-box}
+#errpan .cd{width:min(400px,100%);max-height:calc(100dvh - 24px);display:flex;flex-direction:column;background:#F5F7EF;color:#111;border:3px solid #111;border-radius:18px;box-shadow:0 8px 0 #111;padding:14px;box-sizing:border-box;gap:8px}
+#errpan h3{margin:0;text-align:center;font:900 19px/1.2 var(--ui)} #errpan p{margin:0;font:500 12px/1.6 var(--ui)}
+#errpan pre{margin:0;flex:1 1 auto;min-height:80px;max-height:40vh;overflow:auto;background:#fff;border:2px solid #111;border-radius:10px;padding:8px;font:11px/1.45 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-all}
+#errpan label{display:flex;gap:8px;align-items:center;font:800 12px/1.3 var(--ui)} #errpan textarea{background:#fff;color:#111;width:100%;box-sizing:border-box;min-height:54px;border:2px solid #111;border-radius:10px;padding:8px;font:500 13px/1.4 var(--ui)}
+#errpan .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px} #errpan .btns button{font:800 14px/1 var(--ui);border:2px solid #111;border-radius:12px;padding:12px;cursor:pointer;background:#fff;color:#111} #errpan .btns .go{background:#FF9F1C}`; document.head.appendChild(st); }
+const errNudgeEl=document.createElement('button'); errNudgeEl.id='errnudge'; errNudgeEl.type='button'; errNudgeEl.hidden=true; errNudgeEl.textContent='🐞 不具合？送る'; document.body.appendChild(errNudgeEl);
+errNudgeEl.addEventListener('click',()=>{ errNudgeEl.hidden=true; errOpen(); });
+function errNudge(){ if(errAuto()===false&&ERR.shown>0) return; if(ERR.shown>=2) return; ERR.shown++; errNudgeEl.hidden=false; clearTimeout(ERR.nt); ERR.nt=setTimeout(()=>errNudgeEl.hidden=true,9000); }
+const errEl=document.createElement('div'); errEl.id='errpan'; errEl.hidden=true; document.body.appendChild(errEl);
+function errOpen(){ const un=ERR.list.filter(e=>!e.sent), items=un.length?un:[{t:Date.now(),kind:'report',msg:'（エラーは出ていない・プレイヤーからの報告）',stack:'',ctx:errCtx(),trail:ERR.trail.slice(-20),n:1}];
+  const view=items.slice(-10).map(e=>`■ ${new Date(e.t).toLocaleString('ja-JP')} ${e.kind}${e.n>1?' ×'+e.n:''}\n${e.msg}\n${(e.stack||'').split('\n').slice(0,3).join('\n')}\n状態: ${JSON.stringify(e.ctx)}\n直前の操作: ${e.trail.slice(-6).map(x=>x[1].trim()).join(' → ')}`).join('\n\n');
+  errEl.innerHTML=`<div class="cd"><h3>🐞 不具合を送る</h3><p>下の中身だけを作者に送る。名前・コイン・保存データは送らない</p><pre></pre><textarea maxlength="200" placeholder="何をしていたら起きた？（なくてもOK）"></textarea><label><input type="checkbox"${errAuto()?' checked':''}> 次からは聞かずに自動で送る</label><div class="btns"><button type="button" data-a="no">送らない</button><button type="button" class="go" data-a="send">送る</button></div></div>`;
+  errEl.querySelector('pre').textContent=view; errEl.hidden=false;
+  errEl.querySelector('[data-a=no]').onclick=()=>{ errEl.hidden=true; try{ if(errAuto()===null) localStorage.setItem('pk_err_auto','0'); }catch(e){} };
+  errEl.querySelector('[data-a=send]').onclick=async()=>{ const note=errEl.querySelector('textarea').value.replace(/[<>]/g,'').trim().slice(0,200); try{ localStorage.setItem('pk_err_auto',errEl.querySelector('input').checked?'1':'0'); }catch(e){}
+    if(note) items.forEach(e=>e.note=note); const send=items.map(e=>Object.assign({},e,{msg:note?e.msg+' ／メモ:'+note:e.msg})); errEl.hidden=true; if(!un.length){ ERR.list.push(items[0]); } if(await errSend(send,false)){ items.forEach(e=>e.sent=1); errSave(); } }; }
+{ const _o=hbOpen; hbOpen=function(){ const r=_o.apply(this,arguments); const box=document.querySelector('#hbPanel .box'); if(box&&!box.querySelector('[data-a=bug]')){ const b=document.createElement('button'); b.className='mbtn'; b.type='button'; b.dataset.a='bug'; b.style.textAlign='center'; b.textContent='🐞 不具合を送る'; b.addEventListener('click',e=>{ e.stopPropagation(); hbClose(); errOpen(); }); box.appendChild(b); } return r; }; }
+// ホームの小ボタン列には置かない（ごちゃごちゃさせない）。プロフの下に小さく
+{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
+if(/dbg/.test(location.search)) Object.assign(window,{__ERR:ERR,__errOpen:errOpen,__errPush:errPush});
 
 sizeAll(); resetKick(); S.phase='menu'; hint.style.opacity=0; requestAnimationFrame(frame);
 })();

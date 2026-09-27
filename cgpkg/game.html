@@ -4139,7 +4139,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__T:T,__I18N:I18N});
   if(CGB.name){ try{ const _mp=myProfile; myProfile=function(){ const p=_mp.apply(this,arguments); p.name=CGB.name; return p; }; }catch(e){} }
   // 部屋を作ったら「入れる部屋」として CrazyGames に知らせる・招待ボタンを出す
   const inv=document.createElement('button'); inv.type='button'; inv.id='cgInvite'; inv.className='mbtn'; inv.style.textAlign='center'; inv.hidden=true; inv.textContent='🔗 友だちを招待（リンク）';
-  const invMsg=document.createElement('p'); invMsg.id='cgInvMsg'; invMsg.hidden=true; invMsg.style.cssText='margin:0;font:600 12px/1.4 var(--ui);word-break:break-all;user-select:all;-webkit-user-select:all;opacity:.9';
+  const invMsg=document.createElement('p'); invMsg.id='cgInvMsg'; invMsg.hidden=true; invMsg.style.cssText='margin:0;max-height:3.2em;overflow:hidden;font:600 12px/1.4 var(--ui);word-break:break-all;user-select:all;-webkit-user-select:all;opacity:.9';
   try{ const hb=document.getElementById('lbHost'); hb.parentNode.insertBefore(inv,hb.nextSibling); inv.parentNode.insertBefore(invMsg,inv.nextSibling); }catch(e){}
   inv.addEventListener('click',()=>{ if(NET2.code) post({t:'invite',room:NET2.code}); });
   try{ const _h=hostRoom; hostRoom=function(){ const r=_h.apply(this,arguments); if(NET2.code){ post({t:'room',room:NET2.code,open:true}); inv.hidden=false; } return r; }; }catch(e){}
@@ -4157,7 +4157,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__T:T,__I18N:I18N});
   try{ const _sm=startMode; startMode=function(){ const r=_sm.apply(this,arguments); gp(true); return r; }; }catch(e){}
   try{ const _fi=finish; finish=function(){ gp(false); return _fi.apply(this,arguments); }; }catch(e){}
   try{ const _q=quitToMenu; quitToMenu=function(){ const r=_q.apply(this,arguments); gp(false); return r; }; }catch(e){}
-  try{ const _ho=hbOpen; hbOpen=function(){ gp(false); return _ho.apply(this,arguments); }; const _hc=hbClose; hbClose=function(){ const r=_hc.apply(this,arguments); if(S.phase!=='menu'&&S.phase!=='end') gp(true); return r; }; }catch(e){}
+  try{ const _ho=hbOpen; hbOpen=function(){ gp(false); return _ho.apply(this,arguments); }; const _hc=hbClose; hbClose=function(){ const r=_hc.apply(this,arguments); setTimeout(()=>{ if(S.phase!=='menu'&&S.phase!=='end'&&document.getElementById('menu').hidden) gp(true); },0); return r; }; }catch(e){}
   // ② 起動時：招待リンクから来た → 部屋に入る／Instant Multiplayer（リーダー）→ すぐ部屋を作る
   setTimeout(()=>{ if(CGB.room) join(CGB.room); else if(CGB.instant) hostNow(); },1200);
 })();

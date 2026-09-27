@@ -4152,6 +4152,12 @@ if(/dbg/.test(location.search)) Object.assign(window,{__T:T,__I18N:I18N});
   addEventListener('message',e=>{ const d=e.data; if(!d||d.cgpk!==1||e.source!==parent) return;
     if(d.t==='join') join(d.room);
     if(d.t==='link'&&d.url){ CGB.link=String(d.url); invMsg.hidden=false; invMsg.textContent=CGB.link; try{ navigator.clipboard.writeText(CGB.link).then(()=>{ toast('<span class="ic">🔗</span><span>招待リンクをコピーした<small>友だちに送ってね</small></span>','',2600); },()=>{}); }catch(err){} } });
+  // 遊んでいる間を CrazyGames に知らせる（gameplayStart / gameplayStop）：試合が始まった・終わった・やめた・一時停止
+  const gp=on=>post({t:'gp',on:!!on});
+  try{ const _sm=startMode; startMode=function(){ const r=_sm.apply(this,arguments); gp(true); return r; }; }catch(e){}
+  try{ const _fi=finish; finish=function(){ gp(false); return _fi.apply(this,arguments); }; }catch(e){}
+  try{ const _q=quitToMenu; quitToMenu=function(){ const r=_q.apply(this,arguments); gp(false); return r; }; }catch(e){}
+  try{ const _ho=hbOpen; hbOpen=function(){ gp(false); return _ho.apply(this,arguments); }; const _hc=hbClose; hbClose=function(){ const r=_hc.apply(this,arguments); if(S.phase!=='menu'&&S.phase!=='end') gp(true); return r; }; }catch(e){}
   // ② 起動時：招待リンクから来た → 部屋に入る／Instant Multiplayer（リーダー）→ すぐ部屋を作る
   setTimeout(()=>{ if(CGB.room) join(CGB.room); else if(CGB.instant) hostNow(); },1200);
 })();

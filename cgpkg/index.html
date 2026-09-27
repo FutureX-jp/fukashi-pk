@@ -23,6 +23,7 @@
       if(d.t==='room'){ var room=String(d.room); try{ g.updateRoom({roomId:room,isJoinable:!!d.open,inviteParams:{room:room}}); }catch(x){}
         if(d.open){ try{ g.showInviteButton({room:room}); }catch(x){} } else { try{ g.hideInviteButton(); }catch(x){} } }
       if(d.t==='invite'){ var url=g.inviteLink({room:String(d.room)}); toGame({t:'link',url:url}); }
+      if(d.t==='gp'){ if(d.on) g.gameplayStart(); else g.gameplayStop(); }
       if(d.t==='left'){ try{ g.leftRoom(); }catch(x){} try{ g.hideInviteButton(); }catch(x){} }
     }catch(err){} });
 })();

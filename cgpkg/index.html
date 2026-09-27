@@ -1,0 +1,30 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fukashi PK</title><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#g{position:absolute;top:0;left:50%;transform:translateX(-50%);border:0;display:block;background:#07151A}</style>
+<script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script></head>
+<body><iframe id="g" title="Fukashi PK" allow="autoplay; fullscreen; vibrate; clipboard-write"></iframe>
+<script>
+// 外枠：縦長のゲームを中央に置いて左右は黒帯（スマホの縦持ちでは全面）
+// 進み具合の保存は CrazyGames の Automatic Progress Save（localStorage）。game.html は同じオリジンなので同じ localStorage
+// CrazyGames SDK はここだけで使う：ユーザー名・招待（リンク／ボタン）・Instant Multiplayer・部屋の状態。ゲームとは postMessage（cgpk:1）
+(function(){ var f=document.getElementById('g'); function fit(){ var W=innerWidth,H=innerHeight,w=W; if(W/H>9/16) w=Math.round(H*9/16); f.style.width=w+'px'; f.style.height=H+'px'; } addEventListener('resize',fit); fit();
+  var SDK=null, started=false;
+  function start(q){ if(started) return; started=true; f.src='game.html'+(q?'?'+q:''); f.addEventListener('load',function(){ try{ f.contentWindow.focus(); }catch(e){} }); }
+  function toGame(m){ try{ m.cgpk=1; f.contentWindow.postMessage(m,'*'); }catch(e){} }
+  setTimeout(function(){ start(''); },5000);   // SDK が応答しない時もゲームは始める
+  function ready(){ var p=new URLSearchParams(); var g=SDK.game;
+    try{ var r=g.getInviteParam('room'); if(r) p.set('cgroom',r); }catch(e){}
+    try{ if(g.isInstantMultiplayer) p.set('cginstant','1'); }catch(e){}
+    var fin=function(){ start(p.toString()); };
+    try{ SDK.user.getUser().then(function(u){ if(u&&u.username) p.set('cgname',u.username); fin(); }).catch(fin); }catch(e){ fin(); }
+    try{ g.addJoinRoomListener(function(ip){ if(ip&&ip.room) toGame({t:'join',room:ip.room}); }); }catch(e){} }
+  try{ window.CrazyGames.SDK.init().then(function(){ SDK=window.CrazyGames.SDK; ready(); }).catch(function(){ start(''); }); }catch(e){ start(''); }
+  addEventListener('message',function(e){ var d=e.data; if(!d||d.cgpk!==1||e.source!==f.contentWindow||!SDK) return; var g=SDK.game;
+    try{
+      if(d.t==='room'){ var room=String(d.room); try{ g.updateRoom({roomId:room,isJoinable:!!d.open,inviteParams:{room:room}}); }catch(x){}
+        if(d.open){ try{ g.showInviteButton({room:room}); }catch(x){} } else { try{ g.hideInviteButton(); }catch(x){} } }
+      if(d.t==='invite'){ var url=g.inviteLink({room:String(d.room)}); toGame({t:'link',url:url}); }
+      if(d.t==='left'){ try{ g.leftRoom(); }catch(x){} try{ g.hideInviteButton(); }catch(x){} }
+    }catch(err){} });
+})();
+</script>
+</body></html>

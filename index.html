@@ -32,7 +32,11 @@ body{background:radial-gradient(ellipse at 50% 110%,rgba(24,140,90,.55),transpar
       inviteLink:function(p){ return here()+'?openExternalBrowser=1&room='+String((p&&p.room)||'').replace(/\D/g,'').slice(0,4); },
       addJoinRoomListener:none, updateRoom:none, showInviteButton:none, hideInviteButton:none, gameplayStart:none, gameplayStop:none, leftRoom:none } }};
   /* 人数の記録（GoatCounter）：ゲームは枠の中で動くので、枠の中でも数える印を渡す（count.js は枠の中だと数えない作り） */
-  var n=0, t=setInterval(function(){ try{ var w=document.getElementById('g').contentWindow; if(w&&/game\.html/.test(w.location.pathname)){ w.goatcounter=w.goatcounter||{}; w.goatcounter.allow_frame=true; } }catch(e){} if(++n>1500) clearInterval(t); },20);
+  /* どこから来たか（2026-10-07）：枠の中の document.referrer はこのページ自身になる → このページが受け取った本当の流入元を渡す（関数で渡す＝空の時も空のまま届く） */
+  /* 止めずに渡し続ける：ゲームは言語の切り替えで枠の中だけ読み込み直す。30秒で止めると、その後の記録が全部落ちる */
+  var REF=''; try{ REF=document.referrer||''; }catch(e){}
+  var ref=function(){ return REF; };
+  setInterval(function(){ try{ var w=document.getElementById('g').contentWindow; if(w&&/game\.html/.test(w.location.pathname)){ var c=w.goatcounter=w.goatcounter||{}; if(c.allow_frame!==true) c.allow_frame=true; if(c.referrer!==ref) c.referrer=ref; } }catch(e){} },20);
 })();
 </script></head>
 <body>

@@ -34,6 +34,9 @@ body{background:radial-gradient(ellipse at 50% 110%,rgba(24,140,90,.55),transpar
   /* 人数の記録（GoatCounter）：ゲームは枠の中で動くので、枠の中でも数える印を渡す（count.js は枠の中だと数えない作り） */
   /* どこから来たか（2026-10-07）：枠の中の document.referrer はこのページ自身になる → このページが受け取った本当の流入元を渡す（関数で渡す＝空の時も空のまま届く） */
   /* 止めずに渡し続ける：ゲームは言語の切り替えで枠の中だけ読み込み直す。30秒で止めると、その後の記録が全部落ちる */
+  /* 友だち招待（2026-10-12）：招待リンク＝この公開版＋?ref=コード（LINE の中でも外のブラウザで開く印つき） */
+  window.__pkSrc='gh';
+  window.__pkInvite=function(c){ return here()+'?openExternalBrowser=1&ref='+encodeURIComponent(c); };
   var REF=''; try{ REF=document.referrer||''; }catch(e){}
   var ref=function(){ return REF; };
   setInterval(function(){ try{ var w=document.getElementById('g').contentWindow; if(w&&/game\.html/.test(w.location.pathname)){ var c=w.goatcounter=w.goatcounter||{}; if(c.allow_frame!==true) c.allow_frame=true; if(c.referrer!==ref) c.referrer=ref; } }catch(e){} },20);
@@ -45,7 +48,7 @@ body{background:radial-gradient(ellipse at 50% 110%,rgba(24,140,90,.55),transpar
 // 外枠：PC（マウス）は枠いっぱいの横長で遊ぶ（CrazyGamesのサッカー系は全部横長いっぱい・PC枠は907x510〜）。タッチ端末は縦長9:16を中央に
 // 進み具合の保存は CrazyGames の Automatic Progress Save（localStorage）。game.html は同じオリジンなので同じ localStorage
 // CrazyGames SDK はここだけで使う：ユーザー名・招待（リンク／ボタン）・Instant Multiplayer・部屋の状態。ゲームとは postMessage（cgpk:1）
-(function(){ var f=document.getElementById('g');
+(function(){ var q0=new URLSearchParams(location.search); var f=document.getElementById('g');
     var fine=false; try{ fine=matchMedia('(pointer:fine)').matches&&!('ontouchstart' in window); }catch(e){}
   function fit(){ var W=innerWidth,H=innerHeight,w=W; if(!fine&&W/H>9/16) w=Math.round(H*9/16); f.style.width=w+'px'; f.style.height=H+'px'; }
   addEventListener('resize',fit); fit();
@@ -53,7 +56,7 @@ body{background:radial-gradient(ellipse at 50% 110%,rgba(24,140,90,.55),transpar
   function start(q){ if(started) return; started=true; f.src='game.html'+(q?'?'+q:''); f.addEventListener('load',function(){ try{ f.contentWindow.focus(); }catch(e){} }); }
   function toGame(m){ try{ m.cgpk=1; f.contentWindow.postMessage(m,'*'); }catch(e){} }
   setTimeout(function(){ start(''); },5000);   // SDK が応答しない時もゲームは始める
-  function ready(){ var p=new URLSearchParams(); var g=SDK.game;
+  function ready(){ var p=new URLSearchParams(); var g=SDK.game; try{ var rf=String(q0.get('ref')||'').toLowerCase(); if(/^[a-z0-9]{4,12}$/.test(rf)) p.set('pkref',rf); }catch(e){}
     try{ var r=g.getInviteParam('room'); if(r) p.set('cgroom',r); }catch(e){}
     try{ if(g.isInstantMultiplayer) p.set('cginstant','1'); }catch(e){}
     var fin=function(){ start(p.toString()); };

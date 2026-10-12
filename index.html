@@ -57,7 +57,7 @@ body{background:radial-gradient(ellipse at 50% 110%,rgba(24,140,90,.55),transpar
     try{ var r=g.getInviteParam('room'); if(r) p.set('cgroom',r); }catch(e){}
     try{ if(g.isInstantMultiplayer) p.set('cginstant','1'); }catch(e){}
     var fin=function(){ start(p.toString()); };
-    try{ SDK.user.getUser().then(function(u){ if(u&&u.username) p.set('cgname',u.username); fin(); }).catch(fin); }catch(e){ fin(); }
+    try{ SDK.user.getUser().then(function(u){ if(u&&u.username) p.set('cgname',u.username); else { try{ if(SDK.user.isUserAccountAvailable) p.set('cgguest','1'); }catch(x){} } fin(); }).catch(fin); }catch(e){ fin(); }
     try{ g.addJoinRoomListener(function(ip){ if(ip&&ip.room) toGame({t:'join',room:ip.room}); }); }catch(e){} }
   try{ window.CrazyGames.SDK.init().then(function(){ SDK=window.CrazyGames.SDK; window.__cgReady=true; ready(); }).catch(function(){ start(''); }); }catch(e){ start(''); }
   addEventListener('message',function(e){ var d=e.data; if(!d||d.cgpk!==1||e.source!==f.contentWindow||!SDK) return; var g=SDK.game;
@@ -68,6 +68,7 @@ body{background:radial-gradient(ellipse at 50% 110%,rgba(24,140,90,.55),transpar
         /* 主「相変わらず対戦の友達招待リンクが長すぎる」2026-10-02：長いのは審査前のプレビュー（QA の印が全部つく）だけ。主と家族の固定URL（…/pk＝fkshort=1 つき）から開いた時だけ短いリンクに差し替える。審査の人・公開後は SDK のリンクのまま（CG の決まり） */
         if(/[?&]fkshort=1(&|$)/.test(location.search)){ var rm=String(d.room).replace(/\D/g,'').slice(0,4); if(rm.length===4) url='https://turn.futurex-works.jp/pk?room='+rm; }
         toGame({t:'link',url:url}); }
+      if(d.t==='auth'){ SDK.user.showAuthPrompt().then(function(u){ toGame({t:'authed',name:(u&&u.username)||''}); }).catch(function(){ toGame({t:'authed',name:''}); }); }   /* ゲストへのログイン案内（2026-10-05 主） */
       if(d.t==='gp'){ if(d.on) g.gameplayStart(); else g.gameplayStop(); }
       if(d.t==='left'){ try{ g.leftRoom(); }catch(x){} try{ g.hideInviteButton(); }catch(x){} }
     }catch(err){} });

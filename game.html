@@ -3742,7 +3742,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67f';
+const APP_VER='v67g';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -3787,7 +3787,7 @@ function errOpen(){ const un=ERR.list.filter(e=>!e.sent), items=un.length?un:[{t
     if(note) items.forEach(e=>e.note=note); const send=items.map(e=>Object.assign({},e,{msg:note?e.msg+' ／メモ:'+note:e.msg})); errEl.hidden=true; if(!un.length){ ERR.list.push(items[0]); } if(await errSend(send,false)){ items.forEach(e=>e.sent=1); errSave(); } }; }
 { const _o=hbOpen; hbOpen=function(){ const r=_o.apply(this,arguments); const box=document.querySelector('#hbPanel .box'); if(box&&!box.querySelector('[data-a=bug]')){ const b=document.createElement('button'); b.className='mbtn'; b.type='button'; b.dataset.a='bug'; b.style.textAlign='center'; b.textContent='🐞 不具合を送る'; b.addEventListener('click',e=>{ e.stopPropagation(); hbClose(); errOpen(); }); box.appendChild(b); } return r; }; }
 // ホームの小ボタン列には置かない（ごちゃごちゃさせない）。プロフの下に小さく
-{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/13 11:06'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
+{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/14 00:42'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
 if(/dbg/.test(location.search)) Object.assign(window,{__ERR:ERR,__errOpen:errOpen,__errPush:errPush});
 
 // ===== 実況のくり返し対策（主「同じセリフばかりで飽きる」2026-09-26）=====
@@ -6122,6 +6122,134 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
   place(); setTimeout(place,1500);
   if(/dbg/.test(location.search)) window.__inv={on:true,st,poll,open,get code(){ return code; }};
 }catch(e){ try{ console.warn('invite',e); }catch(x){} } })();
+
+// ===== 結果カード（2026-10-13 主「1行こう」＝『80億分の1』の広がり方を見て：遊んだ人が自分の結果を投稿する形）=====
+// ・結果画面に「📸 結果カードで共有」。この試合で自分が蹴った技名と GOAL/SAVE を1枚の絵（1080x1350）にして、#フカシPK 付きで共有する
+// ・出すのは外枠が window.parent.__pkShare() を用意した所だけ（github.io・Playgama）。CrazyGames・GameMonetize は用意しない＝ボタンも出ない＝game.html はどこでも同じ
+// ・送る物は無い（絵は端末の中で作る）。数えるのは funnel の 'share' の1行だけ（開いた・どれを押したか）
+(function(){ try{
+  const P=(()=>{ try{ return window.parent!==window?window.parent:null; }catch(e){ return null; } })();
+  const cfg=()=>{ try{ return P&&typeof P.__pkShare==='function'?(P.__pkShare()||null):null; }catch(e){ return null; } };
+  const ON=!!cfg()&&!!(cfg()||{}).url;
+  const DBG=/dbg/.test(location.search);
+  if(!ON){ if(DBG) window.__sc={on:false}; return; }
+  const CODE=I18N.code||(I18N.lang==='ja'?'ja':'en'), L=(ja,en,es,pt)=>CODE==='ja'?ja:CODE==='es'?es:CODE==='pt'?pt:en;
+  const tr=s=>{ try{ return typeof T==='function'?T(s):s; }catch(e){ return s; } };
+  const fsend=(k,v)=>{ try{ window.__funnelSend&&__funnelSend(k,v); }catch(e){} };
+
+  // ---- この試合の記録：自分が蹴った分だけ（技名・ゴールか） ----
+  let rec=[], cur=null, last=null;   /* last＝結果が出た後に技名が出る事がある（着地より先にゴール）→ 次に蹴るまでは前の1本に入れる */
+  { const _b=beginRun; beginRun=function(shot,trick){ try{ if(S.kick===0) rec=[]; last=null; cur=humanKicks()?{n:null,ok:null}:null; if(cur&&shot&&shot.name) cur.n=shot.name; }catch(e){} return _b.apply(this,arguments); }; }
+  { const _s=showTrick; showTrick=function(t,gk){ try{ const k=cur||last; if(!gk&&k&&!k.n&&t) k.n=String(t); }catch(e){} return _s.apply(this,arguments); }; }
+  { let prev=null; setInterval(()=>{ try{ const r=S.resolved; if(r&&r!==prev&&cur&&S.shotMine){ cur.ok=r==='goal'; rec.push(cur); last=cur; cur=null; } prev=r; }catch(e){} },120); }
+  try{ const _st=startMode; startMode=function(){ rec=[]; cur=null; last=null; return _st.apply(this,arguments); }; }catch(e){}
+
+  // ---- 絵を作る ----
+  const W=1080, H=1350, YEL='#DFFF24', INK='#111', BG1='#0D3B36', BG2='#07151A';
+  const fontsReady=()=>Promise.race([Promise.all([document.fonts.load('800 80px "M PLUS 1p"'),document.fonts.load('200px Anton')]).catch(()=>{}),new Promise(r=>setTimeout(r,1500))]);
+  const best=()=>{ const named=rec.filter(x=>x.n); if(!named.length) return null; const pool=named.filter(x=>x.ok).length?named.filter(x=>x.ok):named; return pool.slice().sort((a,b)=>b.n.length-a.n.length)[0].n; };
+  const endText=()=>{ const sub=(document.querySelector('#end .sub')||{}).textContent||'', big=((document.querySelector('#end .big')||{}).textContent||'').replace(/\s+/g,' ').trim(); return {sub:sub.trim(),big}; };
+  const vsName=()=>{ try{ if(ST.on&&ST.ch) return tr(ST.ch.keeper); if(M.mode==='cpu') return 'CPU'; }catch(e){} return null; };
+  function fit(g,txt,maxW,size,min,font){ let s=size; g.font=font(s); while(g.measureText(txt).width>maxW&&s>min){ s-=2; g.font=font(s); } return s; }
+  function wrap(g,txt,maxW){ /* 「・」と空白の後ろで折る。1語で幅を超える時だけ字で折る */ const toks=txt.split(/(?<=[・ ])/), out=[]; let line='';
+    for(const tk of toks){ const t=line+tk; if(g.measureText(t).width<=maxW){ line=t; continue; } if(line) out.push(line); line='';
+      if(g.measureText(tk).width<=maxW){ line=tk; continue; } for(const ch of [...tk]){ const u=line+ch; if(g.measureText(u).width>maxW&&line){ out.push(line); line=ch; } else line=u; } }
+    if(line) out.push(line); return out; }
+  function clip(g,t,maxW){ if(g.measureText(t).width<=maxW) return t; const a=[...t.replace(/…$/,'')]; while(a.length>1&&g.measureText(a.join('')+'…').width>maxW) a.pop(); return a.join('')+'…'; }
+  function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+  async function make(){ await fontsReady(); const c=document.createElement('canvas'); c.width=W; c.height=H; const g=c.getContext('2d');
+    /* 2026-10-13 ChatGPT 講評 72点 → 直し3つ：①技名を主役に（黄の字＋黒フチ・最大3行・68px から。2回目の講評で 80→68 に）②点を大きく・網を薄く・題名を低く・見出しを結果の言葉に ③履歴を小さく・下に誘い文 */
+    const UI=(w,s)=>`${w} ${s}px "M PLUS 1p","Hiragino Sans","Yu Gothic",system-ui,sans-serif`, DISP=s=>`${s}px Anton,Impact,"Arial Black",sans-serif`;
+    const bg=g.createLinearGradient(0,0,0,H); bg.addColorStop(0,BG1); bg.addColorStop(1,BG2); g.fillStyle=bg; g.fillRect(0,0,W,H);
+    g.save(); g.globalAlpha=.05; for(let i=0;i<9;i++){ g.fillStyle=i%2?'#fff':'#000'; g.fillRect(0,H-560+i*62,W,62); } g.restore();
+    g.save(); g.strokeStyle='rgba(255,255,255,.06)'; g.lineWidth=12; g.strokeRect(150,196,780,330); g.lineWidth=2; for(let x=150;x<=930;x+=39){ g.beginPath(); g.moveTo(x,196); g.lineTo(x,526); g.stroke(); } for(let y=196;y<=526;y+=33){ g.beginPath(); g.moveTo(150,y); g.lineTo(930,y); g.stroke(); } g.restore();
+    // 題名（高さ 100px 以内）
+    g.textAlign='center'; g.textBaseline='alphabetic'; g.fillStyle=YEL; g.font=DISP(92); g.fillText('FUKASHI PK',W/2,112);
+    g.fillStyle='rgba(255,255,255,.85)'; g.font=UI(800,28); g.fillText(L('キーパーが強すぎるバカPK','The keeper is way too good','El portero es demasiado bueno','O goleiro é bom demais'),W/2,154);
+    // 結果：見出しは「何本決めたか」の言葉（ストーリーは章の結果のまま）
+    const e=endText(), vs=vsName(), nG=rec.filter(x=>x.ok).length, nT=rec.length; let story=false; try{ story=!!ST.on; }catch(x){}
+    const head=story||!nT?e.sub:L(`キーパーから${nT}本中${nG}本決めた！`,`Scored ${nG} of ${nT} past the keeper!`,`¡${nG} de ${nT} goles al portero!`,`${nG} de ${nT} gols no goleiro!`);
+    fit(g,head,920,42,26,x=>UI(800,x)); g.fillStyle='#fff'; g.fillText(head,W/2,252);
+    if(vs){ g.font=UI(800,28); g.fillStyle='rgba(255,255,255,.7)'; g.fillText('VS '+vs,W/2,292); }
+    fit(g,e.big,940,265,100,DISP); g.fillStyle=YEL; g.strokeStyle=INK; g.lineWidth=16; g.lineJoin='round'; g.strokeText(e.big,W/2,508); g.fillText(e.big,W/2,508);
+    // 技名が主役：黄の字＋黒フチ。1行→2行→3行（90→56px）、それでも入らなければ3行目を「…」
+    let y=560; const b0=best(), b=b0?tr(b0):null;   /* 先に訳してから幅を測る（絵の文字は描く時にも訳されるので、測る物と描く物を同じにする） */
+    if(b){ g.font=UI(800,28); g.fillStyle='#fff'; g.fillText(L('今日の技','Signature move','Jugada estrella','Jogada do dia'),W/2,y+14);
+      let s=68, lines=[b];   /* ChatGPT 2回目 89点：技名を 10〜15% 小さく・上下に余白（実際に効いていた 80px → 68px） */
+      for(s=68;s>=46;s-=2){ g.font=UI(800,s); lines=wrap(g,b,960); if(lines.length<=3&&lines.every(l=>g.measureText(l).width<=960)) break; }
+      if(lines.length>3){ lines=lines.slice(0,3); lines[2]=clip(g,lines[2]+'…',960); }
+      if(DBG) window.__scDbg={s,lines};
+      const lh=s*1.16; g.save(); g.translate(W/2,y+30); g.rotate(-0.03); g.font=UI(800,s); g.lineJoin='round';
+      lines.forEach((ln,i)=>{ const yy=s*0.95+i*lh; g.lineWidth=16; g.strokeStyle=INK; g.strokeText(ln,0,yy); g.fillStyle=YEL; g.fillText(ln,0,yy); });
+      g.restore(); y+=30+lines.length*lh+50; }
+    else y+=10;
+    // 1本ずつ（小さく）
+    const FOOT=H-176, rows=rec.slice(0,6), more=rec.length-rows.length; const rowH=Math.min(52,Math.max(30,(FOOT-(more>0?30:0)-y)/Math.max(1,rows.length)));
+    g.textAlign='left'; rows.forEach((k,i)=>{ const yy=y+i*rowH;
+      rr(g,150,yy,118,rowH-10,12); g.fillStyle=k.ok?YEL:'#ff3b4e'; g.fill(); g.lineWidth=3; g.strokeStyle=INK; g.stroke();
+      g.fillStyle=INK; g.font=DISP(Math.round(rowH*0.5)); g.textAlign='center'; g.fillText(k.ok?'GOAL':'SAVE',209,yy+rowH*0.58); g.textAlign='left';
+      g.fillStyle='#fff'; const nm=k.n?tr(k.n):L('ふつうのシュート','Plain shot','Tiro normal','Chute normal'); fit(g,nm,640,Math.min(26,Math.round(rowH*0.5)),18,x=>UI(800,x)); g.globalAlpha=k.n?.9:.5; g.fillText(clip(g,nm,640),290,yy+rowH*0.58); g.globalAlpha=1; });
+    if(more>0){ g.fillStyle='rgba(255,255,255,.6)'; g.font=UI(800,22); g.fillText('+'+more,290,y+rows.length*rowH+18); }
+    // 下：誘い文・ハッシュタグ・遊ぶ場所（小さく）
+    g.textAlign='center'; const cf=cfg()||{}, tag=cf.tag||L('#フカシPK','#FukashiPK','#FukashiPK','#FukashiPK');
+    g.fillStyle='#fff'; fit(g,L('お前の技名も生成しろ。','Generate your own move name.','Genera tu propio nombre de jugada.','Gere o nome da sua jogada.'),960,40,26,x=>UI(800,x)); g.fillText(L('お前の技名も生成しろ。','Generate your own move name.','Genera tu propio nombre de jugada.','Gere o nome da sua jogada.'),W/2,H-112);
+    g.fillStyle=YEL; g.font=UI(800,46); g.fillText(tag,W/2,H-58);
+    g.fillStyle='rgba(255,255,255,.7)'; g.font=UI(500,21); let host=''; try{ const u=new URL(cf.url); host=(u.host+u.pathname).replace(/\/$/,''); }catch(x){} g.fillText(L('無料・インストール不要','Free · no install','Gratis · sin instalar','Grátis · sem instalar')+(host?'  ｜  '+host:''),W/2,H-22);
+    return c; }
+
+  // ---- 共有の文 ----
+  const text=()=>{ const n=rec.filter(x=>x.ok).length, t=rec.length, b=best()?tr(best()):null, tag=(cfg()||{}).tag||L('#フカシPK','#FukashiPK','#FukashiPK','#FukashiPK');
+    return L(`${b?`「${b}」で`:''}${t}本中${n}本決めた⚽ キーパーが強すぎるバカPK ${tag}`,`${n} of ${t} goals${b?` with "${b}"`:''} ⚽ The keeper is way too good ${tag}`,
+      `${n} de ${t} goles${b?` con "${b}"`:''} ⚽ El portero es demasiado bueno ${tag}`,`${n} de ${t} gols${b?` com "${b}"`:''} ⚽ O goleiro é bom demais ${tag}`); };
+
+  // ---- 画面 ----
+  const pan=document.createElement('div'); pan.id='scpan'; pan.hidden=true; document.body.appendChild(pan);
+  { const css=document.createElement('style'); css.textContent=`
+#scpan{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:rgba(7,21,26,.82);padding:10px}
+#scpan[hidden]{display:none}
+#scpan .cd{width:min(400px,100%);max-height:calc(100% - 8px);overflow:auto;background:#F5F7EF;color:#111;border:3px solid #111;border-radius:20px;box-shadow:0 8px 0 #111;padding:12px;box-sizing:border-box;display:grid;gap:10px}
+#scpan .pic{display:block;width:100%;max-height:52vh;object-fit:contain;border-radius:12px;border:2px solid #111;background:#07151A}
+#scpan .wait{display:grid;place-items:center;height:240px;font:700 14px/1.4 var(--ui);opacity:.7}
+#scpan .hint{margin:0;font:600 12px/1.4 var(--ui);text-align:center;opacity:.75}
+#scpan .big{display:block;width:100%;font:800 17px/1.2 var(--ui);color:#111;background:#DFFF24;border:3px solid #111;border-radius:14px;padding:13px;box-shadow:0 5px 0 #111;cursor:pointer}
+#scpan .g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#scpan .g button{display:grid;gap:6px;justify-items:center;font:800 12px/1.2 var(--ui);color:#111;background:#fff;border:2px solid #111;border-radius:14px;padding:10px 4px;cursor:pointer}
+#scpan .g .i{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;font:800 18px/1 var(--ui);color:#fff}
+#scpan .x{display:block;width:100%;font:800 15px/1 var(--ui);color:#111;background:transparent;border:0;text-decoration:underline;padding:10px;cursor:pointer}
+#scBtn{display:block;width:min(340px,calc(100vw - 32px));margin:10px auto 0;font:800 15px/1.2 var(--ui);color:#111;background:#DFFF24;border:3px solid #111;border-radius:14px;padding:11px;cursor:pointer;box-shadow:0 5px 0 #111}
+#scBtn:active{transform:translateY(3px);box-shadow:0 2px 0 #111} #scBtn[hidden]{display:none}`; document.head.appendChild(css); }
+  let png=null, file=null;
+  const touch=matchMedia('(pointer:coarse)').matches;
+  function draw(){ const cf=cfg()||{}, url=cf.url, canFile=!!(file&&navigator.canShare&&(()=>{ try{ return navigator.canShare({files:[file]}); }catch(e){ return false; } })());
+    pan.innerHTML=`<div class="cd" role="dialog" aria-modal="true" translate="no">
+      ${png?`<img class="pic" alt="" src="${png}">`:`<div class="wait">${L('カードを作っています…','Making your card…','Creando tu tarjeta…','Criando seu cartão…')}</div>`}
+      ${png?`${canFile?`<button class="big" type="button" data-k="native">📸 ${L('画像で共有（X・インスタ・LINEなど）','Share image (X, Instagram, etc.)','Compartir imagen (X, Instagram…)','Compartilhar imagem (X, Instagram…)')}</button>`:''}
+      <div class="g"><button type="button" data-k="x"><span class="i" style="background:#111">𝕏</span>${L('Xでポスト','Post on X','Publicar en X','Postar no X')}</button>
+      <button type="button" data-k="line"><span class="i" style="background:#06C755">LINE</span>${L('LINEで送る','LINE','LINE','LINE')}</button>
+      <button type="button" data-k="save"><span class="i" style="background:#3f8cff">⬇</span>${L('画像を保存','Save image','Guardar imagen','Salvar imagem')}</button></div>
+      <p class="hint">${touch?L('画像を長押しでも保存できる。Xには保存した画像を付けてね','You can also long-press the image to save it','También puedes mantener pulsada la imagen para guardarla','Você também pode pressionar a imagem para salvar'):L('Xにポストする時は、保存した画像を付けてね','Attach the saved image when you post','Adjunta la imagen guardada al publicar','Anexe a imagem salva ao postar')}</p>`:''}
+      <button class="x" type="button" data-k="close">${L('閉じる','Close','Cerrar','Fechar')}</button></div>`;
+    pan.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',async e=>{ e.stopPropagation(); const k=b.dataset.k, enc=encodeURIComponent, t=text();
+      if(k==='close'){ pan.hidden=true; return; }
+      fsend('share',k);
+      if(k==='native'){ try{ await navigator.share({files:[file],text:t+'\n'+url}); }catch(x){} }   /* タップの直後に呼ぶ（間に await を挟むと iOS が断る） */
+      if(k==='x') window.open('https://twitter.com/intent/tweet?text='+enc(t)+'&url='+enc(url),'_blank','noopener');
+      if(k==='line') window.open('https://line.me/R/share?text='+enc(t+'\n'+url),'_blank','noopener');
+      if(k==='save'){ try{ const a=document.createElement('a'); a.href=png; a.download='fukashi-pk.png'; document.body.appendChild(a); a.click(); a.remove(); }catch(x){} }
+      try{ PG.add('shares'); }catch(x){} })); }
+  const open=async()=>{ try{ audio(); }catch(e){} png=null; file=null; pan.hidden=false; draw(); fsend('share','open');
+    try{ const c=await make(); png=c.toDataURL('image/png'); const blob=await new Promise(r=>c.toBlob(r,'image/png')); if(blob) file=new File([blob],'fukashi-pk.png',{type:'image/png'}); }catch(e){ try{ console.warn('sharecard',e); }catch(x){} }
+    draw(); };
+  pan.addEventListener('click',e=>{ if(e.target===pan) pan.hidden=true; });
+
+  // 結果画面のボタン：自分が1本でも蹴った試合だけ
+  const btn=document.createElement('button'); btn.type='button'; btn.id='scBtn'; btn.setAttribute('translate','no'); btn.hidden=true;
+  btn.textContent='📸 '+L('結果カードで共有','Share result card','Compartir tarjeta','Compartilhar cartão');
+  btn.addEventListener('click',e=>{ e.stopPropagation(); open(); });
+  const end=document.getElementById('end'), box=end&&end.querySelector('.box');
+  if(box){ box.appendChild(btn); const upd=()=>{ btn.hidden=end.hidden||!rec.length; }; new MutationObserver(upd).observe(end,{attributes:true,attributeFilter:['hidden']}); upd(); }
+  if(DBG) window.__sc={on:true,rec:()=>rec,setRec:r=>{ rec=r; },make,open,text,best};
+}catch(e){ try{ console.warn('sharecard',e); }catch(x){} } })();
 
 // ===== ガチャ演出 v3（主 2026-10-01「あんま派手じゃないしバカっぽくない。グロックとチャッピーに相談してちょうど派手な演出を作って」）=====
 // ChatGPT 案：レアが上がるほど「壊れていく階段」＋当たった服は3Dで大きく。Grok 案：SR のウソ金色・SSR のネット風の流れる文字

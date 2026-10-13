@@ -37,6 +37,8 @@ body{background:radial-gradient(ellipse at 50% 110%,rgba(24,140,90,.55),transpar
   /* 友だち招待（2026-10-12）：招待リンク＝この公開版＋?ref=コード（LINE の中でも外のブラウザで開く印つき） */
   window.__pkSrc='gh';
   window.__pkInvite=function(c){ return here()+'?openExternalBrowser=1&ref='+encodeURIComponent(c); };
+  /* 結果カード（2026-10-13）：共有する URL＝この公開版（LINE の中でも外のブラウザで開く印つき） */
+  window.__pkShare=function(){ return {url:here()+'?openExternalBrowser=1'}; };
   var REF=''; try{ REF=document.referrer||''; }catch(e){}
   var ref=function(){ return REF; };
   setInterval(function(){ try{ var w=document.getElementById('g').contentWindow; if(w&&/game\.html/.test(w.location.pathname)){ var c=w.goatcounter=w.goatcounter||{}; if(c.allow_frame!==true) c.allow_frame=true; if(c.referrer!==ref) c.referrer=ref; } }catch(e){} },20);

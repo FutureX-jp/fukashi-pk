@@ -3742,7 +3742,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67e';
+const APP_VER='v67f';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -3787,7 +3787,7 @@ function errOpen(){ const un=ERR.list.filter(e=>!e.sent), items=un.length?un:[{t
     if(note) items.forEach(e=>e.note=note); const send=items.map(e=>Object.assign({},e,{msg:note?e.msg+' ／メモ:'+note:e.msg})); errEl.hidden=true; if(!un.length){ ERR.list.push(items[0]); } if(await errSend(send,false)){ items.forEach(e=>e.sent=1); errSave(); } }; }
 { const _o=hbOpen; hbOpen=function(){ const r=_o.apply(this,arguments); const box=document.querySelector('#hbPanel .box'); if(box&&!box.querySelector('[data-a=bug]')){ const b=document.createElement('button'); b.className='mbtn'; b.type='button'; b.dataset.a='bug'; b.style.textAlign='center'; b.textContent='🐞 不具合を送る'; b.addEventListener('click',e=>{ e.stopPropagation(); hbClose(); errOpen(); }); box.appendChild(b); } return r; }; }
 // ホームの小ボタン列には置かない（ごちゃごちゃさせない）。プロフの下に小さく
-{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/13 00:03'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
+{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/13 11:06'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
 if(/dbg/.test(location.search)) Object.assign(window,{__ERR:ERR,__errOpen:errOpen,__errPush:errPush});
 
 // ===== 実況のくり返し対策（主「同じセリフばかりで飽きる」2026-09-26）=====
@@ -5976,7 +5976,7 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
       fetch(`${RK_CFG.url}/rest/v1/rpc/log_funnel`,{method:'POST',keepalive:true,headers:{'apikey':RK_CFG.key,'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(()=>{});
     }catch(e){} };
   window.__funnelSend=send;
-  send('open', (innerWidth>innerHeight?'L':'P')+(matchMedia('(pointer:coarse)').matches?'t':'m'));
+  send('open', (innerWidth>innerHeight?'L':'P')+(matchMedia('(pointer:coarse)').matches?'t':'m')+'|'+((typeof I18N!=='undefined'&&I18N.code)||'?'));   /* v67f：言語も（海外の人かどうか） */
   // 蹴れる状態になった（初めての1回だけ）
   let ready=false; const iv=setInterval(()=>{ try{ if(!ready&&S.phase==='aim'){ ready=true; send('ready'); clearInterval(iv); } }catch(e){} },300);
   setTimeout(()=>clearInterval(iv),120000);
@@ -5990,6 +5990,27 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
   let left=false; const bye=()=>{ if(left) return; left=true; try{ send('leave',(S.phase||'?')+'|k'+kicks); }catch(e){} };
   addEventListener('pagehide',bye); document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') bye(); else left=false; });
 }catch(e){ try{ console.warn('funnel',e); }catch(x){} } })();
+
+// ===== v67f 待ち時間を短く（2026-10-13 主「いいよ」）=====
+// 計測：Playgama の知らない人8人＝1本蹴ってから次を蹴れるまで 28〜36 秒・結果画面やリプレイの最中に閉じた人が多い・ゴールは13本中11本入っている（難しさではない）
+// ① ボールが飛んでから次の番までは画面のどこを押しても早送り（今までは右下の「⏩ 飛ばす」だけ。PC の横長だと目線から一番遠い）。ボタンは目印として残し、文言を「タップで飛ばす」に
+// ② 第1章（ストーリーの最初の章）はリプレイを出さない
+// ③ 計測に足す：開いた時の言語（open の値に |en 等）・早送りを使った時（ff1〜ff3＝場面|btn/tap）
+(function(){ try{
+  const CODE=I18N.code||'en', L=(ja,en,es,pt)=>CODE==='ja'?ja:CODE==='es'?es:CODE==='pt'?pt:en;
+  try{ ffBtn.textContent=L('⏩ タップで飛ばす','⏩ Tap to skip','⏩ Toca para saltar','⏩ Toque para pular'); ffBtn.setAttribute('translate','no'); }catch(e){}
+  // ③ 早送りの記録（1回の起動で3回まで）
+  let ffN=0, how='btn';
+  try{ const _fs=ffStart; ffStart=function(){ const ok=ffAllowed(), ph=S.phase; const r=_fs.apply(this,arguments); if(ok&&ffN<3){ ffN++; try{ window.__funnelSend&&__funnelSend('ff'+ffN,ph+'|'+how); }catch(e){} } how='btn'; return r; }; }catch(e){}
+  // ① どこを押しても早送り（ボタン・入力欄・パネルの上は除く）
+  const skipTap=e=>{ try{ if(e.button>0) return; const t=e.target; if(t&&t.closest&&t.closest('button,a,input,textarea,select,label,[role=dialog],#menu,#end,#hbPanel,#sttalk,#stsel,#movie,#ending,#invpan,#shpan,.toast')) return;
+      if(!['flight','result','replay'].includes(S.phase)) return;   /* 助走・ため・技（ゲームの見せ場）は画面タップでは飛ばさない。飛ばしたい人は右下のボタン */
+      if(!ffAllowed()||FF.on) return; how='tap'; ffStart(); }catch(x){} };
+  document.addEventListener('pointerdown',e=>skipTap(e),true);
+  // ② 第1章はリプレイ無し
+  try{ const _c=RP.can.bind(RP); RP.can=function(){ try{ if(ST.on&&ST.idx===0) return false; }catch(e){} return _c(); }; }catch(e){}
+  if(/dbg/.test(location.search)) window.__tapskip={get n(){ return ffN; }};
+}catch(e){ try{ console.warn('tapskip',e); }catch(x){} } })();
 
 // ===== 友だち招待（2026-10-12 主「早速それをやって欲しい」＝友だちが実際に遊んだら招待した人にごほうび）=====
 // ・招待リンクの形は外枠が決める（window.parent.__pkInvite(code) → URL）。外枠が用意していない所（CrazyGames 等）ではボタンも出ない＝game.html はどこでも同じ

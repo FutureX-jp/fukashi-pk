@@ -3742,7 +3742,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67h';
+const APP_VER='v67j';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -3787,7 +3787,7 @@ function errOpen(){ const un=ERR.list.filter(e=>!e.sent), items=un.length?un:[{t
     if(note) items.forEach(e=>e.note=note); const send=items.map(e=>Object.assign({},e,{msg:note?e.msg+' ／メモ:'+note:e.msg})); errEl.hidden=true; if(!un.length){ ERR.list.push(items[0]); } if(await errSend(send,false)){ items.forEach(e=>e.sent=1); errSave(); } }; }
 { const _o=hbOpen; hbOpen=function(){ const r=_o.apply(this,arguments); const box=document.querySelector('#hbPanel .box'); if(box&&!box.querySelector('[data-a=bug]')){ const b=document.createElement('button'); b.className='mbtn'; b.type='button'; b.dataset.a='bug'; b.style.textAlign='center'; b.textContent='🐞 不具合を送る'; b.addEventListener('click',e=>{ e.stopPropagation(); hbClose(); errOpen(); }); box.appendChild(b); } return r; }; }
 // ホームの小ボタン列には置かない（ごちゃごちゃさせない）。プロフの下に小さく
-{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/14 19:05'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
+{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/15 10:40'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
 if(/dbg/.test(location.search)) Object.assign(window,{__ERR:ERR,__errOpen:errOpen,__errPush:errPush});
 
 // ===== 実況のくり返し対策（主「同じセリフばかりで飽きる」2026-09-26）=====
@@ -5218,7 +5218,7 @@ try{ const k='この章をさっき途中でやめたから、使った分は戻
 //    今まで：初回はすぐ第1章 → 名前はホームに戻った時だけ。NEXT で進み続けるとホームに戻らないので一度も聞かれず、ランキングに「主人公」が並んでいた
 //    これから：勝った時の会話の最後に実況が「ところで……」と切り出す → 名前の画面 → 決定（または あとで決める）→ いつものクリア画面へ
 { const _t=talk;
-  talk=function(lines,done,title){ let ask=false; try{ ask=!!(ST.on&&S.phase==='end'&&lines&&ST.ch&&lines===ST.ch.win&&localStorage.getItem('pk_names')===null); }catch(e){}
+  talk=function(lines,done,title){ let ask=false; try{ ask=!!(ST.on&&S.phase==='end'&&lines&&ST.ch&&lines===ST.ch.win&&localStorage.getItem('pk_names')===null&&(window.__chDone?__chDone().n>=3:true)); }catch(e){}   /* v67j 主 10/15「3章クリア後にしようかな」＝名前を聞くのは第3章クリアの直後（第1章の直後は離脱が多かった） */
     if(!ask) return _t.apply(this,arguments);
     return _t.call(this,lines.concat([[NAME.yui,'ところで……お名前、まだ聞いてませんでした！']]),()=>{
       let fin=false; const go=()=>{ if(fin) return; fin=true; try{ document.getElementById('menu').hidden=true; }catch(e){} done(); };
@@ -6250,6 +6250,64 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
   if(box){ box.appendChild(btn); const upd=()=>{ btn.hidden=end.hidden||!rec.length; }; new MutationObserver(upd).observe(end,{attributes:true,attributeFilter:['hidden']}); upd(); }
   if(DBG) window.__sc={on:true,rec:()=>rec,setRec:r=>{ rec=r; },make,open,text,best};
 }catch(e){ try{ console.warn('sharecard',e); }catch(x){} } })();
+
+// ===== v67j プレイ時間を伸ばす（2026-10-15 主「PKだけに絞ろう」）=====
+// 計測（Playgama・初めての人・10/11〜10/15 の47起動）：開いた 47 → 1本目 24（51%）→ 3本目 13 → 第1章クリア 10 → 第2章 0
+//   ① 1本も蹴らずに帰った人の大半が PC（マウス）。狙いの画面で 5〜27 秒止まって離脱＝クリックしても何も起きない（短すぎる動きは無効）
+//   ② 第1章クリアの10人の半分は、結果画面が出て数秒で閉じた（Playgama はここで広告が出る）。続けた人も守る章のリプレイ・待ち時間で離脱
+// 直し：
+//   ① クリック／タップだけでもシュートになる（ボールから押した所へ向けて普通の強さで蹴る。下を押したらまっすぐ上へ）。説明の板に「クリックだけでもOK」
+//   ② 第1章を初めてクリアした時だけ、結果画面の NEXT を 3 秒数えて自動で押す（「モードを選ぶ」や画面を触ったら止める）
+//   ③ リプレイは3章クリアするまで出さない（v67f の「第1章だけ無し」を広げた）。章の数は __chDone()＝守る章も入れた通し番号
+//   ⑤ 名前を聞くのは第3章クリアの直後（今までは第1章の直後・10/2 主の決定）← fix1001.js ⑫ の条件（主 10/15「3章クリア後にしようかな」）
+//   ④ 広告（Playgama・GameMonetize の外枠）は3章クリアまで出さない（主「3章終わるまでいらないんじゃない？」） ← build_pg.py / build_gm.py 側
+//   計測：tapshot（クリックだけで蹴った・最初の3回）／auto2（自動で次の章へ）
+(function(){ try{
+  const CODE=I18N.code||'en', L=(ja,en,es,pt)=>CODE==='ja'?ja:CODE==='es'?es:CODE==='pt'?pt:en;
+  const ls=(k,v)=>{ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } };
+  const fsend=(a,b)=>{ try{ window.__funnelSend&&__funnelSend(a,b); }catch(e){} };
+  const FINE=(()=>{ try{ return matchMedia('(pointer:fine)').matches&&!('ontouchstart' in window); }catch(e){ return false; } })();
+
+  // ---- ① クリック／タップだけでもシュート ----
+  let tapN=0;
+  const _ts=tryShot; tryShot=function(){
+    try{ if(S.phase==='aim'&&humanKicks()&&pts&&pts.length){
+        const a=pts[0], b=pts[pts.length-1], H=innerHeight, len=Math.hypot(b.x-a.x,b.y-a.y);
+        if(len<H*0.05){   /* 今までは無効で何も起きなかった動き（クリック・軽いタップ）。下向きのドラッグは今まで通り無効 */
+          const v=ball.position.clone().project(camera), bx=(v.x+1)/2*innerWidth, by=(1-(v.y+1)/2)*H;
+          let ux=b.x-bx, uy=b.y-by; if(uy>-H*0.12){ ux*=0.5; uy=-H*0.38; }   /* ボールより下・すぐ上を押した時はゴールの真ん中寄りへ */
+          const k=(H*0.32)/Math.max(1,-uy), dx=ux*k, dy=uy*k, n=9, D=220, t0=performance.now()-D;   /* ボール→押した所の向きのまま、長さは画面の32%（普通のスワイプ）に揃える */
+          pts=[]; for(let i=0;i<=n;i++){ const q=i/n; pts.push({x:bx+dx*q,y:by+dy*q,t:t0+D*q}); }   /* 220ms＝普通の強さ（aimFromTrail で 胸の高さ前後・速さ 20m/s 前後） */
+          if(tapN<3){ tapN++; fsend('tapshot',(FINE?'m':'t')+tapN); }
+        } } }catch(e){ try{ console.warn('tapshot',e); }catch(x){} }
+    return _ts.apply(this,arguments); };
+  // 説明の板に1行足す
+  try{ const m=document.querySelector('#cgtut .msg'); if(m){ const s=document.createElement('small'); s.className='hl tapok';
+      s.textContent=FINE?L('クリックだけでもOK','Or just click!','¡O solo haz clic!','Ou só clique!'):L('タップだけでもOK','Or just tap!','¡O solo toca!','Ou só toque!'); m.appendChild(s); } }catch(e){}
+
+  // ---- ② 第1章を初めてクリアした時は、NEXT を3秒で自動で押す ----
+  { const end=document.getElementById('end'), r=document.getElementById('retry');
+    let timer=0, armed=false;
+    const stop=()=>{ if(timer){ clearInterval(timer); timer=0; } try{ if(r.dataset.lbl){ r.textContent=r.dataset.lbl; delete r.dataset.lbl; } }catch(e){} };
+    new MutationObserver(()=>{ try{
+      if(end.hidden){ stop(); return; }
+      if(timer||armed) return;
+      if(!(ST.on&&!ST.both&&ST.idx===0&&r.dataset.next==='1'&&ls('pk_auto2')!=='1')) return;
+      armed=true; ls('pk_auto2','1'); let n=3; r.dataset.lbl=r.textContent;
+      const draw=()=>{ r.textContent=L(`NEXT ▶ ${n}`,`NEXT ▶ ${n}`,`SIGUIENTE ▶ ${n}`,`PRÓXIMO ▶ ${n}`); };
+      draw(); timer=setInterval(()=>{ n--; if(n>0){ draw(); return; } stop(); if(!end.hidden){ fsend('auto2','1'); r.click(); } },1000);
+    }catch(e){} }).observe(end,{attributes:true,attributeFilter:['hidden']});
+    // 自分で何か押したら数えるのをやめる（NEXT を自分で押した時は普通にそのまま進む）
+    end.addEventListener('pointerdown',e=>{ if(timer&&e.target!==r) stop(); },true);
+  }
+
+  // ---- ③ リプレイは3章クリアするまで出さない ----
+  const done=()=>{ try{ return window.__chDone?__chDone().n:(+ls('pk_story')||0); }catch(e){ return 0; } };   /* クリアした章の数（蹴る章＋守る章の通し番号。pk_story は蹴る章だけなので使わない） */
+  const rpBlocked=()=>{ try{ return !!((ST.on||(window.__GST&&__GST.on))&&done()<3); }catch(e){ return false; } };
+  try{ const _c=RP.can.bind(RP); RP.can=function(){ if(rpBlocked()) return false; return _c(); }; }catch(e){}
+
+  if(/dbg/.test(location.search)) window.__playtime={get tapN(){ return tapN; },ball,camera,RP,rpBlocked};
+}catch(e){ try{ console.warn('playtime',e); }catch(x){} } })();
 
 // ===== ガチャ演出 v3（主 2026-10-01「あんま派手じゃないしバカっぽくない。グロックとチャッピーに相談してちょうど派手な演出を作って」）=====
 // ChatGPT 案：レアが上がるほど「壊れていく階段」＋当たった服は3Dで大きく。Grok 案：SR のウソ金色・SSR のネット風の流れる文字

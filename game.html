@@ -3742,7 +3742,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67j';
+const APP_VER='v67k';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -3787,7 +3787,7 @@ function errOpen(){ const un=ERR.list.filter(e=>!e.sent), items=un.length?un:[{t
     if(note) items.forEach(e=>e.note=note); const send=items.map(e=>Object.assign({},e,{msg:note?e.msg+' ／メモ:'+note:e.msg})); errEl.hidden=true; if(!un.length){ ERR.list.push(items[0]); } if(await errSend(send,false)){ items.forEach(e=>e.sent=1); errSave(); } }; }
 { const _o=hbOpen; hbOpen=function(){ const r=_o.apply(this,arguments); const box=document.querySelector('#hbPanel .box'); if(box&&!box.querySelector('[data-a=bug]')){ const b=document.createElement('button'); b.className='mbtn'; b.type='button'; b.dataset.a='bug'; b.style.textAlign='center'; b.textContent='🐞 不具合を送る'; b.addEventListener('click',e=>{ e.stopPropagation(); hbClose(); errOpen(); }); box.appendChild(b); } return r; }; }
 // ホームの小ボタン列には置かない（ごちゃごちゃさせない）。プロフの下に小さく
-{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/15 10:40'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
+{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/17 01:00'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
 if(/dbg/.test(location.search)) Object.assign(window,{__ERR:ERR,__errOpen:errOpen,__errPush:errPush});
 
 // ===== 実況のくり返し対策（主「同じセリフばかりで飽きる」2026-09-26）=====
@@ -5074,7 +5074,7 @@ if(/dbg/.test(location.search)) window.__movT=()=>MOV.on?MOV.t:99;
       if(!(G&&G.on&&M.gkOnly&&SP_AT.includes(M.B.length))) return _cs.apply(this,arguments);
       const j=G.j%12; NKK.j=j; NKK.side=Math.random()<0.5?-1:1; NKK.ph=Math.random()*6.28;
       const tx=(Math.random()*2-1)*2.9, ty=0.3+Math.random()*1.8;
-      let speed=21+Math.random()*4; if(j===0) speed=27; if(j===3) speed=26; if(j===2) speed=22;
+      let speed=21+Math.random()*4; if(j===0) speed=19;  /* v67k 最初の守る章は遅く（元 27） */ if(j===3) speed=26; if(j===2) speed=22;
       const gd=window.__GDATA&&window.__GDATA()[G.j], title=(gd&&gd.title)||'必殺キック';
       beginRun({tx,ty,curve:0,speed,vs:3.5,name:title},null,0.45);
       NKK.on=true; NKK.u=0;
@@ -6308,6 +6308,19 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
 
   if(/dbg/.test(location.search)) window.__playtime={get tapN(){ return tapN; },ball,camera,RP,rpBlocked};
 }catch(e){ try{ console.warn('playtime',e); }catch(x){} } })();
+
+// ===== v67k 最初の守る章（第2章・蹴田 正義）を易しく（2026-10-17・離脱の計測より）=====
+// 計測（10/12〜10/16・初めての人）: 第2章に入った5回は全員 1〜3本でやめた。守る側は10本中8本決められていた（蹴る側のゴール率は85%）
+// 普通のシュート: 速さ 14〜30 → 14〜19、コース 左右±3.2・高さ0.25〜2.25 → 左右±2.4・高さ0.3〜1.5、枠外12%と技35%は無し
+// 必殺（2本目・4本目）は nkkick.js の速さ 27 → 19（動きの見た目はそのまま）
+{ const _cs=cpuShot; cpuShot=function(){ const G=window.__GST;
+    if(!(G&&G.on&&M.gkOnly&&G.j===0&&![1,3].includes(M.B.length))) return _cs.apply(this,arguments);
+    try{ window.__NKK&&window.__NKK.clear(); }catch(e){}
+    const tx=(Math.random()*2-1)*2.4, ty=0.3+Math.random()*1.2;
+    const vs=1.4+Math.random()*1.2, speed=THREE.MathUtils.clamp(14+Math.random()*5,14,19);
+    beginRun({tx,ty,curve:0,speed,vs},null,0.45); };
+  window.__EASYG={maxSpeed:19,maxX:2.4,maxY:1.5};
+}
 
 // ===== ガチャ演出 v3（主 2026-10-01「あんま派手じゃないしバカっぽくない。グロックとチャッピーに相談してちょうど派手な演出を作って」）=====
 // ChatGPT 案：レアが上がるほど「壊れていく階段」＋当たった服は3Dで大きく。Grok 案：SR のウソ金色・SSR のネット風の流れる文字

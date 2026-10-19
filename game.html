@@ -3742,7 +3742,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67k';
+const APP_VER='v67l';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -3787,7 +3787,7 @@ function errOpen(){ const un=ERR.list.filter(e=>!e.sent), items=un.length?un:[{t
     if(note) items.forEach(e=>e.note=note); const send=items.map(e=>Object.assign({},e,{msg:note?e.msg+' ／メモ:'+note:e.msg})); errEl.hidden=true; if(!un.length){ ERR.list.push(items[0]); } if(await errSend(send,false)){ items.forEach(e=>e.sent=1); errSave(); } }; }
 { const _o=hbOpen; hbOpen=function(){ const r=_o.apply(this,arguments); const box=document.querySelector('#hbPanel .box'); if(box&&!box.querySelector('[data-a=bug]')){ const b=document.createElement('button'); b.className='mbtn'; b.type='button'; b.dataset.a='bug'; b.style.textAlign='center'; b.textContent='🐞 不具合を送る'; b.addEventListener('click',e=>{ e.stopPropagation(); hbClose(); errOpen(); }); box.appendChild(b); } return r; }; }
 // ホームの小ボタン列には置かない（ごちゃごちゃさせない）。プロフの下に小さく
-{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/17 01:00'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
+{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/19 23:49'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
 if(/dbg/.test(location.search)) Object.assign(window,{__ERR:ERR,__errOpen:errOpen,__errPush:errPush});
 
 // ===== 実況のくり返し対策（主「同じセリフばかりで飽きる」2026-09-26）=====
@@ -5958,7 +5958,7 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
 // ===== 離脱の計測（2026-10-12 主「離脱率を測るものを入れる？」→「流してOK」）=====
 // どこで閉じられているかを段階ごとに1行ずつ送る。送るのは：端末のランダム番号（ランキングと同じ pk_dev）・この起動の番号・出し先・版・段階・値・開いてからの秒・初めての人か
 // 名前・保存データ・位置・IP は送らない（IP はサーバー側で md5 にして荒らし対策だけに使う＝不具合ログと同じ）
-// 1回の起動で送るのは最大 24 行。送り先は Supabase の log_funnel（funnel.sql）
+// 1回の起動で送るのは最大 80 行（v67l で 24→80・蹴る/結果も 6/8→40：第2章から先が見えていなかった）。送り先は Supabase の log_funnel（funnel.sql）
 (function(){ try{
   if(/nofunnel/.test(location.search)) return;
   const ls=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
@@ -5970,7 +5970,7 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
   const isNew=ls('pk_names')===null&&(+ls('pk_story')||0)===0;
   const ver=(typeof APP_VER!=='undefined'?APP_VER:'?');
   let sent=0, kicks=0, results=0, last='open';
-  const send=(step,val)=>{ try{ last=step; if(sent>=24||RK_MOCK||!RK_CFG.url) return; sent++;
+  const send=(step,val)=>{ try{ last=step; if(sent>=80||RK_MOCK||!RK_CFG.url) return; sent++;
       const body={p_device:rkDev(),p_sid:sid,p_src:src,p_ver:ver,p_new:isNew,p_step:String(step).slice(0,16),p_val:val==null?null:String(val).slice(0,40),p_t:sec()};
       if(/dbg/.test(location.search)) (window.__funnel=window.__funnel||[]).push(body);
       fetch(`${RK_CFG.url}/rest/v1/rpc/log_funnel`,{method:'POST',keepalive:true,headers:{'apikey':RK_CFG.key,'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(()=>{});
@@ -5981,9 +5981,9 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
   let ready=false; const iv=setInterval(()=>{ try{ if(!ready&&S.phase==='aim'){ ready=true; send('ready'); clearInterval(iv); } }catch(e){} },300);
   setTimeout(()=>clearInterval(iv),120000);
   // 蹴った（最初の 6 本）
-  { const _b=beginRun; beginRun=function(shot,trick){ try{ if(humanKicks()&&kicks<6){ kicks++; send('kick'+kicks, trick||'-'); } }catch(e){} return _b.apply(this,arguments); }; }
+  { const _b=beginRun; beginRun=function(shot,trick){ try{ if(humanKicks()&&kicks<40){ kicks++; send('kick'+kicks, trick||'-'); } }catch(e){} return _b.apply(this,arguments); }; }
   // 結果（最初の 8 回・蹴った／守った両方）
-  { let prev=null; setInterval(()=>{ try{ const r=S.resolved; if(r&&r!==prev&&results<8){ results++; send('res'+results,(S.shotMine?'K:':'G:')+r); } prev=r; }catch(e){} },200); }   /* 結果は S.resolved を見張る（resolve・afterResult は差し替えても呼ばれない経路があった） */
+  { let prev=null; setInterval(()=>{ try{ const r=S.resolved; if(r&&r!==prev&&results<40){ results++; send('res'+results,(S.shotMine?'K:':'G:')+r); } prev=r; }catch(e){} },200); }   /* 結果は S.resolved を見張る（resolve・afterResult は差し替えても呼ばれない経路があった） */
   // 章の終わり（勝ち負けと章番号）
   try{ const _f=ST.finish; ST.finish=function(){ const out=_f.apply(this,arguments); try{ const g=this.ch.goal, have=g.type==='tricks'?this.tricks:this.goals; send(have>=g.n?'chwin':'chlose',this.idx+1); }catch(e){} return out; }; }catch(e){}
   // 閉じた・裏に回した（最後にいた所）
@@ -6321,6 +6321,28 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
     beginRun({tx,ty,curve:0,speed,vs},null,0.45); };
   window.__EASYG={maxSpeed:19,maxX:2.4,maxY:1.5};
 }
+
+// ===== v67l（2026-10-19）第1章クリア直後の離脱と、計測の穴 =====
+// 計測（10/18 13時〜10/19・Playgama・初めての人）: 第1章クリア 107回のうち 37回は「クリア → 帰る」の間に何も起きていない（auto2 も無い）。
+//   chwin は ST.finish の頭で送られ、そのあと勝ちの会話（タップで次へ）→ 結果画面 → 3秒で自動NEXT、の順＝会話を送らない人は結果画面にも進まない
+// ① 章の終わりの会話は、クリアした章が3つ未満の間だけ 2.2秒ごとに自動で送る（タップすればすぐ送れるのは今まで通り）
+// ② 計測：結果画面が出た（endshow）／守る章の勝ち負け（gwin/glose・今までは送っていなかった）／会話を自動で送った（talkauto）
+(function(){ try{
+  const send=(a,b)=>{ try{ window.__funnelSend&&window.__funnelSend(a,b); }catch(e){} };
+  const done=()=>{ try{ return window.__chDone?__chDone().n:0; }catch(e){ return 0; } };
+  const tk=document.getElementById('sttalk'), end=document.getElementById('end');
+  let lastTxt='', since=0, autoN=0;
+  setInterval(()=>{ try{
+    const story=(ST.on||(window.__GST&&__GST.on));
+    if(!tk||tk.hidden||!tk.onclick||!story||S.phase!=='end'||done()>=3){ lastTxt=''; return; }
+    const cur=tk.querySelector('.txt').textContent;
+    if(cur!==lastTxt){ lastTxt=cur; since=performance.now(); return; }
+    if(performance.now()-since>=2200){ since=performance.now(); autoN++; if(autoN===1) send('talkauto','1'); tk.onclick(); }
+  }catch(e){} },250);
+  if(end) new MutationObserver(()=>{ try{ if(!end.hidden) send('endshow',(ST.on?'K':(window.__GST&&__GST.on)?'G':'-')+done()); }catch(e){} }).observe(end,{attributes:true,attributeFilter:['hidden']});
+  try{ const G=window.__GST, _f=G.finish; G.finish=function(){ let ok=null; try{ const g=__GDATA()[G.j], sv=M.B.filter(x=>x===false).length; ok=sv>=g.n; }catch(e){} const r=_f.apply(this,arguments); try{ send(ok?'gwin':'glose',G.j); }catch(e){} return r; }; }catch(e){}
+  if(/dbg/.test(location.search)) window.__talkauto={get n(){ return autoN; }};
+}catch(e){ try{ console.warn('talkauto',e); }catch(x){} } })();
 
 // ===== ガチャ演出 v3（主 2026-10-01「あんま派手じゃないしバカっぽくない。グロックとチャッピーに相談してちょうど派手な演出を作って」）=====
 // ChatGPT 案：レアが上がるほど「壊れていく階段」＋当たった服は3Dで大きく。Grok 案：SR のウソ金色・SSR のネット風の流れる文字

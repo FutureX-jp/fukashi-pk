@@ -3218,10 +3218,10 @@ const TSPEC={
 function TSC(){ const v=pos.clone().project(camera); return [(v.x+1)/2*innerWidth,(1-v.y)/2*innerHeight]; }
 function myTrailItem(){ const id=GACHA.eq('trail'); return id&&GI[id]&&GACHA.owned(id)?GI[id]:null; }
 const TR2={acc:0,ang:0,phase:null,slowDone:false,hit:false};
-(function trLoop(){ requestAnimationFrame(trLoop); const it=myTrailItem(), sp=it&&TSPEC[it.name], mine=S.shotMine;
+(function trLoop(){ requestAnimationFrame(trLoop); const _tn=performance.now(); let tdt=(_tn-(TR2.lt||0))/1000; if(!(tdt>0&&tdt<0.1)) tdt=1/60; TR2.lt=_tn; const it=myTrailItem(), sp=it&&TSPEC[it.name], mine=S.shotMine;
   if(S.phase!==TR2.phase){ if(S.phase==='flight'&&sp&&mine){ TR2.slowDone=false; TR2.hit=false; if(sp.launch) sp.launch(); } TR2.phase=S.phase; }
   if(!sp||!mine||S.phase!=='flight') { if(sp&&mine&&S.phase==='result'&&!TR2.hit&&S.resolved&&S.resolved!=='miss'){ TR2.hit=true; sp.impact(); } return; }
-  TR2.acc+=1/60; TR2.ang+=0.35;
+  TR2.acc+=tdt; TR2.ang+=0.35*tdt*60;
   if(TR2.acc>=sp.rate){ TR2.acc=0; for(let i=0;i<sp.n;i++) emoBurst(sp.p,pos,{n:1,speed:sp.side?1.6:0.5,up:sp.fount?1.4:0.2,grav:sp.fount?3:0.6,life:0.7,size:sp.sz,spread:0.18});
     if(sp.ring){ for(const k of sp.ring2?[0,2.09,4.19]:[0,3.14]){ const a=TR2.ang+k; emoBurst(sp.ring,new THREE.Vector3(pos.x+Math.cos(a)*0.3,pos.y+Math.sin(a)*0.3,pos.z),{n:1,speed:0.05,up:0,grav:0,life:0.35,size:sp.sz*0.8,spread:0}); } } }
   if(sp.slow&&!TR2.slowDone&&pos.z<3.2){ TR2.slowDone=true; gs.slow(sp.slow[0],sp.slow[1]); if(sp.inv) gs.filt('invert(1)',160); } })();
@@ -3742,7 +3742,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67l';
+const APP_VER='v67m';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -3787,7 +3787,7 @@ function errOpen(){ const un=ERR.list.filter(e=>!e.sent), items=un.length?un:[{t
     if(note) items.forEach(e=>e.note=note); const send=items.map(e=>Object.assign({},e,{msg:note?e.msg+' ／メモ:'+note:e.msg})); errEl.hidden=true; if(!un.length){ ERR.list.push(items[0]); } if(await errSend(send,false)){ items.forEach(e=>e.sent=1); errSave(); } }; }
 { const _o=hbOpen; hbOpen=function(){ const r=_o.apply(this,arguments); const box=document.querySelector('#hbPanel .box'); if(box&&!box.querySelector('[data-a=bug]')){ const b=document.createElement('button'); b.className='mbtn'; b.type='button'; b.dataset.a='bug'; b.style.textAlign='center'; b.textContent='🐞 不具合を送る'; b.addEventListener('click',e=>{ e.stopPropagation(); hbClose(); errOpen(); }); box.appendChild(b); } return r; }; }
 // ホームの小ボタン列には置かない（ごちゃごちゃさせない）。プロフの下に小さく
-{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/19 23:49'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
+{ const _p=pfOpen; pfOpen=function(r,mine){ const out=_p.apply(this,arguments); if(mine||!r){ const cd=document.querySelector('#pfpan .pf'); if(cd&&!cd.querySelector('.bug')){ const a=document.createElement('button'); a.type='button'; a.className='bug'; a.style.cssText='font:800 12px/1 var(--ui);background:transparent;border:0;color:#555;text-decoration:underline;padding:6px;cursor:pointer'; a.textContent=`🐞 不具合を送る（${APP_VER}）`; a.dataset.b='10/20 15:13'; a.addEventListener('click',()=>{ document.getElementById('pfpan').hidden=true; errOpen(); }); cd.appendChild(a); } } return out; }; }
 if(/dbg/.test(location.search)) Object.assign(window,{__ERR:ERR,__errOpen:errOpen,__errPush:errPush});
 
 // ===== 実況のくり返し対策（主「同じセリフばかりで飽きる」2026-09-26）=====
@@ -3915,12 +3915,12 @@ function g2Init(){ if(G2.cv) return; const fx=$g('.fx'); const c=document.create
   const sk=document.createElement('div'); sk.className='g2skip'; sk.textContent='タップでスキップ ▶▶'; fx.appendChild(sk);
   fx.addEventListener('pointerdown',()=>{ if(!gcBusy||G2.skip||$g('.res').classList.contains('on')) return; G2.skip=true; if(G2.wake) G2.wake(); }); }
 function g2Size(){ const d=Math.min(1.5,devicePixelRatio||1); G2.dpr=d; G2.W=innerWidth; G2.H=innerHeight; G2.cv.width=Math.round(G2.W*d); G2.cv.height=Math.round(G2.H*d); G2.cx.setTransform(d,0,0,d,0,0); }
-function g2Loop(){ G2.raf=0; const g=G2.cx, W=G2.W, H=G2.H; g.clearRect(0,0,W,H); const now=performance.now();
+function g2Loop(){ G2.raf=0; const g=G2.cx, W=G2.W, H=G2.H; g.clearRect(0,0,W,H); const now=performance.now(); let fdt=(now-(G2.lt||0))/1000; if(!(fdt>0&&fdt<0.1)) fdt=1/60; G2.lt=now; const fk=fdt*60;
   if(G2.rays){ const r=G2.rays, a0=(now-G2.t0)/1000*r.spin, n=r.n, R=Math.hypot(W,H); g.save(); g.translate(W/2,H*r.y); g.globalCompositeOperation='lighter';
     for(let i=0;i<n;i++){ const a=a0+i*Math.PI*2/n; g.fillStyle=r.rainbow?`hsla(${(i*360/n+now/8)%360},100%,60%,${r.a})`:r.c; g.beginPath(); g.moveTo(0,0); g.lineTo(Math.cos(a-0.07)*R,Math.sin(a-0.07)*R); g.lineTo(Math.cos(a+0.07)*R,Math.sin(a+0.07)*R); g.fill(); } g.restore(); }
-  for(let i=G2.rings.length-1;i>=0;i--){ const r=G2.rings[i]; r.t+=1/60; const k=r.t/r.life; if(k>=1){ G2.rings.splice(i,1); continue; } g.strokeStyle=r.c; g.globalAlpha=1-k; g.lineWidth=r.w*(1-k)+1; g.beginPath(); g.arc(r.x,r.y,r.r0+(r.r1-r.r0)*(1-Math.pow(1-k,3)),0,7); g.stroke(); g.globalAlpha=1; }
+  for(let i=G2.rings.length-1;i>=0;i--){ const r=G2.rings[i]; r.t+=fdt; const k=r.t/r.life; if(k>=1){ G2.rings.splice(i,1); continue; } g.strokeStyle=r.c; g.globalAlpha=1-k; g.lineWidth=r.w*(1-k)+1; g.beginPath(); g.arc(r.x,r.y,r.r0+(r.r1-r.r0)*(1-Math.pow(1-k,3)),0,7); g.stroke(); g.globalAlpha=1; }
   g.globalCompositeOperation='lighter';
-  for(let i=G2.parts.length-1;i>=0;i--){ const p=G2.parts[i]; p.t+=1/60; if(p.t>p.life){ G2.parts.splice(i,1); continue; } p.vy+=p.g/60; p.vx*=0.985; p.vy*=0.985; p.x+=p.vx/60; p.y+=p.vy/60; const k=1-p.t/p.life;
+  for(let i=G2.parts.length-1;i>=0;i--){ const p=G2.parts[i]; p.t+=fdt; if(p.t>p.life){ G2.parts.splice(i,1); continue; } p.vy+=p.g*fdt; const dmp=Math.pow(0.985,fk); p.vx*=dmp; p.vy*=dmp; p.x+=p.vx*fdt; p.y+=p.vy*fdt; const k=1-p.t/p.life;
     g.fillStyle=p.rb?`hsl(${(p.h+now/5)%360},100%,62%)`:p.c; g.globalAlpha=Math.min(1,k*1.6);
     if(p.sq){ g.save(); g.translate(p.x,p.y); g.rotate(p.t*p.sp); g.fillRect(-p.s,-p.s*0.5,p.s*2,p.s); g.restore(); } else { g.beginPath(); g.arc(p.x,p.y,p.s*(0.4+0.6*k),0,7); g.fill(); } }
   g.globalAlpha=1; g.globalCompositeOperation='source-over';
@@ -5958,12 +5958,13 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
 // ===== 離脱の計測（2026-10-12 主「離脱率を測るものを入れる？」→「流してOK」）=====
 // どこで閉じられているかを段階ごとに1行ずつ送る。送るのは：端末のランダム番号（ランキングと同じ pk_dev）・この起動の番号・出し先・版・段階・値・開いてからの秒・初めての人か
 // 名前・保存データ・位置・IP は送らない（IP はサーバー側で md5 にして荒らし対策だけに使う＝不具合ログと同じ）
-// 1回の起動で送るのは最大 80 行（v67l で 24→80・蹴る/結果も 6/8→40：第2章から先が見えていなかった）。送り先は Supabase の log_funnel（funnel.sql）
+// 1回の起動で送るのは最大 80 行（送れなかった分は端末にためて後で送る＝v67m）（v67l で 24→80・蹴る/結果も 6/8→40：第2章から先が見えていなかった）。送り先は Supabase の log_funnel（funnel.sql）
 (function(){ try{
   if(/nofunnel/.test(location.search)) return;
   const ls=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
   const T0=performance.now(), sec=()=>Math.round((performance.now()-T0)/100)/10;
   const sid=Math.random().toString(36).slice(2,10);
+  const QK='pk_fq';
   const host=(()=>{ try{ return (window.top!==window?document.referrer:location.href)||location.href; }catch(e){ return location.href; } })();
   const ref=(()=>{ try{ return document.referrer+'|'+(window.parent!==window?window.parent.location.href:''); }catch(e){ return document.referrer||''; } })(), pubEnv=(()=>{ try{ return window.parent.CrazyGames.SDK.environment; }catch(e){ return ''; } })();
   const src=/crazygames/.test(location.host+ref)||(window.CG&&pubEnv&&pubEnv!=='pub'&&!/127\.0\.0\.1|localhost/.test(location.host))?'cg':/itch\.(io|zone)/.test(host+location.host)?'itch':/github\.io/.test(location.host)?'gh':/gamemonetize/.test(host+location.host)?'gm':/playgama/.test(host+location.host)?'pg':/127\.0\.0\.1|localhost/.test(location.host)?'dev':'other';
@@ -5973,8 +5974,22 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
   const send=(step,val)=>{ try{ last=step; if(sent>=80||RK_MOCK||!RK_CFG.url) return; sent++;
       const body={p_device:rkDev(),p_sid:sid,p_src:src,p_ver:ver,p_new:isNew,p_step:String(step).slice(0,16),p_val:val==null?null:String(val).slice(0,40),p_t:sec()};
       if(/dbg/.test(location.search)) (window.__funnel=window.__funnel||[]).push(body);
-      fetch(`${RK_CFG.url}/rest/v1/rpc/log_funnel`,{method:'POST',keepalive:true,headers:{'apikey':RK_CFG.key,'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(()=>{});
+      post(body).then(ok=>{ if(ok) flush(); else qAdd(body); });
     }catch(e){} };
+  // v67m 送れなかった行は端末にためて、次に送れた時・電波が戻った時・次に開いた時に送る（KSKだぜGAMES の数え方から 2026-10-20 主「取り入れれるものは今後のゲーム開発に使おう」）
+  // ためるのは最大128行・24時間まで。4xx（429以外）は送り直しても通らないので捨てる。成功しても返事を受け取る前に閉じられた分は数えない（二重に数えないことを優先）
+  function post(body){ return fetch(`${RK_CFG.url}/rest/v1/rpc/log_funnel`,{method:'POST',keepalive:true,headers:{'apikey':RK_CFG.key,'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(r=>r.ok||(r.status>=400&&r.status<500&&r.status!==429)).catch(()=>false); }
+  function qGet(){ try{ const a=JSON.parse(localStorage.getItem(QK)||'[]'); return Array.isArray(a)?a.filter(e=>e&&e.b&&e.at>Date.now()-864e5):[]; }catch(e){ return []; } }
+  function qPut(a){ try{ if(a.length) localStorage.setItem(QK,JSON.stringify(a.slice(-128))); else localStorage.removeItem(QK); }catch(e){} }
+  function qAdd(body){ const a=qGet(); a.push({b:body,at:Date.now()}); qPut(a); if(/dbg/.test(location.search)) window.__funnelQ=qGet(); }
+  let flushing=false;
+  async function flush(){ if(flushing||RK_MOCK||!RK_CFG.url) return; flushing=true;
+    try{ for(let n=0;n<20;n++){ const a=qGet(); if(!a.length) break; const ok=await post(a[0].b); if(!ok) break; const b=qGet(); b.shift(); qPut(b); } }
+    finally{ flushing=false; if(/dbg/.test(location.search)) window.__funnelQ=qGet(); } }
+  window.__funnelFlush=flush;
+  addEventListener('online',()=>{ flush(); });
+  setTimeout(flush,3000);
   window.__funnelSend=send;
   send('open', (innerWidth>innerHeight?'L':'P')+(matchMedia('(pointer:coarse)').matches?'t':'m')+'|'+((typeof I18N!=='undefined'&&I18N.code)||'?'));   /* v67f：言語も（海外の人かどうか） */
   // 蹴れる状態になった（初めての1回だけ）
@@ -6343,6 +6358,29 @@ if(/dbg/.test(location.search)) window.__lie=()=>{ const H=RIGS.keeper.act, v=ne
   try{ const G=window.__GST, _f=G.finish; G.finish=function(){ let ok=null; try{ const g=__GDATA()[G.j], sv=M.B.filter(x=>x===false).length; ok=sv>=g.n; }catch(e){} const r=_f.apply(this,arguments); try{ send(ok?'gwin':'glose',G.j); }catch(e){} return r; }; }catch(e){}
   if(/dbg/.test(location.search)) window.__talkauto={get n(){ return autoN; }};
 }catch(e){ try{ console.warn('talkauto',e); }catch(x){} } })();
+
+// ===== v67m 3Dの描画が止まった時の案内（2026-10-20・KSKだぜGAMES の作りから）=====
+// iPhone は裏に回した時やメモリが足りない時に WebGL を落とすことがある。今までは黒い画面のまま何も出なかった＝「静かに止まる」
+// 落ちたら：一時停止して、画面の言葉で「読み込み直す」ボタンを出す。計測（funnel）に glost を1行送る
+(function(){ try{
+  const cv=renderer&&renderer.domElement; if(!cv) return;
+  const TX={ja:['画面の描画が止まりました','スマホのメモリが足りなくなった時などに起きます。進み具合は残っています','読み込み直す'],
+    en:['The 3D view stopped','This can happen when your device runs low on memory. Your progress is saved','Reload'],
+    es:['La vista 3D se detuvo','Puede pasar cuando el dispositivo se queda sin memoria. Tu progreso está guardado','Recargar'],
+    pt:['A visualização 3D parou','Isso pode acontecer quando o aparelho fica sem memória. Seu progresso está salvo','Recarregar']};
+  function show(){ if(document.getElementById('glost')) return;
+    const c=(typeof I18N!=='undefined'&&TX[I18N.code])?I18N.code:'ja', t=TX[c];
+    const d=document.createElement('div'); d.id='glost'; d.setAttribute('translate','no'); d.setAttribute('role','alertdialog');
+    d.style.cssText='position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:rgba(7,21,26,.92);color:#fff;font:700 16px/1.5 "M PLUS Rounded 1c",system-ui,sans-serif;text-align:center;padding:24px';
+    const box=document.createElement('div'); box.style.cssText='max-width:340px';
+    const h=document.createElement('div'); h.textContent=t[0]; h.style.cssText='font-size:20px;font-weight:800;margin-bottom:8px;color:#DFFF24';
+    const p=document.createElement('div'); p.textContent=t[1]; p.style.cssText='font-size:14px;font-weight:500;opacity:.9;margin-bottom:18px';
+    const b=document.createElement('button'); b.id='glost-reload'; b.textContent=t[2]; b.style.cssText='font:800 18px/1 inherit;padding:14px 28px;border-radius:14px;border:3px solid #111;background:#DFFF24;color:#111;cursor:pointer';
+    b.addEventListener('click',()=>{ try{ location.reload(); }catch(e){} });
+    box.append(h,p,b); d.appendChild(box); document.body.appendChild(d); }
+  cv.addEventListener('webglcontextlost',e=>{ try{ e.preventDefault(); }catch(x){} try{ if(window.__funnelSend) window.__funnelSend('glost',(typeof S!=='undefined'&&S.phase)||'?'); }catch(x){} show(); },false);
+  if(/dbg/.test(location.search)){ window.__glost=show; window.__G2={G2,loop:()=>{ g2Init(); g2Loop(); },TR2,gl:cv,ctx:()=>renderer.getContext()}; }
+}catch(e){ try{ console.warn('glost',e); }catch(x){} } })();
 
 // ===== ガチャ演出 v3（主 2026-10-01「あんま派手じゃないしバカっぽくない。グロックとチャッピーに相談してちょうど派手な演出を作って」）=====
 // ChatGPT 案：レアが上がるほど「壊れていく階段」＋当たった服は3Dで大きく。Grok 案：SR のウソ金色・SSR のネット風の流れる文字

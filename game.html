@@ -1077,7 +1077,7 @@ function step(dt){
     if(woodwork()){ postHit=true; sideAcc=0; hitStop(0.12); flash('#fff',0.6,200); burst({at:pos.clone(),n:90,colors:['#fff6c2','#ffd23f','#ffffff'],speed:7,grav:6,life:0.7,size:0.07,add:true}); ring(pos.clone(),0xfff6c2,4,0.3); tone(1250,0.5,'triangle',.35); tone(620,0.4,'sine',.2); S.shake=0.35; }
     if(R.ultra&&!R.blown){ R.ultra=false; const hb=capsuleHit(); R.ultra=true; if(hb) blowKeeper(); }
     const h=capsuleHit();
-    if(h){ const vn=vel.x*h.nx+vel.y*h.ny; vel.x=vel.x-2*vn*h.nx*0.5+h.nx*3; vel.y=Math.abs(vel.y)*0.4+h.ny*2; vel.z=Math.abs(vel.z)*0.35; sideAcc=0; hitStop(0.14); flash('#ff4d5a',0.4,300); S.shake=0.4; burst({at:pos.clone(),n:110,colors:['#ffffff','#d8ff3c'],speed:6,grav:5,life:0.8,size:0.07,add:true}); ring(pos.clone(),0xff4d5a,6,0.35); if(h.u>0.72){ R.face=true; jolt(keeper,'head',-24); jolt(keeper,'sx',6); jolt(keeper,'sy',-6); tone(300,0.1,'square',.12,120);} else R.face=false; tryResolve('save'); }
+    if(h){ const vn=vel.x*h.nx+vel.y*h.ny; vel.x=vel.x-2*vn*h.nx*0.5+h.nx*3; vel.y=Math.abs(vel.y)*0.4+h.ny*2; vel.z=Math.abs(vel.z)*0.35; sideAcc=0; hitStop(0.14); flash('#ff4d5a',0.4,300); S.shake=0.4; burst({at:pos.clone(),n:110,colors:['#ffffff','#d8ff3c'],speed:6,grav:5,life:0.8,size:0.07,add:true}); ring(pos.clone(),0xff4d5a,6,0.35); if(h.u>0.72){ R.face=true; jolt(keeper,'head',-24); jolt(keeper,'sx',6); jolt(keeper,'sy',-6); tone(300,0.1,'square',.12,120);} else R.face=false; try{ fsHit(); }catch(e){} tryResolve('save'); }
     else if(pos.z<-BALL_R && Math.abs(pos.x)<HALF && pos.y<GOAL_H) tryResolve('goal');
     else if(pos.z<-0.5 || (S.t>0.6 && vel.z>-0.5 && pos.z>0) || S.t>3.2) tryResolve(postHit?'post':'miss');
   }
@@ -1401,7 +1401,7 @@ function frame(now){
     camSmooth.p.copy(want); camSmooth.l.lerp(look,1-Math.pow(0.0005,realDt));
     const off=THREE.MathUtils.clamp(GK.th/1.45,-1,1), t=performance.now()/1000;   // グローブは飛んでも画面の真ん中を塞がない位置に
     gloves.forEach(q=>{ const idle=GK.active?0:Math.sin(t*6+q.sx)*0.015;
-      q.g.position.set(q.sx*0.21+off*0.03, -0.2+Math.abs(off)*0.02+idle, -0.66); q.g.rotation.set(0.1,0,-q.sx*0.22+off*0.2); }); }
+      q.g.position.set(q.sx*0.21+off*0.03, -0.2+Math.abs(off)*0.02+idle, -0.66); q.g.rotation.set(0.1,0,-q.sx*0.22+off*0.2); q.g.scale.setScalar(0.6); }); try{ fsTick(); }catch(e){} }
   if(S.phase==='replay') RP.camFor(want,look);
   if(!camSmooth){ camSmooth={p:want.clone(),l:look.clone()}; }
   const cs=1-Math.pow(0.0015,realDt); if(!fp){ camSmooth.p.lerp(want,cs); camSmooth.l.lerp(look,cs); }
@@ -1413,7 +1413,7 @@ function frame(now){
   if(DBG_CAM){ camSmooth.p.set(DBG_CAM[0],DBG_CAM[1],DBG_CAM[2]); camSmooth.l.set(DBG_CAM[3],DBG_CAM[4],DBG_CAM[5]); camera.position.copy(camSmooth.p); }   // 検証用：?cam=x,y,z,lx,ly,lz
   if(DBG_BALLCAM){ camSmooth.p.set(0.28,0.22,SPOT_Z+0.42); camSmooth.l.copy(pos); camera.position.copy(camSmooth.p); ball.rotation.y+=realDt*0.5; }   // 検証用：?ballcam でボールの寄り
   if(S.shake>0){ S.shake-=realDt; const a=S.shake*0.12; camera.position.x+=(Math.random()-.5)*a; camera.position.y+=(Math.random()-.5)*a; }
-  camera.lookAt(camSmooth.l); if(fp) camera.rotateZ(THREE.MathUtils.clamp(GK.th,-1.45,1.45)*0.22); if(S.phase==='charge'&&!fp) camera.rotateZ(0.16*Math.min(1,S.chargeT/S.chargeDur)*Math.sin(S.chargeT*3+1));
+  camera.lookAt(camSmooth.l); if(fp) camera.rotateZ(THREE.MathUtils.clamp(GK.th,-1.45,1.45)*0.22); if(fp){ try{ fsCam(); }catch(e){} } if(S.phase==='charge'&&!fp) camera.rotateZ(0.16*Math.min(1,S.chargeT/S.chargeDur)*Math.sin(S.chargeT*3+1));
   humanSync(); { const wantFov=fp?Math.min(baseFov,FPV.fov):baseFov; if(Math.abs(camera.fov-wantFov)>0.01){ camera.fov+= (wantFov-camera.fov)*Math.min(1,realDt*8); if(Math.abs(camera.fov-wantFov)<0.05) camera.fov=wantFov; camera.updateProjectionMatrix(); } }   /* キーパー視点は少し寄る＝キッカーの動きが読める */
   gkHud(fp); updAimMark(now/1000); tipTick(now); if(window.__preR) window.__preR(now); renderer.render(scene,camera); drawTrail(now); recFrame(); fpsTick(now);
   requestAnimationFrame(frame);
@@ -3743,7 +3743,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67q';
+const APP_VER='v67r';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -7920,6 +7920,72 @@ try{ if(I18N.lang==='en'){ const base=I18N.dict['（レベル{0}で解放）']; 
 @media (min-aspect-ratio:4/3) and (max-height:520px){ #sksel .ktool{padding-top:5px} #sksel .ksort,#sksel .kview button{height:26px} #sksel[data-view=list] .card .in{min-height:44px;padding:4px 10px!important} }`; document.head.appendChild(st);
   if(/dbg/.test(location.search)) window.__skv=()=>({view:VIEW,sort:SORT,order:[...grid.querySelectorAll('.card')].slice(0,14).map(c=>(c.classList.contains('lk')?'🔒':'')+((c.querySelector('.r')||{}).textContent||'').trim()+(c.querySelector('.nw')?'*':''))});
 }
+
+// ===== v67r 一人称で止めた感（2026-10-24 主「止めた感じがしないんよ」「1人称だけでいい」）=====
+// 録画を0.07秒ごとに見た原因：①飛んでも画面がほぼ動かない ②手袋は左右下に置きっぱなし ③ボールは遠くで消えて手に当たる瞬間が映らない（当たるのはカメラ＝頭の横・下）④当たった瞬間に SAVE!! が真ん中を覆う
+// 直し（ChatGPT の案の①〜⑤・記録は 相談用\セーブ演出_相談_1024.md）：
+//  ①飛んだ後、ボールが近づくほど両手がボールの見えている方へ伸びる（ボールが5m→0.6mで0→1）・画面もその方へ少し寄る
+//  ②当たった瞬間：両手の間にボールを置いて0.09秒止める（手は1.18倍に膨らむ・接触点に白い光・低い打撃音＋パシッ）
+//  ③反動：画面が0.06m後ろへ・3度ほど傾いて0.08秒で戻る
+//  ④ボールは手から弾かれて前（キッカー側）へ0.16秒で飛んでいく → 本物のボールに戻す
+//  ⑤SAVE!! は当たってから0.16秒後に出す
+//  顔へ向かう球（画面の真ん中に来る球）は手が両脇まで来て間をすり抜け、本物のボールが画面いっぱいに当たる（顔面ブロック）
+const FS={hit:null,proxy:null,hid:false,glow:null,reachT:null,w:0};
+function fsOn(){ try{ return gkView()&&FPV.back<=0.6&&FPV.mode!=='goal'; }catch(e){ return false; } }
+const _fsV=new THREE.Vector3();
+function fsTgt(p){ _fsV.copy(p); camera.updateMatrixWorld(); camera.worldToLocal(_fsV); const z=Math.min(-0.25,_fsV.z), D=0.75, hh=D*Math.tan(camera.fov*Math.PI/360), hw=hh*camera.aspect;   /* 縦長でも横長でも画面の中に収める */
+  const t=new THREE.Vector3(THREE.MathUtils.clamp(_fsV.x/(-z)*D,-0.62*hw,0.62*hw), THREE.MathUtils.clamp(_fsV.y/(-z)*D,-0.55*hh,0.4*hh), -D); t.hw=hw; t.near=-_fsV.z; t.rx=_fsV.x/(-z)*D/hw; t.ry=_fsV.y/(-z)*D/hh; return t; }
+function fsEnd(){ if(FS.proxy) FS.proxy.visible=false; if(FS.glow) FS.glow.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } FS.hit=null; }
+function fsGlow(){ if(FS.glow) return FS.glow; const c=document.createElement('canvas'); c.width=c.height=128; const g=c.getContext('2d'), r=g.createRadialGradient(64,64,0,64,64,64);
+  r.addColorStop(0,'rgba(255,255,255,1)'); r.addColorStop(.35,'rgba(230,255,170,.7)'); r.addColorStop(1,'rgba(216,255,60,0)'); g.fillStyle=r; g.fillRect(0,0,128,128);
+  FS.glow=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),blending:THREE.AdditiveBlending,depthTest:false,depthWrite:false,transparent:true})); FS.glow.renderOrder=999; FS.glow.visible=false; camera.add(FS.glow); return FS.glow; }
+function fsProxy(){ if(FS.proxy) return FS.proxy; FS.proxy=ball.clone(true); FS.proxy.visible=false; FS.proxy.renderOrder=998; camera.add(FS.proxy); return FS.proxy; }
+// 当たった瞬間（capsuleHit の save の所から呼ぶ）
+function fsHit(){ if(!fsOn()||!S.shot) return;
+  if(R.face){ // 顔面ブロック：手の所まで来ていた球（置き換え中）は、手をすり抜けて画面いっぱいに顔へ当たる。置き換えていなければ本物のボールが当たる絵のまま
+    if(FS.proxy&&FS.proxy.visible){ FS.gp=gloves.map(q=>q.g.position.clone()); FS.hit={t0:performance.now(),tgt:FS.proxy.position.clone(),side:Math.sign(FS.proxy.position.x)||1,face:true}; tone(300,0.12,'square',.14,90); clearTimeout(FS.endT); FS.endT=setTimeout(fsEnd,700); }
+    else { if(FS.proxy) FS.proxy.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } }
+    FS.reachT=null; FS.w=0; return; } const t=fsTgt(pos); FS.hit={t0:performance.now(),tgt:t,side:Math.sign(t.x)||1};
+  const p=fsProxy(); p.material=ball.material; p.position.copy(t).add(new THREE.Vector3(0,0,-0.04)); p.scale.setScalar(ball.scale.x||1); p.quaternion.copy(camera.quaternion).invert().multiply(ball.quaternion); p.visible=true;
+  if(ball.visible){ ball.visible=false; FS.hid=true; }
+  const g=fsGlow(); g.position.copy(t).add(new THREE.Vector3(0,0,0.02)); g.scale.setScalar(0.05); g.visible=true;
+  tone(70,0.2,'sine',.6,40); tone(2300,0.035,'square',.14); tone(900,0.06,'triangle',.12,300); S.shake=Math.max(S.shake,0.25);
+  try{ if(navigator.vibrate) navigator.vibrate(30); }catch(e){}
+  clearTimeout(FS.endT); FS.endT=setTimeout(fsEnd,700); }
+// 毎フレーム：手袋（元の位置を置いた直後に呼ぶ）
+function fsTick(){ const now=performance.now();
+  if(FS.hit&&FS.hit.face){ const a=(now-FS.hit.t0)/1000, T=FS.hit.tgt, s=FS.hit.side, p=FS.proxy;   /* 0.06秒で手の所→顔（画面の真ん中・目の前）、0.14秒まで張り付いて、0.32秒で前へ落ちる */
+    { const back=a<0.2?1:Math.max(0,1-(a-0.2)/0.15); if(FS.gp) gloves.forEach((q,i)=>q.g.position.lerp(FS.gp[i],back)); }   /* 手は伸ばした所に残って、すり抜けられた感じ */
+    if(p&&p.visible){ if(a<0.06){ const u=a/0.06; p.position.set(T.x*(1-u),T.y*(1-u)-0.03*u,T.z+(-0.24-T.z)*u); }
+      else if(a<0.14){ p.position.set(0,-0.03,-0.24); p.scale.set(1.15,0.86,1).multiplyScalar(ball.scale.x||1); }
+      else if(a<0.32){ const u=(a-0.14)/0.18, e=1-Math.pow(1-u,2); p.position.set(s*0.2*e,-0.03+0.15*e-0.35*e*e,-0.24-2.6*e); p.scale.setScalar(ball.scale.x||1); p.rotation.x-=0.3; }
+      else { p.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } } }
+    if(a>0.6) fsEnd(); FS.w=0; return; }
+  if(FS.hit){ const a=(now-FS.hit.t0)/1000, T=FS.hit.tgt, s=FS.hit.side;
+    const back=a<0.18?1:Math.max(0,1-(a-0.18)/0.15);   /* 0.18秒まで手は当たった所、0.33秒で元へ */
+    gloves.forEach(q=>{ const P=new THREE.Vector3(T.x+q.sx*Math.min(0.075,(T.hw||0.2)*0.32), T.y-0.01, T.z+0.03); q.g.position.lerp(P,back);
+      q.g.rotation.set(0.1-0.25*back,0,-q.sx*0.22*(1-back)+q.sx*0.35*back); q.g.scale.setScalar(0.6*(a<0.03?1.18:a<0.12?1.18-(a-0.03)/0.09*0.18:1)); });
+    const p=FS.proxy; if(p&&p.visible){ if(a<0.09){ p.position.copy(T).add(new THREE.Vector3(0,0,-0.04)); p.scale.set(1.12,0.9,1.0).multiplyScalar(ball.scale.x||1); }
+      else if(a<0.25){ const u=(a-0.09)/0.16, e=1-Math.pow(1-u,2); p.position.set(T.x+s*0.55*e, T.y+0.3*e-0.25*e*e, T.z-0.04-3.2*e); p.scale.setScalar(ball.scale.x||1); p.rotation.x-=0.4; }
+      else { p.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } } }
+    const g=FS.glow; if(g&&g.visible){ const u=a/0.12; if(u>=1) g.visible=false; else { g.scale.setScalar(0.06+0.32*u); g.material.opacity=1-u; } }
+    if(a>0.6) fsEnd(); FS.w=0; return; }
+  // 伸ばす：自分で飛んだ後だけ（飛ばなかった時に勝手に手が出ないように）
+  const reach=S.phase==='flight'&&!S.resolved&&GK.dove&&humanKeeps();
+  const w0=reach?THREE.MathUtils.smoothstep(1-(pos.z-0.6)/4.4,0,1):0; if(!reach){ if(FS.proxy) FS.proxy.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } } FS.w+=(w0-FS.w)*0.35; const w=FS.w; if(w<0.01){ if(FS.hid){ ball.visible=true; FS.hid=false; } if(FS.proxy) FS.proxy.visible=false; FS.reachT=null; return; }
+  const T=fsTgt(pos); FS.reachT=T;
+  // 顔へ向かう球（画面の真ん中に来る＝顔面ブロックになる球）は、手が両脇まで来て間をすり抜けて顔に当たる（本物のボールのまま画面いっぱいになる）
+  const face=Math.abs(T.rx)<0.4&&T.ry>-0.4&&T.ry<0.5; FS.face=face;
+  gloves.forEach(q=>{ q.g.position.lerp(new THREE.Vector3(T.x+q.sx*(face?T.hw*0.62:Math.min(0.085,T.hw*0.36)), T.y-0.02, T.z+0.05),w); q.g.rotation.set(0.1-0.2*w,0,-q.sx*0.22*(1-w)+q.sx*0.3*w); });
+  // カメラの1m手前まで来た本物のボールは画面いっぱいに膨らんで手も隠す → 手の間の位置に置き換えて見せる（当たったら fsHit がそのまま引き継ぐ）
+  const p=fsProxy(); if(reach&&!face&&w>0.6&&T.near<1.0&&T.near>0){ p.material=ball.material; p.position.copy(T).add(new THREE.Vector3(0,0,-0.03)); p.scale.setScalar(ball.scale.x||1); p.visible=true; if(ball.visible){ ball.visible=false; FS.hid=true; } }
+  else { p.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } } }
+// カメラ：寄る・反動（lookAt と元の傾きの後に呼ぶ）
+function fsCam(){ const T=FS.reachT, w=FS.w; if(T&&w>0.01&&T.hw){ const nx=T.x/T.hw, ny=T.y/(T.hw/camera.aspect); camera.translateX(nx*0.14*w); camera.translateY(ny*0.08*w); camera.rotateZ(-nx*0.06*w); }   /* 飛んだ方へ最大0.14m寄って3度ほど傾く */
+  if(FS.hit){ const a=(performance.now()-FS.hit.t0)/1000, f=FS.hit.face?1.6:1, env=a<0.03?a/0.03:Math.exp(-(a-0.03)/0.08); camera.translateZ(0.06*f*env); camera.rotateZ(-FS.hit.side*0.05*f*env); camera.rotateX((FS.hit.face?0.08:0.03)*env); } }
+// ⑤ SAVE!! は当たってから0.16秒後
+{ const _sb=showBanner; showBanner=function(t,sub,cls){ if(FS.hit&&performance.now()-FS.hit.t0<80){ const a=arguments; setTimeout(()=>_sb.apply(this,a),160); return; } return _sb.apply(this,arguments); }; }
+if(/dbg/.test(location.search)){ window.__FS=FS; window.__fsPos=()=>pos; }
 
 sizeAll(); resetKick(); S.phase='menu'; hint.style.opacity=0; requestAnimationFrame(frame);
 })();

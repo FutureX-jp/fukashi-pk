@@ -3743,7 +3743,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67r';
+const APP_VER='v67s';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -7935,7 +7935,7 @@ function fsOn(){ try{ return gkView()&&FPV.back<=0.6&&FPV.mode!=='goal'; }catch(
 const _fsV=new THREE.Vector3();
 function fsTgt(p){ _fsV.copy(p); camera.updateMatrixWorld(); camera.worldToLocal(_fsV); const z=Math.min(-0.25,_fsV.z), D=0.75, hh=D*Math.tan(camera.fov*Math.PI/360), hw=hh*camera.aspect;   /* 縦長でも横長でも画面の中に収める */
   const t=new THREE.Vector3(THREE.MathUtils.clamp(_fsV.x/(-z)*D,-0.62*hw,0.62*hw), THREE.MathUtils.clamp(_fsV.y/(-z)*D,-0.55*hh,0.4*hh), -D); t.hw=hw; t.near=-_fsV.z; t.rx=_fsV.x/(-z)*D/hw; t.ry=_fsV.y/(-z)*D/hh; return t; }
-function fsEnd(){ if(FS.proxy) FS.proxy.visible=false; if(FS.glow) FS.glow.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } FS.hit=null; }
+function fsEnd(){ FS.slip=null; if(FS.proxy) FS.proxy.visible=false; if(FS.glow) FS.glow.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } FS.hit=null; }
 function fsGlow(){ if(FS.glow) return FS.glow; const c=document.createElement('canvas'); c.width=c.height=128; const g=c.getContext('2d'), r=g.createRadialGradient(64,64,0,64,64,64);
   r.addColorStop(0,'rgba(255,255,255,1)'); r.addColorStop(.35,'rgba(230,255,170,.7)'); r.addColorStop(1,'rgba(216,255,60,0)'); g.fillStyle=r; g.fillRect(0,0,128,128);
   FS.glow=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),blending:THREE.AdditiveBlending,depthTest:false,depthWrite:false,transparent:true})); FS.glow.renderOrder=999; FS.glow.visible=false; camera.add(FS.glow); return FS.glow; }
@@ -7952,6 +7952,20 @@ function fsHit(){ if(!fsOn()||!S.shot) return;
   tone(70,0.2,'sine',.6,40); tone(2300,0.035,'square',.14); tone(900,0.06,'triangle',.12,300); S.shake=Math.max(S.shake,0.25);
   try{ if(navigator.vibrate) navigator.vibrate(30); }catch(e){}
   clearTimeout(FS.endT); FS.endT=setTimeout(fsEnd,700); }
+// 当たるかの見込み（2026-10-24 主のショート用の録画で、決められた5本目でも手の間にボールが見えて「止めたのにゴール」に見えた → 当たらない球は手の間に置かない）
+// ボールの今の位置・速さから、キーパーの面（z=0.15）に来た時の位置を出し、飛び終わりの姿勢（GK.to）の胴の線（capsuleHit と同じ太さ）と比べる
+function fsPred(){ try{ if(GK.block||GK.hand||R.gkSp||R.god) return null;   /* 技の盾・巨大な手などは今まで通り */
+    // ゲームの step() と同じ式（重力・空気抵抗・横の曲がり・地面で弾む）で 1/240 秒ずつ進め、capsuleHit と同じ距離を、その時のキーパーの姿勢（updGK と同じ動き）で調べる
+    const sc=GK.scaleNow||1, L=1.15*sc, rr=(humanKeeps()?0.25:0.22)*sc+BALL_R, p=pos.clone(), v=vel.clone(), dt=1/240; let sa=sideAcc||0, best=null;
+    for(let i=0;i<720;i++){ const sp=v.length(); v.y-=G*dt; v.addScaledVector(v,-DRAG*sp*dt); if(p.y>BALL_R+0.01) v.x+=sa*dt*(p.z>0?1:0); p.addScaledVector(v,dt);
+      if(p.y<BALL_R){ p.y=BALL_R; if(v.y<0)v.y*=-0.5; v.x*=0.985; v.z*=0.985; sa*=0.9; }
+      if(p.z>0.55) continue; if(p.z<-0.25) break; const t=(i+1)*dt;
+      let cx=GK.cx, cy=GK.cy, th=GK.th;
+      if(GK.active&&GK.to&&GK.from){ const k=THREE.MathUtils.clamp((GK.t0+t-GK.react)/GK.dur,0,1), e=1-Math.pow(1-k,3); cx=GK.from.cx+(GK.to.cx-GK.from.cx)*e; cy=GK.from.cy+(GK.to.cy-GK.from.cy)*e+Math.sin(k*Math.PI)*0.25; th=GK.from.th+(GK.to.th-GK.from.th)*e; }
+      const ax=cx-Math.sin(th)*L, ay=cy-Math.cos(th)*L, ex=cx+Math.sin(th)*L, ey=cy+Math.cos(th)*L, abx=ex-ax, aby=ey-ay;
+      const u=THREE.MathUtils.clamp(((p.x-ax)*abx+(p.y-ay)*aby)/(abx*abx+aby*aby),0,1), d=Math.hypot(p.x-(ax+abx*u),p.y-(ay+aby*u),(p.z-0.15)*0.6);
+      if(!best||d<best.d) best={d,u}; if(d<rr) break; }
+    return best?{hit:best.d<rr,u:best.u,d:best.d}:null; }catch(e){ return null; } }
 // 毎フレーム：手袋（元の位置を置いた直後に呼ぶ）
 function fsTick(){ const now=performance.now();
   if(FS.hit&&FS.hit.face){ const a=(now-FS.hit.t0)/1000, T=FS.hit.tgt, s=FS.hit.side, p=FS.proxy;   /* 0.06秒で手の所→顔（画面の真ん中・目の前）、0.14秒まで張り付いて、0.32秒で前へ落ちる */
@@ -7972,13 +7986,20 @@ function fsTick(){ const now=performance.now();
     if(a>0.6) fsEnd(); FS.w=0; return; }
   // 伸ばす：自分で飛んだ後だけ（飛ばなかった時に勝手に手が出ないように）
   const reach=S.phase==='flight'&&!S.resolved&&GK.dove&&humanKeeps();
+  // 手の間に来ていた球が決められた（見込みが外れた）時：手をすり抜けて手前下へ抜けていく（0.15秒）＝「止めたのにゴール」に見せない
+  if(!reach&&!FS.slip&&S.resolved==='goal'&&FS.proxy&&FS.proxy.visible&&FS.hid) FS.slip={t0:now,from:FS.proxy.position.clone(),s:Math.sign(FS.proxy.position.x)||1};
+  if(FS.slip){ const a=(now-FS.slip.t0)/1000, p=FS.proxy, F=FS.slip.from; FS.w=0; FS.reachT=null;
+    if(p&&a<0.15){ const u=a/0.15; p.position.set(F.x+FS.slip.s*0.18*u, F.y-0.28*u, F.z+0.4*u); p.visible=true; return; }
+    if(p) p.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } FS.slip=null; return; }
   const w0=reach?THREE.MathUtils.smoothstep(1-(pos.z-0.6)/4.4,0,1):0; if(!reach){ if(FS.proxy) FS.proxy.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } } FS.w+=(w0-FS.w)*0.35; const w=FS.w; if(w<0.01){ if(FS.hid){ ball.visible=true; FS.hid=false; } if(FS.proxy) FS.proxy.visible=false; FS.reachT=null; return; }
   const T=fsTgt(pos); FS.reachT=T;
   // 顔へ向かう球（画面の真ん中に来る＝顔面ブロックになる球）は、手が両脇まで来て間をすり抜けて顔に当たる（本物のボールのまま画面いっぱいになる）
-  const face=Math.abs(T.rx)<0.4&&T.ry>-0.4&&T.ry<0.5; FS.face=face;
-  gloves.forEach(q=>{ q.g.position.lerp(new THREE.Vector3(T.x+q.sx*(face?T.hw*0.62:Math.min(0.085,T.hw*0.36)), T.y-0.02, T.z+0.05),w); q.g.rotation.set(0.1-0.2*w,0,-q.sx*0.22*(1-w)+q.sx*0.3*w); });
+  const pr=fsPred(); FS.pd=pr?+pr.d.toFixed(3):null; const miss=pr&&!pr.hit, face=pr?(pr.hit&&pr.u>0.72):(Math.abs(T.rx)<0.4&&T.ry>-0.4&&T.ry<0.5); FS.face=face; FS.miss=miss;
+  // 届かない球：手は途中まで（半分）しか伸びず、ボールの手前で止まる＝横を抜けていくのが見える
+  const wg=miss?w*0.5:w, gx=miss?T.x-Math.sign(T.x||1)*T.hw*0.45:T.x;
+  gloves.forEach(q=>{ q.g.position.lerp(new THREE.Vector3(gx+q.sx*(face?T.hw*0.62:Math.min(0.085,T.hw*0.36)), T.y-0.02, T.z+0.05),wg); q.g.rotation.set(0.1-0.2*wg,0,-q.sx*0.22*(1-wg)+q.sx*0.3*wg); });
   // カメラの1m手前まで来た本物のボールは画面いっぱいに膨らんで手も隠す → 手の間の位置に置き換えて見せる（当たったら fsHit がそのまま引き継ぐ）
-  const p=fsProxy(); if(reach&&!face&&w>0.6&&T.near<1.0&&T.near>0){ p.material=ball.material; p.position.copy(T).add(new THREE.Vector3(0,0,-0.03)); p.scale.setScalar(ball.scale.x||1); p.visible=true; if(ball.visible){ ball.visible=false; FS.hid=true; } }
+  const p=fsProxy(); if(reach&&!face&&!miss&&w>0.6&&T.near<1.0&&T.near>0){ p.material=ball.material; p.position.copy(T).add(new THREE.Vector3(0,0,-0.03)); p.scale.setScalar(ball.scale.x||1); p.visible=true; if(ball.visible){ ball.visible=false; FS.hid=true; } }
   else { p.visible=false; if(FS.hid){ ball.visible=true; FS.hid=false; } } }
 // カメラ：寄る・反動（lookAt と元の傾きの後に呼ぶ）
 function fsCam(){ const T=FS.reachT, w=FS.w; if(T&&w>0.01&&T.hw){ const nx=T.x/T.hw, ny=T.y/(T.hw/camera.aspect); camera.translateX(nx*0.14*w); camera.translateY(ny*0.08*w); camera.rotateZ(-nx*0.06*w); }   /* 飛んだ方へ最大0.14m寄って3度ほど傾く */

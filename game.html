@@ -414,7 +414,7 @@ const keeperPivot=new THREE.Group(); keeperPivot.add(keeper.root); keeper.root.p
 function HUMAN_LIB(B){
   if(!B) return null; const M=B.meta;
   const bin=(()=>{ const s=atob(B.bin), u=new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i); return u.buffer; })();
-  const texLoad=(b64,mime,srgb)=>{ const img=new Image(); const t=new THREE.Texture(img); img.onload=()=>{ t.needsUpdate=true; }; img.src='data:'+mime+';base64,'+b64; if(srgb) t.encoding=THREE.sRGBEncoding; t.flipY=false; t.anisotropy=4; return t; };
+  const texLoad=(b64,mime,srgb)=>{ const img=new Image(); (window.__IMG=window.__IMG||[]).push(img); const t=new THREE.Texture(img); img.onload=()=>{ t.needsUpdate=true; window.__IMGT=performance.now(); }; img.src='data:'+mime+';base64,'+b64; if(srgb) t.encoding=THREE.sRGBEncoding; t.flipY=false; t.anisotropy=4; return t; };
   const TX={skin:texLoad(B.tex.skin,'image/jpeg',true), skinD:B.tex.skinD?texLoad(B.tex.skinD,'image/jpeg',true):null, nrm:texLoad(B.tex.nrm,'image/jpeg',false), hair:texLoad(B.tex.hair,'image/png',true), eye:texLoad(B.tex.eye,'image/jpeg',true)};
   const ibm0=new Float32Array(bin,M.ibm,M.bones.length*16), bpos={};
   M.bones.forEach((b,i)=>{ const m=new THREE.Matrix4().fromArray(ibm0,i*16).invert(); bpos[b.n]=new THREE.Vector3().setFromMatrixPosition(m); });
@@ -3743,7 +3743,7 @@ if(/dbg/.test(location.search)) Object.assign(window,{__ngHit:ngHit,__ngMask:ngM
 // ①端末の中に直近30件を必ず記録（エラー・Promiseの失敗・console.error・操作の足跡20件・画面の状態）
 // ②送るのはプレイヤーが「送る」を押した時だけ（中身を見せてから）。一度「自動で送る」をONにした人は次から黙って送る。既定はOFF（null=まだ聞いてない／false=断った を区別）
 // ③送り先は同じ Supabase の log_error（errlog.sql）。名前・端末の保存データ・位置は送らない。送るのは：版・端末の種類・画面の大きさ・モード・章・直前の操作・エラー文
-const APP_VER='v67s';
+const APP_VER='v67t';
 const ERR={list:[],trail:[],shown:0,sent:0};
 try{ ERR.list=JSON.parse(localStorage.getItem('pk_err')||'[]'); if(!Array.isArray(ERR.list)) ERR.list=[]; }catch(e){ ERR.list=[]; }
 setTimeout(()=>{ (window.__earlyErr||[]).forEach(x=>errPush('early',x[0],x[1])); window.__earlyErr=null; },0);   // 本体が読み込まれる前に起きたエラー（<head> の見張りが貯めた分）
@@ -3818,9 +3818,20 @@ const GUARD={ph:'',since:0,shown:false,fc:0,fc0:0,ft:0,hl:0};
 function heatGap(){ try{ const ph=S.phase, mv=!document.getElementById('menu').hidden;
   if(ph==='menu'||mv) return 100;
   if(!document.getElementById('sttalk').hidden||!document.getElementById('end').hidden||ph==='aim'||ph==='cpuwait'||ph==='oppwait'||ph==='skinview') return 33; }catch(e){} return 0; }
+// v67t 重さの記録を賢く：裏に回っていた間の1コマは捨てる（3.1秒＝アプリを切り替えただけでも出る長さ）＋起動後の秒・狙う場面の何回目・画像の読み込み途中かを足す
+const SLOWV={t:-1e9,bg:0};   // t＝最後に「裏へ・表へ」の合図が来た時刻
+{ const mark=()=>{ SLOWV.t=performance.now(); }; ['visibilitychange','freeze','resume'].forEach(k=>document.addEventListener(k,mark,true)); ['pagehide','pageshow','blur','focus'].forEach(k=>addEventListener(k,mark,true)); }
+function slowCheck(t0,t1,ph,aimN){ let im=[]; try{ im=[...(window.__IMG||[]),...document.images]; }catch(e){}
+  const ip=im.filter(i=>!i.complete).length, ia=window.__IMGT?Math.max(0,(t0-window.__IMGT)/1000):null, sec=((t1-t0)/1000).toFixed(1);
+  // 裏へ回る合図は、止まっていたコマが終わった後に届く → 1.5秒待ってから決める
+  setTimeout(()=>{ try{ if(document.hidden||SLOWV.t>=t0-1000){ SLOWV.bg++; return; }
+    if((GUARD.slowN=(GUARD.slowN||0)+1)>3) return;
+    errPush('slow','1コマが重い: '+ph+' '+sec+'秒','up='+(t0/1000).toFixed(1)+'s aimN='+aimN+(ph==='aim'&&aimN===1?' firstAim':'')+' img='+ip+'/'+im.length+(ia==null?'':' imgAgo='+ia.toFixed(1)+'s')+' bgDrop='+SLOWV.bg); }catch(_){} },1500); }
+if(/dbg/.test(location.search)) window.__SLOWV=SLOWV;
 { const _f=frame; const seen=new Set(); frame=function(now){ GUARD.fc++; GUARD.ft=performance.now();
   const gap=heatGap(); if(gap&&now-GUARD.hl<gap-3){ requestAnimationFrame(frame); return; } GUARD.hl=now;
-  const _t0=performance.now(); try{ return _f(now); }catch(e){ requestAnimationFrame(frame); const k=String(e&&e.message); if(!seen.has(k)){ seen.add(k); try{ errPush('frame',k,e&&e.stack); }catch(_){} } } finally{ const _t1=performance.now(); GUARD.ft=_t1; if(_t1-_t0>3000&&(GUARD.slowN=(GUARD.slowN||0)+1)<=3){ try{ errPush('slow','1コマが重い: '+S.phase+' '+((_t1-_t0)/1000).toFixed(1)+'秒',''); }catch(_){} } } }; }
+  if(S.phase==='aim'&&GUARD.lph!=='aim') GUARD.aimN=(GUARD.aimN||0)+1; GUARD.lph=S.phase;
+  const _t0=performance.now(); try{ return _f(now); }catch(e){ requestAnimationFrame(frame); const k=String(e&&e.message); if(!seen.has(k)){ seen.add(k); try{ errPush('frame',k,e&&e.stack); }catch(_){} } } finally{ const _t1=performance.now(); GUARD.ft=_t1; if(_t1-_t0>3000){ try{ slowCheck(_t0,_t1,S.phase,GUARD.aimN||0); }catch(_){} } } }; }
 
 const GUARD_WAIT={aim:1,cpuwait:1,oppwait:1,menu:1,skinview:1,end:1,ending:1,movie:1};   // プレイヤーを待っている場面・自分で終わる場面は数えない
 const guardEl=document.createElement('div'); guardEl.id='guardpan'; guardEl.hidden=true;
